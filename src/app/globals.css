@@ -12,3 +12,32 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+:root {
+  --nat-navbar-bg: #223866;
+  --nat-navbar-bg-rgb: 34, 56, 102;
+  --nat-navbar-text-color: white;
+}
+
+footer, footer a {
+  color: var(--nat-navbar-text-color);
+}
+
+body {
+  --bs-dark: var(--nat-navbar-bg);
+  --bs-dark-rgb: var(--nat-navbar-bg-rgb);
+  /*background: fixed center url("images/<your image filename>");
+  background-size: cover;*/
+}
+
+body .navbar {
+  --bs-navbar-active-color: var(--nat-navbar-highlight-text);
+  --bs-navbar-brand-color: var(--nat-navbar-text-color);
+  --bs-navbar-brand-hover-color: var(--nat-navbar-highlight-text);
+  --bs-navbar-color: var(--nat-navbar-text-color);
+  --bs-navbar-hover-color: var(--nat-navbar-highlight-text);
+}
+
+.bg-dark a.dropdown-item {
+  color: var(--nat-navbar-bg);
+}
