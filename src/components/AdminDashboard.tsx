@@ -11,11 +11,11 @@ const AdminDashboard = ({ name, skills, interests, location, companies, intervie
       <Card.Img variant="top" src={image} width={75} height={75} />
       <Card.Text>
         <strong>Skills:</strong>
-        {skills}
+        {skills.join(', ')}
       </Card.Text>
       <Card.Text>
         <strong>Interests:</strong>
-        {interests}
+        {interests.join(', ')}
       </Card.Text>
       <Card.Text>
         <strong>Location:</strong>
@@ -23,11 +23,11 @@ const AdminDashboard = ({ name, skills, interests, location, companies, intervie
       </Card.Text>
       <Card.Text>
         <strong>Companies:</strong>
-        {companies}
+        {companies.join(', ')}
       </Card.Text>
       <Card.Text>
         <strong>Interviews:</strong>
-        {interviews}
+        {interviews.join(', ')}
       </Card.Text>
     </Card.Body>
     <Card.Footer>

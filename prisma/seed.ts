@@ -23,9 +23,9 @@ async function main() {
   });
   for (const data of config.defaultData) {
     // const condition = (data.condition as Condition) || Condition.good;
-    console.log(`  Adding stuff: ${JSON.stringify(data)}`);
+    console.log(`  Adding Sucess: ${JSON.stringify(data)}`);
     // eslint-disable-next-line no-await-in-loop
-    await prisma.adminlist.upsert({
+    await prisma.adminList.upsert({
       where: { id: config.defaultData.indexOf(data) + 1 },
       update: {},
       create: {
@@ -39,6 +39,7 @@ async function main() {
       },
     });
   }
+  console.log('Seeding complete');
 }
 main()
   .then(() => prisma.$disconnect())

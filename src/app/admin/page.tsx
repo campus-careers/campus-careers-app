@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row, Table } from 'react-bootstrap';
-import StuffItemAdmin from '@/components/StuffItemAdmin';
+// import StuffItemAdmin from '@/components/StuffItemAdmin';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
@@ -14,7 +14,7 @@ const AdminPage = async () => {
       user: { email: string; id: string; randomKey: string };
     } | null,
   );
-  const stuff = await prisma.stuff.findMany({});
+  const adminListItem = await prisma.adminList.findMany({});
   const users = await prisma.user.findMany({});
 
   return (
@@ -23,24 +23,32 @@ const AdminPage = async () => {
         <Row>
           <Col>
             <h1>Admin Portal</h1>
-            <Table striped bordered hover>
+            <Row xs={1} md={2} lg={3} className="g-4">
+              {adminListItem.map((item) => (
+                <Col key={item.id}>
+                  <AdminDashboard {...item} />
+                </Col>
+              ))}
+            </Row>
+
+            {/* <Table striped bordered hover>
               <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Skills</th>
-                  <th>Interests</th>
-                  <th>Preferred Location</th>
-                  <th>Recommended Companies</th>
-                  <th>Upcoming Interviews</th>
-                  <th>Actions</th>
-                </tr>
+              <tr>
+                <th>Name</th>
+                <th>Skills</th>
+                <th>Interests</th>
+                <th>Preferred Location</th>
+                <th>Recommended Companies</th>
+                <th>Upcoming Interviews</th>
+                <th>Actions</th>
+              </tr>
               </thead>
               <tbody>
-                {stuff.map((item) => (
-                  <StuffItemAdmin key={item.id} {...item} />
-                ))}
+              {stuff.map((item) => (
+                <StuffItemAdmin key={item.id} {...item} />
+              ))}
               </tbody>
-            </Table>
+            </Table> */}
           </Col>
         </Row>
         <Row>
