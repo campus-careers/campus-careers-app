@@ -25,7 +25,7 @@ async function main() {
     // const condition = (data.condition as Condition) || Condition.good;
     console.log(`  Adding stuff: ${JSON.stringify(data)}`);
     // eslint-disable-next-line no-await-in-loop
-    await prisma.adminList.upsert({
+    await prisma.adminlist.upsert({
       where: { id: config.defaultData.indexOf(data) + 1 },
       update: {},
       create: {
