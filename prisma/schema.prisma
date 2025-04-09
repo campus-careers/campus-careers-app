@@ -43,3 +43,14 @@ model Stuff {
   condition Condition @default(good)
   owner     String
 }
+
+model adminList {
+  id        Int @id @default(autoincrement())
+  name String
+  image String
+  skills String[]
+  interests String[]
+  location String
+  companies String[]
+  interviews String[]
+}

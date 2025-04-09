@@ -4,7 +4,9 @@ import StuffItemAdmin from '@/components/StuffItemAdmin';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
+import AdminDashboard from '@/components/AdminDashboard';
 
+// import { adminList } from '@prisma/client';
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
   adminProtectedPage(
@@ -20,14 +22,16 @@ const AdminPage = async () => {
       <Container id="list" fluid className="py-3">
         <Row>
           <Col>
-            <h1>List Stuff Admin</h1>
+            <h1>Admin Portal</h1>
             <Table striped bordered hover>
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Quantity</th>
-                  <th>Condition</th>
-                  <th>Owner</th>
+                  <th>Skills</th>
+                  <th>Interests</th>
+                  <th>Preferred Location</th>
+                  <th>Recommended Companies</th>
+                  <th>Upcoming Interviews</th>
                   <th>Actions</th>
                 </tr>
               </thead>
