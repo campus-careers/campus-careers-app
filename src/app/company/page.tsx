@@ -21,11 +21,7 @@ const CompaniesPage = async () => {
     } | null,
   );
 
-  const owner = session?.user!.email ? session.user.email : '';
   const companies: Company[] = await prisma.company.findMany({
-    where: {
-      owner,
-    },
   });
   // console.log(companies);
 
