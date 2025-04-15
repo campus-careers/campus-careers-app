@@ -36,20 +36,6 @@ const AdminDashboard = ({ name, skills, interests, location, companies, intervie
       </a>
     </Card.Footer>
   </Card>
-  /*
-  <tr>
-    <td>{image}</td>
-    <td>{name}</td>
-    <td>{skills}</td>
-    <td>{interests}</td>
-    <td>{location}</td>
-    <td>{companies}</td>
-    <td>{interviews}</td>
-    <td>
-      <a href={`/edit/${id}`}>Edit</a>
-    </td>
-  </tr>
-  */
 );
 
 export default AdminDashboard;
