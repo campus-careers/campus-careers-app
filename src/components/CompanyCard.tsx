@@ -17,8 +17,16 @@ const CompanyCard = ({ company }: { company: Company }) => (
     <Card.Body>
       <Card.Text>
         {company.overview}
-        {company.jobs}
-        {company.contacts}
+        <p />
+        <p>
+          <b>Searching for:</b>
+          {' '}
+          {company.jobs}
+        </p>
+        <p>
+          <b>If interested, contact: </b>
+          {company.contacts}
+        </p>
       </Card.Text>
     </Card.Body>
   </Card>
