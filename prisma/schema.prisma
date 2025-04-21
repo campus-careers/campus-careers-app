@@ -44,11 +44,35 @@ model Stuff {
   owner     String
 }
 
+enum Skills {
+  engLicense
+  compTIACert
+  c
+  python
+  java
+  aiExperience
+  coding
+  design
+}
+
 model Company {
   id        	Int       @id @default(autoincrement())
   name      	String    @unique
+  salary      Int       @default(50000)    
   overview    String
   location    String
   jobs		    String
   contacts	  String
+  idealSkill  Skills[]
+}
+
+model Student {
+  id          Int       @id @default(autoincrement())
+  name        String
+  interests   String[]
+  companies   Company.name[]
+  interviews  String[]
+  location    String
+  skills      Skills[]
+  image       String
 }

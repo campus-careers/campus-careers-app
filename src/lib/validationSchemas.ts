@@ -1,16 +1,22 @@
 import * as Yup from 'yup';
 
-export const AddStuffSchema = Yup.object({
+export const AddCompanySchema = Yup.object({
   name: Yup.string().required(),
-  quantity: Yup.number().positive().required(),
-  condition: Yup.string().oneOf(['excellent', 'good', 'fair', 'poor']).required(),
-  owner: Yup.string().required(),
+  salary: Yup.number().required(),
+  overview: Yup.string().required(),
+  location: Yup.string().required(),
+  jobs: Yup.string().required(),
+  contacts: Yup.string().required(),
+  idealSkill: Yup.string().required(),
 });
 
-export const EditStuffSchema = Yup.object({
+export const EditCompanySchema = Yup.object({
   id: Yup.number().required(),
   name: Yup.string().required(),
-  quantity: Yup.number().positive().required(),
-  condition: Yup.string().oneOf(['excellent', 'good', 'fair', 'poor']).required(),
-  owner: Yup.string().required(),
+  salary: Yup.number().required(),
+  overview: Yup.string().required(),
+  location: Yup.string().required(),
+  jobs: Yup.string().required(),
+  contacts: Yup.string().required(),
+  idealSkill: Yup.string().required(),
 });

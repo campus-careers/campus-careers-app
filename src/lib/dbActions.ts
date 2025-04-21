@@ -1,30 +1,26 @@
 'use server';
 
-import { Stuff, Condition } from '@prisma/client';
+import { Company, Skills } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
 
 /**
- * Adds a new stuff to the database.
- * @param stuff, an object with the following properties: name, quantity, owner, condition.
+ * Adds a new company to the database.
+ * @param company, an object with the following properties: name, overview, location, jobs, contacts.
  */
-export async function addStuff(stuff: { name: string; quantity: number; owner: string; condition: string }) {
+// eslint-disable-next-line max-len
+export async function addCompany(company: { name: string; salary: number; overview: string; location: string; jobs: string; contacts: string; idealSkill: Skills[] }) {
   // console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
-  let condition: Condition = 'good';
-  if (stuff.condition === 'poor') {
-    condition = 'poor';
-  } else if (stuff.condition === 'excellent') {
-    condition = 'excellent';
-  } else {
-    condition = 'fair';
-  }
-  await prisma.stuff.create({
+  await prisma.company.create({
     data: {
-      name: stuff.name,
-      quantity: stuff.quantity,
-      owner: stuff.owner,
-      condition,
+      name: company.name,
+      salary: company.salary,
+      overview: company.overview,
+      location: company.location,
+      jobs: company.jobs,
+      contacts: company.contacts,
+      idealSkill: company.idealSkill,
     },
   });
   // After adding, redirect to the list page
@@ -32,18 +28,21 @@ export async function addStuff(stuff: { name: string; quantity: number; owner: s
 }
 
 /**
- * Edits an existing stuff in the database.
- * @param stuff, an object with the following properties: id, name, quantity, owner, condition.
+ * Edits an existing company in the database.
+ * @param company, an object with the following properties: name, overview, location, jobs, contacts.
  */
-export async function editStuff(stuff: Stuff) {
+export async function editCompany(company: Company) {
   // console.log(`editStuff data: ${JSON.stringify(stuff, null, 2)}`);
-  await prisma.stuff.update({
-    where: { id: stuff.id },
+  await prisma.company.update({
+    where: { id: company.id },
     data: {
-      name: stuff.name,
-      quantity: stuff.quantity,
-      owner: stuff.owner,
-      condition: stuff.condition,
+      name: company.name,
+      salary: company.salary,
+      overview: company.overview,
+      location: company.location,
+      jobs: company.jobs,
+      contacts: company.contacts,
+      // idealSkill: company.idealSkill,
     },
   });
   // After updating, redirect to the list page
@@ -51,12 +50,12 @@ export async function editStuff(stuff: Stuff) {
 }
 
 /**
- * Deletes an existing stuff from the database.
- * @param id, the id of the stuff to delete.
+ * Deletes an existing company from the database.
+ * @param id, the id of the company to delete.
  */
-export async function deleteStuff(id: number) {
+export async function deleteCompany(id: number) {
   // console.log(`deleteStuff id: ${id}`);
-  await prisma.stuff.delete({
+  await prisma.company.delete({
     where: { id },
   });
   // After deleting, redirect to the list page

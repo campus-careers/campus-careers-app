@@ -1,9 +1,10 @@
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row, Table } from 'react-bootstrap';
-import StuffItemAdmin from '@/components/StuffItemAdmin';
+import { Col, Container, Row } from 'react-bootstrap';
+import CompanyAdmin from '@/components/CompanyAdmin';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
+import { Company, Student } from '@prisma/client';
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
@@ -12,52 +13,33 @@ const AdminPage = async () => {
       user: { email: string; id: string; randomKey: string };
     } | null,
   );
-  const stuff = await prisma.stuff.findMany({});
-  const users = await prisma.user.findMany({});
+
+  const companies: Company[] = await prisma.company.findMany({
+  });
+  const students: Student[] = await prisma.student.findMany({});
 
   return (
     <main>
       <Container id="list" fluid className="py-3">
         <Row>
           <Col>
-            <h1>List Stuff Admin</h1>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Quantity</th>
-                  <th>Condition</th>
-                  <th>Owner</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stuff.map((item) => (
-                  <StuffItemAdmin key={item.id} {...item} />
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <h1>List Users Admin</h1>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+            <h1>Admin Dashboard</h1>
+            <Row xs={1} md={2} lg={3} className="g-4">
+              <h2>Companies</h2>
+              {companies.map((company) => (
+                <Col key={company.name}>
+                  <CompanyAdmin company={company} />
+                </Col>
+              ))}
+            </Row>
+            <Row xs={1} md={2} lg={3} className="g-4">
+              <h2>Students</h2>
+              {students.map((student) => (
+                <Col key={student.firstName + student.lastName}>
+                  <Student student={student} />
+                </Col>
+              ))}
+            </Row>
           </Col>
         </Row>
       </Container>
