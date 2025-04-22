@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient, Role, Skill, Locations } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
@@ -30,8 +30,8 @@ async function main() {
       update: {},
       create: {
         name: data.name,
-        skills: data.skills,
-        location: data.location,
+        skills: data.skills as Skill[],
+        location: data.location as Locations,
         companies: data.companies,
         interviews: data.interviews,
         image: data.image,

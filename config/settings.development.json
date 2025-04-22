@@ -5,7 +5,7 @@
   ],
 
   "defaultData": [
-    { "name": "Alan", "skills": ["coding", "design"], "interests": ["coding", "reading"], "location": "hawaii", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" },
-    { "name": "Mason", "skills": ["coding", "design"], "interests": ["coding", "reading"], "location": "hawaii", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" }
+    { "name": "Alan", "skills": ["JavaScript", "Python"], "interests": ["coding", "reading"], "location": "Remote", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" },
+    { "name": "Mason", "skills": ["JavaScript", "Ruby"], "interests": ["coding", "reading"], "location": "Honolulu", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" }
   ]
 }

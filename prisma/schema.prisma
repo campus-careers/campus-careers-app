@@ -36,6 +36,25 @@ enum Condition {
   poor
 }
 
+enum Skill {
+  JavaScript
+  Python
+  Java
+  CSharp
+  Ruby
+  CPlusPlus
+  Design
+}
+
+enum Locations {
+  Honolulu
+  NewYork
+  SanFrancisco
+  London
+  Tokyo
+  Remote
+}
+
 model Stuff {
   id        Int       @id @default(autoincrement())
   name      String
@@ -48,9 +67,15 @@ model adminList {
   id        Int @id @default(autoincrement())
   name String
   image String
-  skills String[]
+  skills Skill[]
   interests String[]
-  location String
+  location Locations
   companies String[]
   interviews String[]
+}
+
+model Filter {
+  id Int @id @default(autoincrement())
+  skills Skill @default(JavaScript)
+  locations Locations @default(Honolulu)
 }
