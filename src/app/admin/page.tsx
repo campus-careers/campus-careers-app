@@ -51,6 +51,7 @@ const AdminPage = async () => {
             </Table> */}
           </Col>
         </Row>
+
         <Row>
           <Col>
             <h1>List Users Admin</h1>

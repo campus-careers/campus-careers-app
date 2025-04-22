@@ -76,6 +76,6 @@ model adminList {
 
 model Filter {
   id Int @id @default(autoincrement())
-  skills Skill @default(JavaScript)
+  skills Skill[]
   locations Locations @default(Honolulu)
 }

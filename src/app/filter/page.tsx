@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 import FilterSkillOrLocation from '@/components/FilterSkillOrLocation';
+import { Skill, Locations } from '@prisma/client';
 
 // import { adminList } from '@prisma/client';
 const FilterSkillPage = async () => {
@@ -13,8 +14,11 @@ const FilterSkillPage = async () => {
       user: { email: string; id: string; randomKey: string };
     } | null,
   );
-  const filterListItem = await prisma.Filter.findMany({});
+  // const filterListItem = await prisma.filter.findMany({});
   const users = await prisma.user.findMany({});
+  const allSkills = Object.values(Skill) as Skill[];
+  const allLocations = Object.values(Locations) as Locations[];
+  // console.log('Filter List Items:', filterListItem);
 
   return (
     <main>
@@ -22,35 +26,11 @@ const FilterSkillPage = async () => {
         <Row>
           <Col>
             <h1>Browse by Skill or Location</h1>
-            <Row xs={1} md={2} lg={3} className="g-4">
-              {filterListItem.map((item) => (
-                <Col key={item.id}>
-                  <FilterSkillOrLocation {...item} />
-                </Col>
-              ))}
-            </Row>
-
-            {/* <Table striped bordered hover>
-              <thead>
-              <tr>
-                <th>Name</th>
-                <th>Skills</th>
-                <th>Interests</th>
-                <th>Preferred Location</th>
-                <th>Recommended Companies</th>
-                <th>Upcoming Interviews</th>
-                <th>Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              {stuff.map((item) => (
-                <StuffItemAdmin key={item.id} {...item} />
-              ))}
-              </tbody>
-            </Table> */}
+            {/* Render FilterSkillOrLocation once and pass allSkills and allLocations */}
+            <FilterSkillOrLocation skills={allSkills} locations={allLocations} />
           </Col>
         </Row>
-
+        <br />
         <Row>
           <Col>
             <h1>List Users Admin</h1>

@@ -21,24 +21,46 @@ async function main() {
     });
     // console.log(`  Created user: ${user.email} with role: ${user.role}`);
   });
-  for (const data of config.defaultData) {
-    // const condition = (data.condition as Condition) || Condition.good;
-    console.log(`  Adding Sucess: ${JSON.stringify(data)}`);
-    // eslint-disable-next-line no-await-in-loop
-    await prisma.adminList.upsert({
-      where: { id: config.defaultData.indexOf(data) + 1 },
-      update: {},
-      create: {
-        name: data.name,
-        skills: data.skills as Skill[],
-        location: data.location as Locations,
-        companies: data.companies,
-        interviews: data.interviews,
-        image: data.image,
-        interests: data.interests,
-      },
-    });
-  }
+  await Promise.all(
+    config.defaultData.map(async (data, index) => {
+      console.log(`  Adding Sucess: ${JSON.stringify(data)}`);
+      await prisma.adminList.upsert({
+        where: { id: index + 1 },
+        update: {},
+        create: {
+          name: data.name,
+          skills: data.skills as Skill[],
+          location: data.location as Locations,
+          companies: data.companies,
+          interviews: data.interviews,
+          image: data.image,
+          interests: data.interests,
+        },
+      });
+    }),
+  );
+
+  // Seed Filter Table
+  const filters = [
+    {
+      skills: ['JavaScript', 'Python'] as Skill[], // Ensure these match the Skill enum
+      locations: 'Remote' as Locations, // Ensure this matches the Locations enum
+    },
+  ];
+
+  await Promise.all(
+    filters.map(async (filter) => {
+      console.log(`  Adding Filter Item: ${JSON.stringify(filter)}`);
+      await prisma.filter.create({
+        data: {
+          skills: filter.skills[0], // Use the first skill from the array
+          locations: filter.locations,
+        },
+        // skills: filter.skills[0] as Skill, // Assign the first skill or adjust schema to accept arrays
+        // locations: filter.locations as Locations,
+      });
+    }),
+  );
   console.log('Seeding complete');
 }
 main()
