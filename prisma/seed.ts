@@ -19,7 +19,6 @@ async function main() {
         role,
       },
     });
-    // console.log(`  Created user: ${user.email} with role: ${user.role}`);
   });
   await Promise.all(
     config.defaultData.map(async (data, index) => {
@@ -56,8 +55,6 @@ async function main() {
           skills: filter.Skill as Skill[],
           locations: filter.locations,
         },
-        // skills: filter.skills[0] as Skill, // Assign the first skill or adjust schema to accept arrays
-        // locations: filter.locations as Locations,
       });
     }),
   );

@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
@@ -18,7 +18,7 @@ const FilterSkillPage = async () => {
   const allSkills = Object.values(Skill) as Skill[];
   const allLocations = Object.values(Locations) as Locations[];
 
-  const adminList = await prisma.adminList.findMany({
+  const adminList = (await prisma.adminList.findMany({
     select: {
       id: true,
       name: true,
@@ -28,9 +28,12 @@ const FilterSkillPage = async () => {
       companies: true,
       interviews: true,
     },
-  });
-  // console.log('Filter List Items:', filterListItem);
-
+  })).map(admin => ({
+    ...admin,
+    id: admin.id.toString(),
+    skills: admin.skills.map(skill => skill.toString()),
+    location: admin.location.toString(),
+  }));
   return (
     <main>
       <Container id="list" fluid className="py-3">

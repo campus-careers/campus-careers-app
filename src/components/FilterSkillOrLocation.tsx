@@ -28,11 +28,6 @@ const FilterSkillOrLocation = ({
 
   // State for filtered users
   const [filteredUsers, setFilteredUsers] = useState(users);
-
-  // state for filter list
-  // const [filteredSkills, setFilteredSkills] = useState<string[]>(skills);
-  // const [filteredLocations, setFilteredLocations] = useState<string[]>(locations);
-
   // handle search button click
   const handleSearch = async () => {
     const results = users.filter(
@@ -42,43 +37,7 @@ const FilterSkillOrLocation = ({
 
     setFilteredUsers(results);
   };
-  // const matchedSkill = skills.filter((skill) => skill.toLowerCase().includes(selectedSkill.toLowerCase()));
-  // const matchedLocation = locations.filter((location) => location.toLowerCase().includes(selectedLocation));
-
-  // setFilteredSkills(matchedSkill);
-  // setFilteredLocations(matchedLocation);
-
   return (
-  /*
-      <Container className="mt-5">
-        <Row className="mb-4 align-items-center">
-          <Col xs={5}>
-            <Form.Group controlId="formBasicSkills">
-              <Form.Control
-                type="text"
-                placeholder="Skill"
-                value={selectedSkill}
-                onChange={(e) => setSelectedSkill(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-          <Col xs={5}>
-            <Form.Group controlId="formBasicLocation">
-              <Form.Control
-                type="text"
-                placeholder="Location"
-                value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-          <Col xs={2}>
-            <Button variant="primary" className="w-100" onClick={handleSearch}>
-              Search
-            </Button>
-          </Col>
-        </Row>
-    */
 
     <Container className="mt-5">
       {/* Search Section */}
@@ -160,55 +119,6 @@ const FilterSkillOrLocation = ({
           </Table>
         </Col>
       </Row>
-      {/*
-      Skills Section
-      <Row className="mb-4">
-        <Col>
-          <h4>Skills</h4>
-          <Row className="g-2">
-        {filteredSkills.length > 0 ? (
-          filteredSkills.map((skill) => (
-            <Col key={skill} xs={6} md={4} lg={3}>
-          <Button
-            variant="outline-primary"
-            className="w-100"
-            onClick={() => setSelectedSkill(skill)}
-          >
-            {skill}
-          </Button>
-            </Col>
-          ))
-        ) : (
-          <p>No matching skills found</p>
-        )}
-          </Row>
-        </Col>
-      </Row>
-
-      Locations Section
-      <Row>
-        <Col>
-          <h4>Locations</h4>
-          <Row className="g-2">
-        {filteredLocations.length > 0 ? (
-          filteredLocations.map((location) => (
-            <Col key={location} xs={6} md={4} lg={3}>
-          <Button
-            variant="outline-primary"
-            className="w-100"
-            onClick={() => setSelectedLocation(location)}
-          >
-            {location}
-          </Button>
-            </Col>
-          ))
-        ) : (
-          <p>No matching location found</p>
-        )}
-          </Row>
-        </Col>
-      </Row>
-      */}
     </Container>
   );
 };
