@@ -36,6 +36,20 @@ async function main() {
       },
     });
   }
+  for (const student of config.defaultStudent) {
+    console.log(`  Creating student: ${student.email}`);
+    await prisma.student.upsert({
+      where: { email: student.email },
+      update: {},
+      create: {
+        email: student.email,
+        fullName: student.fullName,
+        location: student.location,
+        skills: student.skills,
+        image: student.image,
+      },
+    });
+  }
 }
 main()
   .then(() => prisma.$disconnect())

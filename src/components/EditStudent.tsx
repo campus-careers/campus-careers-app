@@ -65,7 +65,7 @@ const EditStudent = () => {
                   onChange={handleImageUpload}
                   style={{ display: 'none' }}
                 />
-              </Form.Label>
+                </Form.Label>
             </Form.Group>
           )}
         </Col>

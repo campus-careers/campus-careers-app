@@ -43,3 +43,12 @@ model Stuff {
   condition Condition @default(good)
   owner     String
 }
+
+model Student {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  fullName  String
+  location  String?
+  skills    String?
+  image     String?
+}
