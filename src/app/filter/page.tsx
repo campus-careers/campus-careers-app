@@ -15,9 +15,20 @@ const FilterSkillPage = async () => {
     } | null,
   );
   // const filterListItem = await prisma.filter.findMany({});
-  const users = await prisma.user.findMany({});
   const allSkills = Object.values(Skill) as Skill[];
   const allLocations = Object.values(Locations) as Locations[];
+
+  const adminList = await prisma.adminList.findMany({
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      skills: true,
+      location: true,
+      companies: true,
+      interviews: true,
+    },
+  });
   // console.log('Filter List Items:', filterListItem);
 
   return (
@@ -27,29 +38,11 @@ const FilterSkillPage = async () => {
           <Col>
             <h1>Browse by Skill or Location</h1>
             {/* Render FilterSkillOrLocation once and pass allSkills and allLocations */}
-            <FilterSkillOrLocation skills={allSkills} locations={allLocations} />
-          </Col>
-        </Row>
-        <br />
-        <Row>
-          <Col>
-            <h1>List Users Admin</h1>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+            <FilterSkillOrLocation
+              skills={allSkills}
+              locations={allLocations}
+              users={adminList}
+            />
           </Col>
         </Row>
       </Container>

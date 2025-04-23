@@ -43,8 +43,8 @@ async function main() {
   // Seed Filter Table
   const filters = [
     {
-      skills: ['JavaScript', 'Python'] as Skill[], // Ensure these match the Skill enum
-      locations: 'Remote' as Locations, // Ensure this matches the Locations enum
+      Skill: ['JavaScript', 'Python', 'Java', 'Design', 'CPlusPlus', 'Ruby', 'CSharp'],
+      locations: 'Remote' as Locations,
     },
   ];
 
@@ -53,7 +53,7 @@ async function main() {
       console.log(`  Adding Filter Item: ${JSON.stringify(filter)}`);
       await prisma.filter.create({
         data: {
-          skills: filter.skills[0], // Use the first skill from the array
+          skills: filter.Skill as Skill[],
           locations: filter.locations,
         },
         // skills: filter.skills[0] as Skill, // Assign the first skill or adjust schema to accept arrays

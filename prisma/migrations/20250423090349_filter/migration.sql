@@ -20,8 +20,8 @@ ADD COLUMN     "location" "Locations" NOT NULL;
 -- CreateTable
 CREATE TABLE "Filter" (
     "id" SERIAL NOT NULL,
-    "skills" "Skill" NOT NULL,
-    "locations" "Locations" NOT NULL,
+    "skills" "Skill"[],
+    "locations" "Locations" NOT NULL DEFAULT 'Honolulu',
 
     CONSTRAINT "Filter_pkey" PRIMARY KEY ("id")
 );
