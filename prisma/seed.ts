@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Condition } from '@prisma/client';
+import { PrismaClient, Role, Condition, Company } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
@@ -33,6 +33,20 @@ async function main() {
         quantity: data.quantity,
         owner: data.owner,
         condition,
+      },
+    });
+  }
+  for (const company of config.company) {
+    console.log(`  Creating company: ${company.name}`);
+    await prisma.company.upsert({
+      where: { name: company.name },
+      update: {},
+      create: {
+        name: company.name,
+        overview: company.overview,
+        location: company.location,
+        jobs: company.jobs,
+        contacts: company.contacts,
       },
     });
   }
