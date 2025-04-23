@@ -46,9 +46,10 @@ model Stuff {
 
 model Company {
   id        	Int       @id @default(autoincrement())
-  name      	String    @unique
+  name      	String    
   overview    String
   location    String
   jobs		    String
   contacts	  String
+  owner       String    @default("")
 }

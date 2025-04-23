@@ -1,32 +1,26 @@
 'use client';
 
 import { Card } from 'react-bootstrap';
-import Link from 'next/link';
 import { Company } from '@prisma/client';
 
-const CompanyCard = ({ company }: { company: Company }) => (
-  <Card className="h-100 w-75">
-    <Card.Header>
-      <Card.Title>
-        {company.name}
-      </Card.Title>
-      <Card.Subtitle>
+const CompanyCard: React.FC<{ company: Company }> = ({ company }) => (
+  <Card className="mb-4" style={{ maxWidth: '350px' }}>
+    <Card.Body>
+      <Card.Title>{company.name}</Card.Title>
+      <Card.Subtitle className="mb-2 text-muted">
         {company.location}
       </Card.Subtitle>
-    </Card.Header>
-    <Card.Body>
-      <Card.Text>
+
+      <Card.Text className="mb-3">
         {company.overview}
-        <p />
-        <p>
-          <b>Searching for:</b>
-          {' '}
-          {company.jobs}
-        </p>
-        <p>
-          <b>If interested, contact: </b>
-          {company.contacts}
-        </p>
+      </Card.Text>
+
+      <Card.Text className="mb-2">
+        <strong>Searching for:</strong> {company.jobs}
+      </Card.Text>
+
+      <Card.Text>
+        <strong>If interested, contact:</strong> {company.contacts}
       </Card.Text>
     </Card.Body>
   </Card>

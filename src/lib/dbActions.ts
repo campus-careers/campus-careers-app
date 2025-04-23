@@ -1,6 +1,6 @@
 'use server';
 
-import { Stuff, Condition } from '@prisma/client';
+import { Stuff, Condition, Company } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -91,4 +91,26 @@ export async function changePassword(credentials: { email: string; password: str
       password,
     },
   });
+}
+
+export async function addCompany(company: {
+  name: string;
+  location: string;
+  overview: string;
+  jobs: string;
+  contacts: string;
+  owner: string;
+}) {
+  await prisma.company.create({
+    data: {
+      name: company.name,
+      location: company.location,
+      overview: company.overview,
+      jobs: company.jobs,
+      contacts: company.contacts,
+      owner: company.owner,
+    },
+  });
+
+  redirect('/companies');
 }

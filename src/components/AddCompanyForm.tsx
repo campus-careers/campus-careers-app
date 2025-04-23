@@ -10,13 +10,15 @@ import { addCompany } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddCompanySchema } from '@/lib/validationSchemas';
 
-type CompanyFormValues = {
+const onSubmit = async (data: {
   name: string;
-  address: string;
+  location: string;
+  overview: string;
+  jobs: string;
+  contacts: string;
   owner: string;
-};
-
-const onSubmit = async (data: CompanyFormValues) => {
+}) => {
+  // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
   await addCompany(data);
   swal('Success', 'Your company has been added', 'success', {
     timer: 2000,
@@ -32,9 +34,8 @@ const AddCompanyForm: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CompanyFormValues>({
+  } = useForm({
     resolver: yupResolver(AddCompanySchema),
-    defaultValues: { owner: currentUser },
   });
 
   if (status === 'loading') {
@@ -48,14 +49,14 @@ const AddCompanyForm: React.FC = () => {
     <Container className="py-3">
       <Row className="justify-content-center">
         <Col xs={5}>
-          <div className="text-center mb-3">
+          <Col className="text-center">
             <h2>Add Company</h2>
-          </div>
+          </Col>
           <Card>
             <Card.Body>
               <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Company Name</Form.Label>
+                <Form.Group>
+                  <Form.Label>Name</Form.Label>
                   <input
                     type="text"
                     {...register('name')}
@@ -64,32 +65,61 @@ const AddCompanyForm: React.FC = () => {
                   <div className="invalid-feedback">{errors.name?.message}</div>
                 </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Address</Form.Label>
+                <Form.Group>
+                  <Form.Label>Location</Form.Label>
                   <input
                     type="text"
-                    {...register('address')}
-                    className={`form-control ${errors.address ? 'is-invalid' : ''}`}
+                    {...register('location')}
+                    className={`form-control ${errors.location ? 'is-invalid' : ''}`}
                   />
-                  <div className="invalid-feedback">{errors.address?.message}</div>
+                  <div className="invalid-feedback">{errors.location?.message}</div>
                 </Form.Group>
 
-                {/* hidden owner field */}
-                <input type="hidden" {...register('owner')} />
+                <Form.Group>
+                  <Form.Label>Overview</Form.Label>
+                  <textarea
+                    {...register('overview')}
+                    className={`form-control ${errors.overview ? 'is-invalid' : ''}`}
+                    rows={3}
+                  />
+                  <div className="invalid-feedback">{errors.overview?.message}</div>
+                </Form.Group>
 
-                <Form.Group className="mt-4">
-                  <Row>
+                <Form.Group>
+                  <Form.Label>Jobs (comma-separated)</Form.Label>
+                  <input
+                    type="text"
+                    {...register('jobs')}
+                    className={`form-control ${errors.jobs ? 'is-invalid' : ''}`}
+                  />
+                  <div className="invalid-feedback">{errors.jobs?.message}</div>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Contacts (email, phone)</Form.Label>
+                  <input
+                    type="text"
+                    {...register('contacts')}
+                    className={`form-control ${errors.contacts ? 'is-invalid' : ''}`}
+                  />
+                  <div className="invalid-feedback">{errors.contacts?.message}</div>
+                </Form.Group>
+
+                <input type="hidden" {...register('owner')} value={currentUser} />
+
+                <Form.Group className="form-group">
+                  <Row className="pt-3">
                     <Col>
-                      <Button type="submit" variant="primary" className="w-100">
+                      <Button type="submit" variant="primary">
                         Submit
                       </Button>
                     </Col>
                     <Col>
                       <Button
                         type="button"
-                        variant="warning"
-                        className="w-100"
                         onClick={() => reset()}
+                        variant="warning"
+                        className="float-right"
                       >
                         Reset
                       </Button>
