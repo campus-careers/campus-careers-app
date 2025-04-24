@@ -1,11 +1,113 @@
 {
   "defaultAccounts": [
-    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN" },
-    { "email": "john@foo.com", "password": "changeme" }
+    {
+      "name":"Alan",
+      "email": "admin@foo.com",
+      "password": "changeme",
+      "role": "ADMIN",
+      "location": "NewYork",
+      "skills": ["Java", "CSharp"]
+    },
+    {
+      "name": "John Doe",
+      "email": "john@foo.com",
+      "password": "changeme",
+      "role": "USER",
+      "location": "Remote",
+      "skills": ["JavaScript", "Python"]
+    }
+  ],
+  "defaultCompanies": [
+    {
+      "name": "Company A",
+      "location": "Remote",
+      "skills": ["JavaScript", "Python"],
+      "image": "/images/company-a.png",
+      "interviews": [],
+      "interests": []
+    },
+    {
+      "name": "Company B",
+      "location": "NewYork",
+      "skills": ["Java", "CSharp"],
+      "image": "/images/company-b.png",
+      "interviews": [],
+      "interests": []
+    }
   ],
 
   "defaultData": [
-    { "name": "Alan", "skills": ["JavaScript", "Python"], "interests": ["coding", "reading"], "location": "Remote", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" },
-    { "name": "Mason", "skills": ["JavaScript", "Ruby"], "interests": ["coding", "reading"], "location": "Honolulu", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" }
+    { 
+      "name": "Alan",
+      "skills": ["JavaScript", "Python"],
+      "interests": ["coding", "reading"],
+      "location": "Remote",
+      "companies" : ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
+    },
+    { 
+      "name": "Mason",
+      "skills": ["JavaScript", "Ruby"],
+      "interests": ["coding", "reading"],
+      "location": "Honolulu",
+      "companies" : ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
+    },
+    { 
+      "name": "Liam",
+      "skills": ["JavaScript", "Python"],
+      "interests": ["coding", "reading"],
+      "location": "Remote",
+      "companies" : ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
+    },
+    { 
+      "name": "Noah",
+      "skills": ["JavaScript", "Python"],
+      "interests": ["coding", "reading"],
+      "location": "Remote",
+      "companies" : ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
+    },
+    { 
+      "name": "Oliver",
+      "skills": ["JavaScript", "CSharp"],
+      "interests": ["coding", "reading"],
+      "location": "Tokyo",
+      "companies" : ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
+    },
+    { 
+      "name": "Elijah",
+      "skills": ["JavaScript", "Python"],
+      "interests": ["coding", "reading"],
+      "location": "Remote",
+      "companies" : ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
+    },
+    { 
+      "name": "James",
+      "skills": ["JavaScript", "Python"],
+      "interests": ["coding", "reading"],
+      "location": "NewYork",
+      "companies" : ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
+    },
+    { 
+      "name": "William",
+      "skills": ["JavaScript", "Python"],
+      "interests": ["coding", "reading"],
+      "location": "SanFrancisco",
+      "companies" : ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "/images/company-a.png"
+    }
   ]
 }

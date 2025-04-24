@@ -14,6 +14,9 @@ async function main() {
       where: { email: account.email },
       update: {},
       create: {
+        name: account.name,
+        location: account.location as Locations,
+        skills: account.skills as Skill[],
         email: account.email,
         password,
         role,
@@ -31,9 +34,27 @@ async function main() {
           skills: data.skills as Skill[],
           location: data.location as Locations,
           companies: data.companies,
-          interviews: data.interviews,
+          interviews: data.interviews || [],
           image: data.image,
-          interests: data.interests,
+          interests: data.interests || [],
+        },
+      });
+    }),
+  );
+
+  await Promise.all(
+    config.defaultCompanies.map(async (company, index) => {
+      console.log(`  Adding Company: ${JSON.stringify(company)}`);
+      await prisma.adminList.upsert({
+        where: { id: index + 1 },
+        update: {},
+        create: {
+          name: company.name,
+          skills: company.skills as Skill[], // Ensure skills match the Skill enum
+          location: company.location as Locations, // Ensure location matches the Locations enum
+          interviews: company.interviews || [],
+          image: company.image || '',
+          interests: company.interests || [],
         },
       });
     }),
