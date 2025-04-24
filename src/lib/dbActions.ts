@@ -42,7 +42,7 @@ export async function editCompany(company: Company) {
       location: company.location,
       jobs: company.jobs,
       contacts: company.contacts,
-      // idealSkill: company.idealSkill,
+      idealSkill: company.idealSkill,
     },
   });
   // After updating, redirect to the list page
