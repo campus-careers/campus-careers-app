@@ -7,7 +7,7 @@ export const AddCompanySchema = Yup.object({
   location: Yup.string().required(),
   jobs: Yup.string().required(),
   contacts: Yup.string().required(),
-  idealSkill: Yup.string().required(),
+  idealSkill: Yup.array().required(),
 });
 
 export const EditCompanySchema = Yup.object({
@@ -18,5 +18,5 @@ export const EditCompanySchema = Yup.object({
   location: Yup.string().required(),
   jobs: Yup.string().required(),
   contacts: Yup.string().required(),
-  idealSkill: Yup.string().required(),
+  idealSkill: Yup.array().required(),
 });

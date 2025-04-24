@@ -1,6 +1,6 @@
 'use server';
 
-import { Company, Skills } from '@prisma/client';
+import { Company } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -10,7 +10,7 @@ import { prisma } from './prisma';
  * @param company, an object with the following properties: name, overview, location, jobs, contacts.
  */
 // eslint-disable-next-line max-len
-export async function addCompany(company: { name: string; salary: number; overview: string; location: string; jobs: string; contacts: string; idealSkill: Skills[] }) {
+export async function addCompany(company: { name: string; salary: number; overview: string; location: string; jobs: string; contacts: string; idealSkill: string[] }) {
   // console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
   await prisma.company.create({
     data: {

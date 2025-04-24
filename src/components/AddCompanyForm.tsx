@@ -8,13 +8,12 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import swal from 'sweetalert';
 import { redirect } from 'next/navigation';
-import { Skills } from '@prisma/client';
 import { addCompany } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddCompanySchema } from '@/lib/validationSchemas';
 
 // eslint-disable-next-line max-len
-const onSubmit = async (data: { name: string; salary: number; overview: string; location: string; jobs: string; contacts: string; idealSkill: Skills[] }) => {
+const onSubmit = async (data: { name: string; salary: number; overview: string; location: string; jobs: string; contacts: string; idealSkill: string[] }) => {
   // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
   await addCompany(data);
   swal('Success', 'Your item has been added', 'success', {

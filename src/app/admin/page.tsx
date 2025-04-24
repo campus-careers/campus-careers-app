@@ -35,7 +35,7 @@ const AdminPage = async () => {
             <Row xs={1} md={2} lg={3} className="g-4">
               <h2>Students</h2>
               {students.map((student) => (
-                <Col key={student.firstName + student.lastName}>
+                <Col key={student.name}>
                   <Student student={student} />
                 </Col>
               ))}

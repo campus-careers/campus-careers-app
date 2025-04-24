@@ -42,7 +42,7 @@ async function main() {
     // console.log(`  Adding stuff: ${JSON.stringify(data)}`);
     // eslint-disable-next-line no-await-in-loop
     await prisma.student.upsert({
-      where: { id: config.student.indexOf(data) + 1 },
+      where: { id: config.defaultData.indexOf(data) + 1 },
       update: {},
       create: {
         name: data.name,
