@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from 'react-bootstrap';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { Company } from '@prisma/client';
 
 const CompanyCard = ({ company }: { company: Company }) => (
@@ -11,9 +11,16 @@ const CompanyCard = ({ company }: { company: Company }) => (
         {company.name}
       </Card.Title>
       <Card.Subtitle>
-        {company.location}
-        <b>Skills</b>
-        {company.idealSkill}
+        <p>{company.location}</p>
+        <p>
+          <b>Skills: </b>
+          {company.idealSkill.map((skill) => (
+            <span>
+              {skill}
+              {', '}
+            </span>
+          ))}
+        </p>
       </Card.Subtitle>
     </Card.Header>
     <Card.Body>
