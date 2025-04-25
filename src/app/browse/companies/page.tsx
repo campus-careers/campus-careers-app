@@ -30,14 +30,12 @@ export async function getServerSideProps() {
         // Check if the job's skills overlap with the student's skills
         const skillMatch = job.skills.some((skill) =>
           student.skills.includes(skill));
-
         return locationMatch && skillMatch;
       })
       .map((job) => {
         // Calculate the number of matching skills for sorting
         const matchingSkills = job.skills.filter((skill) =>
           student.skills.includes(skill)).length;
-
         return { ...job, matchingSkills };
       })
       .sort((a, b) => b.matchingSkills - a.matchingSkills) // Sort by matching skills
