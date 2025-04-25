@@ -1,17 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+// Updated Prisma schema
 
 enum Role {
   USER
@@ -25,7 +12,7 @@ model User {
   role       Role       @default(USER)
   name       String?
   major      String?
-  skills     Skill[]
+  skills     SkillModel[]
   interests  String[]
   location   Locations  @default(Remote)
   portfolio  String?
@@ -57,6 +44,11 @@ enum Locations {
   Remote
 }
 
+model SkillModel {  // Renamed model
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}
+
 model Stuff {
   id        Int       @id @default(autoincrement())
   name      String
@@ -82,11 +74,6 @@ model Filter {
   locations Locations @default(Honolulu)
 }
 
-model SkillEntry {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-}
-
 model Location {
   id   Int    @id @default(autoincrement())
   name String @unique
@@ -105,4 +92,3 @@ model AdminList {
   id    Int    @id @default(autoincrement())
   email String @unique
 }
-
