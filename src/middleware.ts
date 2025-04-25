@@ -12,8 +12,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const baseUrl = request.nextUrl.origin;
+
   const profileCheck = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/check-profile`,
+    `${baseUrl}/api/user/check-profile`,
     {
       headers: {
         cookie: request.headers.get('cookie') || '',
