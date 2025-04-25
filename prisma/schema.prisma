@@ -46,51 +46,55 @@ enum Locations {
 // === MODELS ===
 
 model User {
-  id         Int         @id @default(autoincrement())
-  email      String      @unique
-  password   String
-  role       Role        @default(USER)
-  name       String?
-  major      String?
-  skills     Skill[]     // Using enum Skill[]
-  interests  String[]
-  location   Locations   @default(Remote)
-  portfolio  String?
+  id        Int         @id @default(autoincrement())
+  email     String      @unique
+  password  String
+  role      Role        @default(USER)
+  name      String
+  location  Locations
+  skills    Skill[]
+  companies Company[]
+  interests String[]
+  image     String      @default("default-image.jpg")
+  Interview Interview[]
 }
 
 model Stuff {
-  id        Int        @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
   quantity  Int
-  condition Condition  @default(good)
+  condition Condition @default(good)
   owner     String
 }
 
 model Company {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
+  id         Int       @id @default(autoincrement())
+  name       String
+  location   Locations
   salary     Int
   overview   String
-  location   String
   jobs       String
   contacts   String
-  idealSkill String[]
+  idealSkill String
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Filter {
-  id         Int        @id @default(autoincrement())
-  skills     Skill[]    // Using enum Skill[]
-  locations  Locations  @default(Honolulu)
+  id        Int       @id @default(autoincrement())
+  skills    Skill[] // Using enum Skill[]
+  locations Locations @default(Honolulu)
 }
 
 model SkillEntry {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
 }
 
 model Location {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
+  id   Int    @id @default(autoincrement())
+  name String @unique
 }
 
 model Student {
@@ -102,19 +106,26 @@ model Student {
   location   String
   companies  String[]
   interviews String[]
-  interests  String[]  // ✅ Add this line
+  interests  String[] // ✅ Add this line
 }
 
 model adminList {
-  id         Int        @id @default(autoincrement())
-  email      String     @unique
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
   name       String
   skills     Skill[]
   location   Locations
   interests  String[]
   image      String
   interviews String[]
-  companies  String[]  // Ensure the companies field is here
+  companies  String[] // Ensure the companies field is here
 }
 
-
+model Interview {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  company   String
+  notes     String?
+  student   User     @relation(fields: [studentId], references: [id])
+  studentId Int
+}
