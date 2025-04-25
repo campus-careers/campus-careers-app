@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 
 // === Server Actions ===
 
-async function addSkill(formData: FormData) {
+export async function addSkill(formData: FormData) {
   'use server';
 
   const name = formData.get('skill') as string;
@@ -17,20 +17,20 @@ async function addSkill(formData: FormData) {
   }
 }
 
-async function deleteSkill(id: number) {
+export async function deleteSkill(id: number) {
   'use server';
 
   await prisma.skill.delete({ where: { id } });
   revalidatePath('/admin');
 }
 
-function deleteSkillAction(id: number) {
+export async function deleteSkillAction(id: number) {
   'use server';
 
   return deleteSkill(id);
 }
 
-async function addLocation(formData: FormData) {
+export async function addLocation(formData: FormData) {
   'use server';
 
   const name = formData.get('location') as string;
@@ -40,14 +40,14 @@ async function addLocation(formData: FormData) {
   }
 }
 
-async function deleteLocation(id: number) {
+export async function deleteLocation(id: number) {
   'use server';
 
   await prisma.location.delete({ where: { id } });
   revalidatePath('/admin');
 }
 
-function deleteLocationAction(id: number) {
+export async function deleteLocationAction(id: number) {
   'use server';
 
   return deleteLocation(id);
@@ -126,7 +126,7 @@ const AdminPage = async () => {
               {skills.map((skill) => (
                 <li key={skill.id} className="list-group-item d-flex justify-content-between align-items-center">
                   {skill.name}
-                  <form action={deleteSkillAction.bind(null, skill.id)}>
+                  <form action={() => deleteSkillAction(skill.id)}>
                     <button type="submit" className="btn btn-sm btn-danger">Delete</button>
                   </form>
                 </li>
@@ -144,7 +144,7 @@ const AdminPage = async () => {
               {locations.map((loc) => (
                 <li key={loc.id} className="list-group-item d-flex justify-content-between align-items-center">
                   {loc.name}
-                  <form action={deleteLocationAction.bind(null, loc.id)}>
+                  <form action={() => deleteLocationAction(loc.id)}>
                     <button type="submit" className="btn btn-sm btn-danger">Delete</button>
                   </form>
                 </li>
