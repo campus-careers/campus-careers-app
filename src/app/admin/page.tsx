@@ -1,10 +1,10 @@
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
-import { adminProtectedPage } from '@/lib/page-protection';
+import { Student, User } from '@prisma/client';
 import authOptions from '@/lib/authOptions';
 import AdminDashboard from '@/components/AdminDashboard';
-import { User } from '@prisma/client';
+import { adminProtectedPage } from '@/lib/page-protection';
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
@@ -15,22 +15,28 @@ const AdminPage = async () => {
     } | null,
   );
 
-  // Use the Student model instead of adminList for dashboard data
-  const adminListItem = (await prisma.student.findMany({
+  // 1. Get admin emails from AdminList
+  const adminEmails = (await prisma.adminList.findMany({
+    select: { email: true },
+  })).map((admin) => admin.email);
+
+  // 2. Find matching Students
+  const adminListItem: Student[] = await prisma.student.findMany({
+    where: {
+      email: { in: adminEmails },
+    },
     select: {
       id: true,
       name: true,
+      email: true,
       image: true,
       skills: true,
-      interests: true,
       location: true,
       companies: true,
+      interests: true, // Add interests if needed!
       interviews: true,
     },
-  })).map(student => ({
-    ...student,
-    id: student.id.toString(), // convert id to string to match component props
-  }));
+  });
 
   const users: User[] = await prisma.user.findMany();
 
@@ -43,7 +49,11 @@ const AdminPage = async () => {
             <Row xs={1} md={2} lg={3} className="g-4">
               {adminListItem.map((item) => (
                 <Col key={item.id}>
-                  <AdminDashboard {...item} />
+                  <AdminDashboard {...{
+                    ...item,
+                    id: item.id.toString(), // ✅ convert id to string here
+                  }}
+                  />
                 </Col>
               ))}
             </Row>

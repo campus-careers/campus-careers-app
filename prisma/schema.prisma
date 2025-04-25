@@ -1,11 +1,16 @@
+// This is your Prisma schema file
+// Learn more at https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql" // or your actual DB
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// === ENUMS ===
 
 enum Role {
   USER
@@ -29,7 +34,6 @@ enum Skill {
   Design
 }
 
-
 enum Locations {
   Honolulu
   NewYork
@@ -39,30 +43,26 @@ enum Locations {
   Remote
 }
 
-model User {
-  id        Int          @id @default(autoincrement())
-  email     String       @unique
-  password  String
-  role      Role         @default(USER)
-  name      String?
-  major     String?
-  skills    SkillModel[] @relation("UserSkills") // Define the relation to SkillModel
-  interests String[]
-  location  Locations    @default(Remote)
-  portfolio String?
-}
+// === MODELS ===
 
-model SkillModel {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  users User[] @relation("UserSkills") // Add reverse relation to User model
+model User {
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  password   String
+  role       Role        @default(USER)
+  name       String?
+  major      String?
+  skills     Skill[]     // Using enum Skill[]
+  interests  String[]
+  location   Locations   @default(Remote)
+  portfolio  String?
 }
 
 model Stuff {
-  id        Int       @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   quantity  Int
-  condition Condition @default(good)
+  condition Condition  @default(good)
   owner     String
 }
 
@@ -78,23 +78,30 @@ model Company {
 }
 
 model Filter {
-  id        Int       @id @default(autoincrement())
-  skills    Skill[]
-  locations Locations @default(Honolulu)
+  id         Int        @id @default(autoincrement())
+  skills     Skill[]    // Using enum Skill[]
+  locations  Locations  @default(Honolulu)
+}
+
+model SkillEntry {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
 }
 
 model Location {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+  id    Int    @id @default(autoincrement())
+  name  String @unique
 }
 
 model Student {
-  id       Int      @id @default(autoincrement())
-  name     String
-  email    String   @unique
-  skills   String[]
-  image    String
-  location String
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  skills     String[]
+  image      String
+  location   String
+  companies  String[]
+  interviews String[]
 }
 
 model adminList {

@@ -15,26 +15,32 @@ const FilterSkillPage = async () => {
     } | null,
   );
 
+  // Get all skills and locations from enums
   const allSkills = Object.values(Skill) as Skill[];
   const allLocations = Object.values(Locations) as Locations[];
 
-  const studentList = (await prisma.student.findMany({
+  // 1. Fetch admin emails from AdminList
+  const adminEmails = (await prisma.adminList.findMany({
+    select: { email: true },
+  })).map((admin) => admin.email);
+
+  // 2. Fetch Students where their email matches AdminList emails
+  const adminList = (await prisma.student.findMany({
+    where: {
+      email: { in: adminEmails },
+    },
     select: {
       id: true,
       name: true,
       image: true,
       skills: true,
       location: true,
-      companies: true, // ✅ Include companies
-      interviews: true, // ✅ Include interviews
+      companies: true,
+      interviews: true,
     },
-  })).map(student => ({
+  })).map((student) => ({
     ...student,
-    id: student.id.toString(),
-    skills: student.skills.map(skill => skill.toString()),
-    location: student.location.toString(),
-    companies: student.companies ?? [],
-    interviews: student.interviews ?? [],
+    id: student.id.toString(), // Convert id to string
   }));
 
   return (
@@ -43,10 +49,11 @@ const FilterSkillPage = async () => {
         <Row>
           <Col>
             <h1>Browse by Skill or Location</h1>
+            {/* ✅ Correct: Pass adminList here */}
             <FilterSkillOrLocation
               skills={allSkills}
               locations={allLocations}
-              users={studentList}
+              users={adminList}
             />
           </Col>
         </Row>
