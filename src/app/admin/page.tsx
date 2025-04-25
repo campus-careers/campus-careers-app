@@ -1,20 +1,21 @@
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
-import { AdminList, User } from '@prisma/client'; // ✅ fixed capitalization
+import { AdminList, User } from '@prisma/client'; // ✅ correct
 import authOptions from '@/lib/authOptions';
 import AdminDashboard from '@/components/AdminDashboard';
 import { adminProtectedPage } from '@/lib/page-protection';
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
+
   adminProtectedPage(
     session as {
       user: { email: string; id: string; randomKey: string };
     } | null,
   );
 
-  const adminListItem: AdminList[] = await prisma.adminList.findMany(); // ✅ fixed
+  const adminListItem: AdminList[] = await prisma.adminList.findMany(); // ✅ correct
   const users: User[] = await prisma.user.findMany();
 
   return (
