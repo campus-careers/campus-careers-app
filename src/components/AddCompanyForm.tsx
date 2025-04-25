@@ -20,25 +20,8 @@ type FormValues = {
   idealSkill: string; // User inputs comma-separated string
 };
 
-const onSubmit = async (data: FormValues) => {
-  const companyData = {
-    name: data.name,
-    location: data.location,
-    salary: Number(data.salary),
-    overview: data.overview,
-    jobs: data.jobs,
-    contacts: data.contacts,
-    idealSkill: data.idealSkill.split(',').map((s) => s.trim()),
-  };
-
-  await addCompany(companyData);
-  swal('Success', 'Your company has been added', 'success', {
-    timer: 2000,
-  });
-};
-
 const AddCompanyForm: React.FC = () => {
-  const { status } = useSession(); // session removed since it's unused
+  const { data: session, status } = useSession(); // ✅ fetch both session and status
 
   const {
     register,
@@ -56,6 +39,29 @@ const AddCompanyForm: React.FC = () => {
   if (status === 'unauthenticated') {
     redirect('/auth/signin');
   }
+
+  const onSubmit = async (data: FormValues) => {
+    if (!session?.user?.id) {
+      console.error('User ID not found');
+      return;
+    }
+
+    const companyData = {
+      name: data.name,
+      salary: Number(data.salary),
+      overview: data.overview,
+      location: data.location,
+      jobs: data.jobs,
+      contacts: data.contacts,
+      idealSkill: data.idealSkill.split(',').map((s) => s.trim()),
+      userId: Number(session.user.id), // ✅ fix here
+    };
+
+    await addCompany(companyData);
+    swal('Success', 'Your company has been added', 'success', {
+      timer: 2000,
+    });
+  };
 
   return (
     <Container className="py-3">
