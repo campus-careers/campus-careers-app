@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
+import { Skill, Locations } from '@prisma/client';
 
 export const POST = async (req: Request) => {
   const session = await getServerSession(authOptions);
@@ -34,9 +35,9 @@ export const POST = async (req: Request) => {
     data: {
       name,
       major,
-      skills: skills.split(',').map((s) => s.trim()),
+      skills: skills.split(',').map((s) => s.trim() as Skill),
       interests: interests.split(',').map((i) => i.trim()),
-      location,
+      location: location as Locations,
       portfolio,
     },
   });
