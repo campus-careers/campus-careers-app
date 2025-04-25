@@ -53,3 +53,12 @@ model Location {
   id   Int    @id @default(autoincrement())
   name String @unique
 }
+
+model Company {
+  id        Int    @id @default(autoincrement())
+  name      String @unique
+  overview  String
+  location  String
+  jobs      String
+  contacts  String
+}
