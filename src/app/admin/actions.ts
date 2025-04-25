@@ -3,21 +3,21 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 
-export async function addSkill(formData: FormData) {
-  const name = formData.get('skill') as string;
+export async function addskillEntry(formData: FormData) {
+  const name = formData.get('skillEntry') as string;
   if (name) {
-    await prisma.skill.create({ data: { name } });
+    await prisma.skillEntry.create({ data: { name } });
     revalidatePath('/admin');
   }
 }
 
-export async function deleteSkill(id: number) {
-  await prisma.skill.delete({ where: { id } });
+export async function deleteskillEntry(id: number) {
+  await prisma.skillEntry.delete({ where: { id } });
   revalidatePath('/admin');
 }
 
-export async function deleteSkillAction(id: number) {
-  return deleteSkill(id);
+export async function deleteskillEntryAction(id: number) {
+  return deleteskillEntry(id);
 }
 
 export async function addLocation(formData: FormData) {

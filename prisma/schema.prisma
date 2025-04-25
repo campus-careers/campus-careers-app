@@ -77,3 +77,13 @@ model Filter {
   skills Skill[]
   locations Locations @default(Honolulu)
 }
+
+model SkillEntry {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}
+
+model Location {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}
