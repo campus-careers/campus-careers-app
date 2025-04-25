@@ -18,6 +18,15 @@ enum Role {
   ADMIN
 }
 
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     Role   @default(USER)
+  skills   Skill[]
+  location Locations @default(Remote)
+}
+
 enum Condition {
   excellent
   good
@@ -25,17 +34,23 @@ enum Condition {
   poor
 }
 
-model User {
-  id         Int      @id @default(autoincrement())
-  email      String   @unique
-  password   String
-  role       Role     @default(USER)
-  name       String?
-  major      String?
-  skills     String[] // PostgreSQL `text[]`
-  interests  String[] // PostgreSQL `text[]`
-  location   String?
-  portfolio  String?
+enum Skill {
+  JavaScript
+  Python
+  Java
+  CSharp
+  Ruby
+  CPlusPlus
+  Design
+}
+
+enum Locations {
+  Honolulu
+  NewYork
+  SanFrancisco
+  London
+  Tokyo
+  Remote
 }
 
 model Stuff {
@@ -46,35 +61,19 @@ model Stuff {
   owner     String
 }
 
-model Company {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
-  salary     Int      @default(50000)
-  overview   String
-  location   String
-  jobs       String
-  contacts   String
-  idealSkill String[] @default(["python","c"])
-}
-
-model Student {
-  id         Int       @id @default(autoincrement())
-  name       String
-  email      String    @unique
-  interests  String[]
-  companies  String[]
+model adminList {
+  id        Int @id @default(autoincrement())
+  name String
+  image String
+  skills Skill[]
+  interests String[]
+  location Locations
+  companies String[]
   interviews String[]
-  location   String
-  skills     String[] @default(["python","c"]) 
-  image      String
 }
 
-model Skill {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-}
-
-model Location {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+model Filter {
+  id Int @id @default(autoincrement())
+  skills Skill[]
+  locations Locations @default(Honolulu)
 }

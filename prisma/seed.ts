@@ -4,49 +4,17 @@ import * as config from '../config/settings.development.json';
 
 const prisma = new PrismaClient();
 
-// ===== Type Definitions for JSON Data =====
-type Account = {
-  email: string;
-  password: string;
-  role?: string;
-};
-
-type CompanyData = {
-  name: string;
-  salary: number;
-  overview: string;
-  location: string;
-  contacts: string;
-  jobs: string;
-  idealSkill: string[];
-};
-
-type StudentData = {
-  name: string;
-  email: string;
-  skills: string[];
-  interests: string[];
-  location: string;
-  companies: string[];
-  interviews: string[];
-  image: string;
-};
-
 async function main() {
   console.log('🔧 Seeding the database...');
   const password = await hash('changeme', 10);
 
   // Seed users
   await Promise.all(
-    (config.defaultAccounts as Account[]).map((account) => {
-      const role: Role = (account.role as Role) || Role.USER;
-      console.log(`  ↪️ Creating user: ${account.email} with role: ${role}`);
-      return prisma.user.upsert({
+    config.defaultAccounts.map(async (account) => {
+      const role = (account.role as Role) || Role.USER;
+      await prisma.user.upsert({
         where: { email: account.email },
-        update: {
-          password,
-          role,
-        },
+        update: {},
         create: {
           email: account.email,
           password,
@@ -56,46 +24,49 @@ async function main() {
     }),
   );
 
-  // Seed companies (from "defaultStudent" in your JSON)
+  // Seed students (requires you to add `email` field to defaultData)
   await Promise.all(
-    (config.defaultStudent as CompanyData[]).map((data) => prisma.company.upsert({
-      where: { name: data.name },
-      update: {},
-      create: {
-        name: data.name,
-        salary: data.salary,
-        overview: data.overview,
-        location: data.location,
-        contacts: data.contacts,
-        jobs: data.jobs,
-        idealSkill: data.idealSkill,
-      },
-    })),
+    config.defaultData.map(async (data, i) => {
+      const email = `student${i + 1}@example.com`; // 👈 generate dummy email if not present
+      await prisma.student.create({
+        data: {
+          name: data.name,
+          email, // required by schema
+          skills: data.skills,
+          interests: data.interests,
+          location: data.location,
+          companies: data.companies,
+          interviews: data.interviews,
+          image: data.image,
+        },
+      });
+    }),
   );
 
-  // Seed students (with email required)
+  // Seed companies (from defaultStudent list)
   await Promise.all(
-    (config.defaultData as StudentData[]).map((data) => prisma.student.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        interests: data.interests,
-        companies: data.companies,
-        interviews: data.interviews,
-        location: data.location,
-        skills: data.skills,
-        image: data.image,
-      },
-    })),
+    config.defaultStudent.map(async (company) => {
+      await prisma.company.upsert({
+        where: { name: company.name },
+        update: {},
+        create: {
+          name: company.name,
+          salary: company.salary,
+          overview: company.overview,
+          location: company.location,
+          jobs: company.jobs,
+          contacts: company.contacts,
+          idealSkill: company.idealSkill,
+        },
+      });
+    }),
   );
 
   console.log('✅ Seeding complete!');
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
+  .then(() => prisma.$disconnect())
   .catch(async (e) => {
     console.error('❌ Seeding failed:', e);
     await prisma.$disconnect();
