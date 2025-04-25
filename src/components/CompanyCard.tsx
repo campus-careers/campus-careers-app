@@ -1,7 +1,6 @@
 'use client';
 
 import { Card } from 'react-bootstrap';
-import Link from 'next/link';
 import { Company } from '@prisma/client';
 
 const CompanyCard = ({ company }: { company: Company }) => (
