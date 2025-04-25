@@ -29,15 +29,15 @@ async function main() {
           companies: {
             create: (account.companies || []).map((companyName: string) => ({
               name: companyName,
-              location: Locations.Honolulu, // ✅ Must be a valid enum value
+              location: Locations.Honolulu,
               salary: 0,
               overview: '',
               jobs: '',
               contacts: '',
-              idealSkill: '',
+              idealSkill: [], // ✅ Correct: must be array, not string
             })),
           },
-          // interviews: [] <-- leave out for now unless you have an Interview model
+          // interviews: [] <-- leave out for now unless you have Interview seeded
         },
       });
     }),
