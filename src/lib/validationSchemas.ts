@@ -22,7 +22,10 @@ export const EditCompanySchema = Yup.object({
   location: Yup.string().required('Location is required'),
   jobs: Yup.string().required('Jobs list is required'),
   contacts: Yup.string().required('Contact info is required'),
-  idealSkill: Yup.array().of(Yup.string()).required('Ideal skills are required'),
+  idealSkill: Yup.array()
+    .of(Yup.string().required('Each skill must be a string'))
+    .required('Ideal skills are required')
+    .min(1, 'You must provide at least one skill'),
 });
 
 // Used for editing student data
