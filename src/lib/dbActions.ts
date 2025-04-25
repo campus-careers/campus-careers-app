@@ -80,7 +80,7 @@ export async function createUser(credentials: { email: string; password: string 
 
 /**
  * Changes the password of an existing user in the database.
- * @param credentials, an object with the following properties: email, password.
+ * @param credentials, an object with the following properties: email,  password.
  */
 export async function changePassword(credentials: { email: string; password: string }) {
   // console.log(`changePassword data: ${JSON.stringify(credentials, null, 2)}`);
