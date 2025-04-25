@@ -92,17 +92,6 @@ model Location {
   name String @unique
 }
 
-model Company {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
-  salary     Int
-  overview   String
-  location   String
-  jobs       String
-  contacts   String
-  idealSkill String[]
-}
-
 model Student {
   id         Int       @id @default(autoincrement())
   name       String
