@@ -12,6 +12,7 @@ type SignUpForm = {
   email: string;
   password: string;
   confirmPassword: string;
+  location: string; // Add location here
 };
 
 const SignUp = () => {
@@ -25,6 +26,7 @@ const SignUp = () => {
     confirmPassword: Yup.string()
       .required('Confirm Password is required')
       .oneOf([Yup.ref('password'), ''], 'Confirm Password does not match'),
+    location: Yup.string().required('Location is required'), // Validate location
   });
 
   const {
@@ -37,7 +39,7 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data: SignUpForm) => {
-    await createUser(data);
+    await createUser(data); // Pass the location field along with other data
     await signIn('credentials', { callbackUrl: '/add', ...data });
   };
 
@@ -88,6 +90,16 @@ const SignUp = () => {
                       className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
                     />
                     <div className="invalid-feedback">{errors.confirmPassword?.message}</div>
+                  </Form.Group>
+
+                  <Form.Group className="form-group">
+                    <Form.Label>Location</Form.Label>
+                    <input
+                      type="text"
+                      {...register('location')}
+                      className={`form-control ${errors.location ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.location?.message}</div>
                   </Form.Group>
 
                   <Form.Group className="form-group py-3">
