@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 import AdminDashboard from '@/components/AdminDashboard';
-import { adminList, User } from '@prisma/client'; // ✅ lowercase match
+import { User } from '@prisma/client';
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
@@ -15,7 +15,23 @@ const AdminPage = async () => {
     } | null,
   );
 
-  const adminListItem: adminList[] = await prisma.adminList.findMany();
+  // Use the Student model instead of adminList for dashboard data
+  const adminListItem = (await prisma.student.findMany({
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      skills: true,
+      interests: true,
+      location: true,
+      companies: true,
+      interviews: true,
+    },
+  })).map(student => ({
+    ...student,
+    id: student.id.toString(), // convert id to string to match component props
+  }));
+
   const users: User[] = await prisma.user.findMany();
 
   return (
@@ -25,7 +41,7 @@ const AdminPage = async () => {
           <Col>
             <h1>Admin Portal</h1>
             <Row xs={1} md={2} lg={3} className="g-4">
-              {adminListItem.map((item: adminList) => (
+              {adminListItem.map((item) => (
                 <Col key={item.id}>
                   <AdminDashboard {...item} />
                 </Col>
