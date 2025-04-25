@@ -1,49 +1,32 @@
 'use client';
 
+/* eslint-disable react/prop-types */
+
 import { Card } from 'react-bootstrap';
-// import Link from 'next/link';
 import { Company } from '@prisma/client';
 
-const CompanyCard = ({ company }: { company: Company }) => (
-  <Card className="h-100 w-75">
-    <Card.Header>
-      <Card.Title>
-        {company.name}
-      </Card.Title>
-      <Card.Subtitle>
-        <p>{company.location}</p>
-        <p>
-          <b>Recommended Skills: </b>
-          {company.idealSkill.map((skill) => (
-            <span>
-              {skill}
-              {', '}
-            </span>
-          ))}
-        </p>
-      </Card.Subtitle>
-    </Card.Header>
+const CompanyCard: React.FC<{ company: Company }> = ({ company }) => (
+  <Card className="mb-4" style={{ maxWidth: '350px' }}>
     <Card.Body>
+      <Card.Title>{company.name}</Card.Title>
+      <Card.Subtitle className="mb-2 text-muted">
+        {company.location}
+      </Card.Subtitle>
+
+      <Card.Text className="mb-3">
+        {company.overview}
+      </Card.Text>
+
+      <Card.Text className="mb-2">
+        <strong>Searching for:</strong>
+        <br />
+        {company.jobs}
+      </Card.Text>
+
       <Card.Text>
-        <p>{company.overview}</p>
-        <p>
-          <b>Salary Range: </b>
-          $
-          {company.salary / 1000}
-          k
-          -
-          $
-          {(company.salary / 1000) + 20}
-          k
-        </p>
-        <p>
-          <b>Searching for: </b>
-          {company.jobs}
-        </p>
-        <p>
-          <b>If interested, contact: </b>
-          {company.contacts}
-        </p>
+        <strong>If interested, contact:</strong>
+        <br />
+        {company.contacts}
       </Card.Text>
     </Card.Body>
   </Card>

@@ -1,6 +1,6 @@
 'use server';
 
-import { Company, Student } from '@prisma/client';
+import { Company } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -75,7 +75,6 @@ export async function createUser(credentials: { email: string; password: string 
 
 /**
  * Changes the password of an existing user in the database.
- * @param credentials, an object with the following properties:  email, password.
  */
 export async function changePassword(credentials: { email: string; password: string }) {
   const password = await hash(credentials.password, 10);
@@ -85,21 +84,4 @@ export async function changePassword(credentials: { email: string; password: str
       password,
     },
   });
-}
-
-/**
- * Edits an existing student in the database.
- */
-export async function editStudent(student: Student) {
-  await prisma.student.update({
-    where: { id: student.id },
-    data: {
-      name: student.name, // ✅ match schema field
-      location: student.location,
-      skills: student.skills,
-      image: student.image,
-      email: student.email,
-    },
-  });
-  redirect('/student/home');
 }

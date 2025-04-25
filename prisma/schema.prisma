@@ -65,15 +65,15 @@ model Stuff {
   owner     String
 }
 
-model adminList {
-  id        Int @id @default(autoincrement())
-  name String
-  image String
-  skills Skill[]
-  interests String[]
-  location Locations
-  companies String[]
-  interviews String[]
+model Company {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  salary     Int
+  overview   String
+  location   String
+  jobs       String
+  contacts   String
+  idealSkill String[]
 }
 
 model Filter {

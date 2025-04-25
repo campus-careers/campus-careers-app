@@ -28,8 +28,11 @@ const NavBar: React.FC = () => {
                   <Nav.Link id="list-stuff-nav" href="/student" key="list" active={pathName === '/list'}>
                     Student Home
                   </Nav.Link>,
-                  <Nav.Link id="list-stuff-nav" href="/filter" key="list" active={pathName === '/filter'}>
-                    Filter by Skills or Location
+                  <Nav.Link id="list-stuff-nav" href="/add" key="list" active={pathName === '/list'}>
+                    Add Company
+                  </Nav.Link>,
+                  <Nav.Link id="list-stuff-nav" href="/company" key="list" active={pathName === '/list'}>
+                    List Company
                   </Nav.Link>,
                 ]
               : ''}
