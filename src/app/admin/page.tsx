@@ -1,72 +1,44 @@
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
+import CompanyAdmin from '@/components/CompanyAdmin';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
-import {
-  addSkill,
-  deleteSkillAction,
-  addLocation,
-  deleteLocationAction,
-} from './actions';
+import { Company, Skill, Location } from '@prisma/client';
+import { addSkill, deleteSkillAction, addLocation, deleteLocationAction } from './actions'; // ✅ import server actions
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
-  adminProtectedPage(session as { user: { email: string; id: string; randomKey: string } } | null);
+  adminProtectedPage(
+    session as {
+      user: { email: string; id: string; randomKey: string };
+    } | null,
+  );
 
-  const stuff = await prisma.stuff.findMany({});
-  const users = await prisma.user.findMany({});
-  const skills = await prisma.skill.findMany();
-  const locations = await prisma.location.findMany();
+  const companies: Company[] = await prisma.company.findMany();
+  const skills: Skill[] = await prisma.skill.findMany(); // ✅ fetch skills
+  const locations: Location[] = await prisma.location.findMany(); // ✅ fetch locations
 
   return (
     <main>
       <Container id="admin" fluid className="py-4">
         <Row>
           <Col>
-            <h1>Stuff (Admin View)</h1>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Quantity</th>
-                  <th>Condition</th>
-                  <th>Owner</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stuff.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.condition}</td>
-                    <td>{item.owner}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
+            <h1>Admin Dashboard</h1>
 
-        <Row className="mt-4">
-          <Col>
-            <h1>User List</h1>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+            <Row xs={1} md={2} lg={3} className="g-4">
+              <h2>Companies</h2>
+              {companies.map((company) => (
+                <Col key={company.name}>
+                  <CompanyAdmin company={company} />
+                </Col>
+              ))}
+            </Row>
+
+            <Row xs={1} md={2} lg={3} className="g-4">
+              <h2>Students</h2>
+              {/* You can render students here if desired */}
+            </Row>
           </Col>
         </Row>
 
@@ -78,7 +50,7 @@ const AdminPage = async () => {
               <button type="submit" className="btn btn-primary">Add</button>
             </form>
             <ul className="list-group">
-              {skills.map((skill) => (
+              {skills.map((skill: Skill) => (
                 <li key={skill.id} className="list-group-item d-flex justify-content-between align-items-center">
                   {skill.name}
                   <form action={() => deleteSkillAction(skill.id)}>
@@ -96,7 +68,7 @@ const AdminPage = async () => {
               <button type="submit" className="btn btn-primary">Add</button>
             </form>
             <ul className="list-group">
-              {locations.map((loc) => (
+              {locations.map((loc: Location) => (
                 <li key={loc.id} className="list-group-item d-flex justify-content-between align-items-center">
                   {loc.name}
                   <form action={() => deleteLocationAction(loc.id)}>

@@ -46,13 +46,27 @@ model Stuff {
   owner     String
 }
 
+model Company {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  salary     Int      @default(50000)
+  overview   String
+  location   String
+  jobs       String
+  contacts   String
+  idealSkill String[] @default(["python","c"])
+}
+
 model Student {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  fullName  String
-  location  String?
-  skills    String?
-  image     String?
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String    @unique
+  interests  String[]
+  companies  String[]
+  interviews String[]
+  location   String
+  skills     String[] @default(["python","c"]) 
+  image      String
 }
 
 model Skill {
@@ -63,13 +77,4 @@ model Skill {
 model Location {
   id   Int    @id @default(autoincrement())
   name String @unique
-}
-
-model Company {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  overview String
-  location String
-  jobs     String
-  contacts String
 }

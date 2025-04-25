@@ -1,74 +1,69 @@
 'use server';
 
-import { Stuff, Condition, Student } from '@prisma/client';
+import { Company, Student } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
 
 /**
- * Adds a new stuff to the database.
- * @param stuff, an object with t he following properties: name, quantity, owner, condition.
+ * Adds a new company to the database.
  */
-export async function addStuff(stuff: { name: string; quantity: number; owner: string; condition: string }) {
-  // console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
-  let condition: Condition = 'good';
-  if (stuff.condition === 'poor') {
-    condition = 'poor';
-  } else if (stuff.condition === 'excellent') {
-    condition = 'excellent';
-  } else {
-    condition = 'fair';
-  }
-  await prisma.stuff.create({
+export async function addCompany(company: {
+  name: string;
+  salary: number;
+  overview: string;
+  location: string;
+  jobs: string;
+  contacts: string;
+  idealSkill: string[];
+}) {
+  await prisma.company.create({
     data: {
-      name: stuff.name,
-      quantity: stuff.quantity,
-      owner: stuff.owner,
-      condition,
+      name: company.name,
+      salary: company.salary,
+      overview: company.overview,
+      location: company.location,
+      jobs: company.jobs,
+      contacts: company.contacts,
+      idealSkill: company.idealSkill,
     },
   });
-  // After adding, redirect to the list page
   redirect('/list');
 }
 
 /**
- * Edits an existing stuff in the database.
- * @param stuff, an object with the following properties: id, name, quantity, owner, condition.
+ * Edits an existing company in the database.
  */
-export async function editStuff(stuff: Stuff) {
-  // console.log(`editStuff data: ${JSON.stringify(stuff, null, 2)}`);
-  await prisma.stuff.update({
-    where: { id: stuff.id },
+export async function editCompany(company: Company) {
+  await prisma.company.update({
+    where: { id: company.id },
     data: {
-      name: stuff.name,
-      quantity: stuff.quantity,
-      owner: stuff.owner,
-      condition: stuff.condition,
+      name: company.name,
+      salary: company.salary,
+      overview: company.overview,
+      location: company.location,
+      jobs: company.jobs,
+      contacts: company.contacts,
+      idealSkill: company.idealSkill,
     },
   });
-  // After updating, redirect to the list page
   redirect('/list');
 }
 
 /**
- * Deletes an existing stuff from the database.
- * @param id, the id of the stuff to delete.
+ * Deletes an existing company from the database.
  */
-export async function deleteStuff(id: number) {
-  // console.log(`deleteStuff id: ${id}`);
-  await prisma.stuff.delete({
+export async function deleteCompany(id: number) {
+  await prisma.company.delete({
     where: { id },
   });
-  // After deleting, redirect to the list page
   redirect('/list');
 }
 
 /**
  * Creates a new user in the database.
- * @param credentials, an object with the following properties: email, password.
  */
 export async function createUser(credentials: { email: string; password: string }) {
-  // console.log(`createUser data: ${JSON.stringify(credentials,  null, 2)}`);
   const password = await hash(credentials.password, 10);
   await prisma.user.create({
     data: {
@@ -80,10 +75,8 @@ export async function createUser(credentials: { email: string; password: string 
 
 /**
  * Changes the password of an existing user in the database.
- * @param credentials, an object with the following properties: email,  password.
  */
 export async function changePassword(credentials: { email: string; password: string }) {
-  // console.log(`changePassword data: ${JSON.stringify(credentials, null, 2)}`);
   const password = await hash(credentials.password, 10);
   await prisma.user.update({
     where: { email: credentials.email },
@@ -92,22 +85,20 @@ export async function changePassword(credentials: { email: string; password: str
     },
   });
 }
+
 /**
  * Edits an existing student in the database.
- * @param student, an object with the following properties: id, fullName, location, skills, image, email.
  */
 export async function editStudent(student: Student) {
-  // console.log(`editStudent data: ${JSON.stringify(student, null, 2)}`);
   await prisma.student.update({
     where: { id: student.id },
     data: {
-      fullName: student.fullName,
+      name: student.name, // ✅ match schema field
       location: student.location,
       skills: student.skills,
       image: student.image,
       email: student.email,
     },
   });
-  // Optional: Redirect after editing
   redirect('/student/home');
 }

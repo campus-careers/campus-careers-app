@@ -1,10 +1,10 @@
 'use client';
 
-import { Card } from 'react-bootstrap';
-// import Link from 'next/link';
 import { Company } from '@prisma/client';
+import { Card } from 'react-bootstrap';
 
-const CompanyCard = ({ company }: { company: Company }) => (
+/* Renders a single row in the List Stuff table. See list/page.tsx. */
+const CompanyAdmin = ({ company }: { company: Company }) => (
   <Card className="h-100 w-75">
     <Card.Header>
       <Card.Title>
@@ -46,7 +46,11 @@ const CompanyCard = ({ company }: { company: Company }) => (
         </p>
       </Card.Text>
     </Card.Body>
+    <Card.Footer>
+      <Card.Link href={`/edit/${company.id}`}>Edit</Card.Link>
+      <Card.Link href={`/delete/${company.id}`}>Delete</Card.Link>
+    </Card.Footer>
   </Card>
 );
 
-export default CompanyCard;
+export default CompanyAdmin;

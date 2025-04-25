@@ -5,19 +5,30 @@
   ],
 
   "defaultData": [
-    { "name": "Basket", "quantity": 3, "owner": "john@foo.com", "condition": "excellent" },
-    { "name": "Bicycle", "quantity": 2, "owner": "john@foo.com", "condition": "poor" },
-    { "name": "Banana", "quantity": 2, "owner": "admin@foo.com", "condition": "good" },
-    { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
+    { "name": "Alan", "skills": ["coding", "design"], "interests": ["coding", "reading"], "location": "hawaii", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" },
+    { "name": "Mason", "skills": ["coding", "design"], "interests": ["coding", "reading"], "location": "hawaii", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" }
   ],
 
   "defaultStudent": [
     {
-      "email": "alice@example.com",
-      "fullName": "Alice Johnson",
-      "location": "Honolulu",
-      "skills": "React, Python",
-      "image": ""
+      "id": 1,
+      "name": "Pacific Robotics Inc.",
+      "salary": 60000,
+      "overview": "A leading provider of automation and robotic solutions across the Asia-Pacific region, specializing in AI-integrated manufacturing systems.",
+      "location": "Honolulu, HI",
+      "jobs": "Robotics Engineer, AI Software Developer, Field Technician",
+      "contacts": "careers@pacificrobotics.com, (808) 555-4321",
+      "idealSkill": ["engLicense","aiExperience"]
+    },
+    {
+      "id": 2,
+      "name": "EcoGrid Solutions",
+      "salary": 55000,
+      "overview": "A clean-tech startup focused on developing sustainable energy infrastructure and smart grid software.",
+      "location": "San Jose, CA",
+      "jobs": "Electrical Engineer, UX Designer, Product Manager",
+      "contacts": "recruit@ecogridsolutions.com, (408) 123-9876",
+      "idealSkill": ["engLicense"]
     }
   ]
 }
