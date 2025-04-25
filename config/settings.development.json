@@ -1,34 +1,70 @@
 {
   "defaultAccounts": [
-    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN" },
-    { "email": "john@foo.com", "password": "changeme" }
-  ],
-
-  "defaultData": [
-    { "name": "Alan", "skills": ["coding", "design"], "interests": ["coding", "reading"], "location": "hawaii", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" },
-    { "name": "Mason", "skills": ["coding", "design"], "interests": ["coding", "reading"], "location": "hawaii", "companies" : ["ABC", "XYZ"], "interviews": ["Interview1", "Interview2"], "image": "url-image" }
-  ],
-
-  "defaultStudent": [
     {
-      "id": 1,
-      "name": "Pacific Robotics Inc.",
-      "salary": 60000,
-      "overview": "A leading provider of automation and robotic solutions across the Asia-Pacific region, specializing in AI-integrated manufacturing systems.",
-      "location": "Honolulu, HI",
-      "jobs": "Robotics Engineer, AI Software Developer, Field Technician",
-      "contacts": "careers@pacificrobotics.com, (808) 555-4321",
-      "idealSkill": ["engLicense","aiExperience"]
+      "name": "Alan",
+      "email": "admin@foo.com",
+      "password": "changeme",
+      "role": "ADMIN",
+      "location": "NewYork",
+      "skills": ["Java", "CSharp"],
+      "image": "alan_image.jpg",
+      "companies": ["Company A", "Company B"],
+      "interviews": ["Interview1", "Interview2"],
+      "interests": ["Tech", "Innovation"]
     },
     {
-      "id": 2,
-      "name": "EcoGrid Solutions",
-      "salary": 55000,
-      "overview": "A clean-tech startup focused on developing sustainable energy infrastructure and smart grid software.",
-      "location": "San Jose, CA",
-      "jobs": "Electrical Engineer, UX Designer, Product Manager",
-      "contacts": "recruit@ecogridsolutions.com, (408) 123-9876",
-      "idealSkill": ["engLicense"]
+      "name": "John Doe",
+      "email": "john@foo.com",
+      "password": "changeme",
+      "role": "USER",
+      "location": "Remote",
+      "skills": ["JavaScript", "Python"],
+      "image": "john_image.jpg",
+      "companies": ["Company A"],
+      "interviews": ["Interview1"],
+      "interests": ["Coding", "Open Source"]
+    }
+  ],
+  "defaultCompanies": [
+    {
+      "name": "Company A",
+      "email": "company-a@foo.com",
+      "location": "Remote",
+      "skills": ["JavaScript", "Python"],
+      "image": "/images/company-a.png",
+      "interviews": [],
+      "interests": []
+    },
+    {
+      "name": "Company B",
+      "email": "company-b@foo.com",
+      "location": "NewYork",
+      "skills": ["Java", "CSharp"],
+      "image": "/images/company-b.png",
+      "interviews": [],
+      "interests": []
+    }
+  ],
+  "defaultData": [
+    { 
+      "name": "Alan",
+      "email": "alan@foo.com",
+      "skills": ["JavaScript", "Python"],
+      "interests": ["coding", "reading"],
+      "location": "Remote",
+      "companies": ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
+    },
+    {
+      "name": "Mason",
+      "email": "mason@foo.com",
+      "skills": ["JavaScript", "Ruby"],
+      "interests": ["coding", "reading"],
+      "location": "Honolulu",
+      "companies": ["ABC", "XYZ"],
+      "interviews": ["Interview1", "Interview2"],
+      "image": "url-image"
     }
   ]
 }

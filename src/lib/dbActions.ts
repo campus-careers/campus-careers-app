@@ -1,6 +1,6 @@
 'use server';
 
-import { Company } from '@prisma/client';
+import { Company } from '@prisma/client'; // If 'User' is used, keep this import, otherwise remove it
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -63,12 +63,14 @@ export async function deleteCompany(id: number) {
 /**
  * Creates a new user in the database.
  */
-export async function createUser(credentials: { email: string; password: string }) {
-  const password = await hash(credentials.password, 10);
+export async function createUser(credentials: { email: string; password: string; name: string }) {
+  const password = await hash(credentials.password, 10); // Hash the password for storage
   await prisma.user.create({
     data: {
       email: credentials.email,
       password,
+      name: credentials.name,
+      image: 'default-image.jpg', // Provide a default value for image
     },
   });
 }
@@ -77,7 +79,7 @@ export async function createUser(credentials: { email: string; password: string 
  * Changes the password of an existing user in the database.
  */
 export async function changePassword(credentials: { email: string; password: string }) {
-  const password = await hash(credentials.password, 10);
+  const password = await hash(credentials.password, 10); // Hash the new password
   await prisma.user.update({
     where: { email: credentials.email },
     data: {

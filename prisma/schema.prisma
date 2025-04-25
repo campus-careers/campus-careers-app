@@ -19,16 +19,17 @@ enum Role {
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  email      String     @unique
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
   password   String
-  role       Role       @default(USER)
-  name       String?
-  major      String?
+  role       Role     @default(USER)
   skills     Skill[]
-  interests  String[]
-  location   Locations  @default(Remote)
-  portfolio  String?
+  location   Locations @default(Remote)
+  image      String
+  companies  String[]  // Add companies if required
+  interviews String[]  // Add interviews if required
+  interests  String[]  // Add interests if required
 }
 
 enum Condition {
@@ -104,8 +105,16 @@ model Student {
   interests  String[]
 }
 
-
 model adminList {
-  id    Int    @id @default(autoincrement())
-  email String @unique
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  name       String
+  skills     Skill[]
+  location   Locations
+  interests  String[]
+  image      String
+  interviews String[]
+  companies  String[]  // Ensure the companies field is here
 }
+
+
