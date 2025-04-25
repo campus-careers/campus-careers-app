@@ -1,14 +1,21 @@
-// import { useState } from 'react';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
-// import { getSession } from 'next-auth/react';
-// import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import BrowseDataSet from '@/components/BrowseDataSet';
 
 const StudentHomePage = async () => {
   // Fetch job listings from the database
   const session = await getServerSession();
   const email = session?.user?.email;
+
+  if (!email) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <h1>Please log in to view your data</h1>
+        </div>
+      </main>
+    );
+  }
 
   const student = await prisma.user.findFirst({
     where: { email: email || undefined },
@@ -30,7 +37,21 @@ const StudentHomePage = async () => {
       companies: true,
       image: true,
     },
-  });
+  }).then((listings) => listings.map((job) => ({
+    ...job,
+    id: job.id.toString(), // Convert id to string
+  })));
+
+  if (!student || jobListings.length === 0) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <h1>No data available</h1>
+          <p>Please check back later.</p>
+        </div>
+      </main>
+    );
+  }
 
   return <BrowseDataSet student={student} jobListings={jobListings} />;
 
