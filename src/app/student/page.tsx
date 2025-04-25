@@ -1,31 +1,13 @@
-import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import EditableProfile from '@/components/EditStudent';
 
 const StudentHomePage = () => (
   <main>
-    {/* Page Title */}
     <Container className="mt-4">
       <h2 className="text-center mb-4">Student Home Page</h2>
       <Row className="justify-content-center">
-        <Col md={4}>
-          <Card className="p-3">
-            <Row>
-              <Col xs={4}>
-                <div style={{
-                  width: '100%',
-                  paddingBottom: '100%',
-                  backgroundColor: '#eee',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                }}
-                />
-              </Col>
-              <Col xs={8}>
-                <h5 className="fw-bold">Full Name</h5>
-                <p className="mb-1">Preferred Location</p>
-                <p className="mb-0">Skills: Skill 1, Skill 2, Skill 3</p>
-              </Col>
-            </Row>
-          </Card>
+        <Col md={5}>
+          <EditableProfile />
         </Col>
 
         <Col md={4} className="d-flex flex-column gap-3">

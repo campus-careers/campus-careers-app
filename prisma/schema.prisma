@@ -46,6 +46,15 @@ model Stuff {
   owner     String
 }
 
+model Student {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  fullName  String
+  location  String?
+  skills    String?
+  image     String?
+}
+
 model Skill {
   id   Int    @id @default(autoincrement())
   name String @unique
@@ -54,13 +63,4 @@ model Skill {
 model Location {
   id   Int    @id @default(autoincrement())
   name String @unique
-}
-
-model Company {
-  id        Int    @id @default(autoincrement())
-  name      String @unique
-  overview  String
-  location  String
-  jobs      String
-  contacts  String
 }

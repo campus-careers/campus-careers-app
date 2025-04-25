@@ -1,6 +1,6 @@
 'use server';
 
-import { Stuff, Condition } from '@prisma/client';
+import { Stuff, Condition, Student } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -91,4 +91,23 @@ export async function changePassword(credentials: { email: string; password: str
       password,
     },
   });
+}
+/**
+ * Edits an existing student in the database.
+ * @param student, an object with the following properties: id, fullName, location, skills, image, email.
+ */
+export async function editStudent(student: Student) {
+  // console.log(`editStudent data: ${JSON.stringify(student, null, 2)}`);
+  await prisma.student.update({
+    where: { id: student.id },
+    data: {
+      fullName: student.fullName,
+      location: student.location,
+      skills: student.skills,
+      image: student.image,
+      email: student.email,
+    },
+  });
+  // Optional: Redirect after editing
+  redirect('/student/home');
 }
