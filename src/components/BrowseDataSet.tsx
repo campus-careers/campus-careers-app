@@ -23,7 +23,7 @@ type BrowseDataSetProps = {
 };
 
 const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
-  const [filteredJobs, setFilteredJobs] = useState(jobListings);
+  const [filteredJobs, setFilteredJobs] = useState<JobListing[]>(jobListings);
 
   const filterJobs = (filterType: string) => {
     if (!jobListings || jobListings.length === 0) {
@@ -44,7 +44,7 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
         filtered = jobListings.filter((job) => job.location === student?.location);
         break;
       default:
-        filtered = jobListings;
+        filtered = jobListings; // If no filter, return all jobs
         break;
     }
 
@@ -127,8 +127,10 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
                 {filteredJobs.map((job) => (
                   <li key={job.id}>
                     {job.name}
+                    {' '}
                     - Location:
                     {job.location}
+                    {' '}
                     - Skills:
                     {job.skills.join(', ')}
                   </li>
