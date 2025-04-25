@@ -43,3 +43,13 @@ model Stuff {
   condition Condition @default(good)
   owner     String
 }
+
+model Skill {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}
+
+model Location {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}
