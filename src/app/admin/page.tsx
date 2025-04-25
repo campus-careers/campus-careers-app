@@ -1,17 +1,51 @@
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row, Table, Form, Button } from 'react-bootstrap';
-import StuffItemAdmin from '@/components/StuffItemAdmin';
+import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
+import { revalidatePath } from 'next/cache';
+
+// === Server Actions ===
+
+async function addSkill(formData: FormData) {
+  'use server';
+
+  const name = formData.get('skill') as string;
+  if (name) {
+    await prisma.skill.create({ data: { name } });
+    revalidatePath('/admin');
+  }
+}
+
+async function deleteSkill(id: number) {
+  'use server';
+
+  await prisma.skill.delete({ where: { id } });
+  revalidatePath('/admin');
+}
+
+async function addLocation(formData: FormData) {
+  'use server';
+
+  const name = formData.get('location') as string;
+  if (name) {
+    await prisma.location.create({ data: { name } });
+    revalidatePath('/admin');
+  }
+}
+
+async function deleteLocation(id: number) {
+  'use server';
+
+  await prisma.location.delete({ where: { id } });
+  revalidatePath('/admin');
+}
+
+// === Page Component ===
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
-  adminProtectedPage(
-    session as {
-      user: { email: string; id: string; randomKey: string };
-    } | null,
-  );
+  adminProtectedPage(session as { user: { email: string; id: string; randomKey: string } } | null);
 
   const stuff = await prisma.stuff.findMany({});
   const users = await prisma.user.findMany({});
@@ -20,10 +54,10 @@ const AdminPage = async () => {
 
   return (
     <main>
-      <Container id="admin" fluid className="py-3">
+      <Container id="admin" fluid className="py-4">
         <Row>
           <Col>
-            <h1>List Stuff Admin</h1>
+            <h1>Stuff (Admin View)</h1>
             <Table striped bordered hover>
               <thead>
                 <tr>
@@ -31,21 +65,25 @@ const AdminPage = async () => {
                   <th>Quantity</th>
                   <th>Condition</th>
                   <th>Owner</th>
-                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {stuff.map((item) => (
-                  <StuffItemAdmin key={item.id} {...item} />
+                  <tr key={item.id}>
+                    <td>{item.name}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.condition}</td>
+                    <td>{item.owner}</td>
+                  </tr>
                 ))}
               </tbody>
             </Table>
           </Col>
         </Row>
 
-        <Row className="mt-5">
+        <Row className="mt-4">
           <Col>
-            <h1>List Users Admin</h1>
+            <h1>User List</h1>
             <Table striped bordered hover>
               <thead>
                 <tr>
@@ -66,38 +104,40 @@ const AdminPage = async () => {
         </Row>
 
         <Row className="mt-5">
-          <Col>
-            <h1>Manage Tags (Skills & Locations)</h1>
-
-            <h5>Skills</h5>
-            <ul>
+          <Col md={6}>
+            <h2>Manage Skills</h2>
+            <form action={addSkill} className="mb-3 d-flex gap-2">
+              <input type="text" name="skill" placeholder="New skill" className="form-control" required />
+              <button type="submit" className="btn btn-primary">Add</button>
+            </form>
+            <ul className="list-group">
               {skills.map((skill) => (
-                <li key={skill.id}>{skill.name}</li>
+                <li key={skill.id} className="list-group-item d-flex justify-content-between align-items-center">
+                  {skill.name}
+                  <form action={() => deleteSkill(skill.id)}>
+                    <button type="submit" className="btn btn-sm btn-danger">Delete</button>
+                  </form>
+                </li>
               ))}
             </ul>
+          </Col>
 
-            <Form action="/api/admin/add-skill" method="POST" className="mb-3">
-              <Form.Group controlId="skill">
-                <Form.Label>Add Skill</Form.Label>
-                <Form.Control name="name" type="text" placeholder="e.g. React" required />
-              </Form.Group>
-              <Button type="submit" className="mt-2">Add Skill</Button>
-            </Form>
-
-            <h5>Locations</h5>
-            <ul>
+          <Col md={6}>
+            <h2>Manage Locations</h2>
+            <form action={addLocation} className="mb-3 d-flex gap-2">
+              <input type="text" name="location" placeholder="New location" className="form-control" required />
+              <button type="submit" className="btn btn-primary">Add</button>
+            </form>
+            <ul className="list-group">
               {locations.map((loc) => (
-                <li key={loc.id}>{loc.name}</li>
+                <li key={loc.id} className="list-group-item d-flex justify-content-between align-items-center">
+                  {loc.name}
+                  <form action={() => deleteLocation(loc.id)}>
+                    <button type="submit" className="btn btn-sm btn-danger">Delete</button>
+                  </form>
+                </li>
               ))}
             </ul>
-
-            <Form action="/api/admin/add-location" method="POST">
-              <Form.Group controlId="location">
-                <Form.Label>Add Location</Form.Label>
-                <Form.Control name="name" type="text" placeholder="e.g. Honolulu" required />
-              </Form.Group>
-              <Button type="submit" className="mt-2">Add Location</Button>
-            </Form>
           </Col>
         </Row>
       </Container>
