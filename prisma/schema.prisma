@@ -101,7 +101,7 @@ model Student {
   location   String
 }
 
-model AdminList {
+model adminList {
   id    Int    @id @default(autoincrement())
   email String @unique
 }

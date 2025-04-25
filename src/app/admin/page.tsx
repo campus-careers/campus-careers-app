@@ -4,17 +4,18 @@ import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 import AdminDashboard from '@/components/AdminDashboard';
-import { adminList, User } from '@prisma/client'; // ✅ fixed
+import { adminList, User } from '@prisma/client'; // ✅ lowercase match
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
+
   adminProtectedPage(
     session as {
       user: { email: string; id: string; randomKey: string };
     } | null,
   );
 
-  const adminListItem: adminList[] = await prisma.adminList.findMany(); // ✅ fixed
+  const adminListItem: adminList[] = await prisma.adminList.findMany();
   const users: User[] = await prisma.user.findMany();
 
   return (
