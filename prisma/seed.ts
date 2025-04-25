@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Condition } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
@@ -21,18 +21,37 @@ async function main() {
     });
     // console.log(`  Created user: ${user.email} with role: ${user.role}`);
   });
-  for (const data of config.defaultData) {
-    const condition = data.condition as Condition || Condition.good;
-    console.log(`  Adding stuff: ${JSON.stringify(data)}`);
+  for (const data of config.company) {
+    // console.log(`  Adding stuff: ${JSON.stringify(data)}`);
     // eslint-disable-next-line no-await-in-loop
-    await prisma.stuff.upsert({
+    await prisma.company.upsert({
+      where: { id: config.company.indexOf(data) + 1 },
+      update: {},
+      create: {
+        name: data.name,
+        salary: data.salary,
+        overview: data.overview,
+        location: data.location,
+        contacts: data.contacts,
+        jobs: data.jobs,
+        idealSkill: data.idealSkill,
+      },
+    });
+  }
+  for (const data of config.defaultData) {
+    // console.log(`  Adding stuff: ${JSON.stringify(data)}`);
+    // eslint-disable-next-line no-await-in-loop
+    await prisma.student.upsert({
       where: { id: config.defaultData.indexOf(data) + 1 },
       update: {},
       create: {
         name: data.name,
-        quantity: data.quantity,
-        owner: data.owner,
-        condition,
+        interests: data.interests,
+        companies: data.companies,
+        interviews: data.interviews,
+        image: data.image,
+        location: data.location,
+        skills: data.skills,
       },
     });
   }
