@@ -1,0 +1,4 @@
+DATABASE_URL="postgresql://postgres.cybolwljscbefxllonrp:A90ToySupra@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+
+NEXTAUTH_SECRET=your-production-secret
+NEXTAUTH_URL=https://your-vercel-deployment.vercel.app

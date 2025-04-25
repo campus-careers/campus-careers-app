@@ -7,7 +7,7 @@ import { prisma } from './prisma';
 
 /**
  * Adds a new stuff to the database.
- * @param stuff, an object with the following properties: name, quantity, owner, condition.
+ * @param stuff, an object with t he following properties: name, quantity, owner, condition.
  */
 export async function addStuff(stuff: { name: string; quantity: number; owner: string; condition: string }) {
   // console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
