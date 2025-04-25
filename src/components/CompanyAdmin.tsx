@@ -14,12 +14,10 @@ const CompanyAdmin = ({ company }: { company: Company }) => (
         <p>{company.location}</p>
         <p>
           <b>Recommended Skills: </b>
-          {company.idealSkill.split(',').map((skill) => (
+          {company.idealSkill.map((skill, index) => (
             <span key={`${company.id}-${skill.trim()}`}>
-              {' '}
-              {/* Combine company.id and skill for uniqueness */}
               {skill.trim()}
-              {', '}
+              {index < company.idealSkill.length - 1 ? ', ' : ''}
             </span>
           ))}
         </p>
