@@ -16,6 +16,7 @@ const FilterSkillPage = async () => {
   );
 
   // Get all skills and locations from enums
+  // Note
   const allSkills = Object.values(Skill) as Skill[];
   const allLocations = Object.values(Locations) as Locations[];
 
