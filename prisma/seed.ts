@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient, Role, Skill, Locations, Condition } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
@@ -8,7 +8,7 @@ async function main() {
   console.log('🔧 Seeding the database...');
   const password = await hash('changeme', 10);
 
-  // Seed users
+  // ✅ Seed users
   await Promise.all(
     config.defaultAccounts.map(async (account) => {
       const role = (account.role as Role) || Role.USER;
@@ -19,47 +19,53 @@ async function main() {
           email: account.email,
           password,
           role,
+          skills: [],
+          location: Locations.Remote,
         },
       });
     }),
   );
 
-  // Seed students (requires you to add `email` field to defaultData)
+  // ✅ Seed adminList (treated as students)
   await Promise.all(
-    config.defaultData.map(async (data, i) => {
-      const email = `student${i + 1}@example.com`; // 👈 generate dummy email if not present
-      await prisma.student.create({
-        data: {
-          name: data.name,
-          email, // required by schema
-          skills: data.skills,
-          interests: data.interests,
-          location: data.location,
-          companies: data.companies,
-          interviews: data.interviews,
-          image: data.image,
-        },
-      });
-    }),
+    config.defaultData.map((data) => prisma.adminList.create({
+      data: {
+        name: data.name,
+        image: data.image,
+        skills: data.skills as Skill[],
+        interests: data.interests,
+        location: Locations[data.location as keyof typeof Locations],
+        companies: data.companies,
+        interviews: data.interviews,
+      },
+    })),
   );
 
-  // Seed companies (from defaultStudent list)
+  // ✅ Seed Stuff if needed (example only — modify as needed)
+  await prisma.stuff.create({
+    data: {
+      name: 'Example Item',
+      quantity: 10,
+      owner: 'admin@foo.com',
+      condition: Condition.good,
+    },
+  });
+
+  // ✅ Seed Filters
+  const filters = [
+    {
+      skills: ['JavaScript', 'Python', 'Design'] as Skill[],
+      locations: Locations.Remote,
+    },
+  ];
+
   await Promise.all(
-    config.defaultStudent.map(async (company) => {
-      await prisma.company.upsert({
-        where: { name: company.name },
-        update: {},
-        create: {
-          name: company.name,
-          salary: company.salary,
-          overview: company.overview,
-          location: company.location,
-          jobs: company.jobs,
-          contacts: company.contacts,
-          idealSkill: company.idealSkill,
-        },
-      });
-    }),
+    filters.map((filter) => prisma.filter.create({
+      data: {
+        skills: filter.skills,
+        locations: filter.locations,
+      },
+    })),
   );
 
   console.log('✅ Seeding complete!');
