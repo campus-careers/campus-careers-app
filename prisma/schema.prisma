@@ -23,13 +23,17 @@ model User {
   email      String   @unique
   password   String
   name       String
-  major      String?  // Add 'major' field here (optional if using `?`)
+  role       Role     @default(USER)
   skills     Skill[]
   location   Locations
   interests  String[]
-  portfolio  String?
   image      String?
+  companies  String[]
+  interviews String[] // Define interviews as a string array
 }
+
+
+
 
 
 enum Condition {
