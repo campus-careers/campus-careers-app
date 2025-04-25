@@ -34,11 +34,11 @@ export const POST = async (req: Request) => {
     where: { email: session.user.email },
     data: {
       name,
-      major,
+      major, // Now 'major' exists in the schema
       skills: skills.split(',').map((s) => s.trim() as Skill),
       interests: interests.split(',').map((i) => i.trim()),
       location: location as Locations,
-      portfolio,
+      portfolio, // Now 'portfolio' exists in the schema
     },
   });
 

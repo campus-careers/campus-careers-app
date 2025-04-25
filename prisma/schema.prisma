@@ -29,8 +29,11 @@ model User {
   interests  String[]
   image      String?
   companies  String[]
-  interviews String[] // Define interviews as a string array
+  interviews String[]
+  major      String?  // Add the 'major' field (optional if using 'String?')
+  portfolio  String?  // Add the 'portfolio' field (optional if using 'String?')
 }
+
 
 
 
