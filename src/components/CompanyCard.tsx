@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable react/prop-types */
+
 import { Card } from 'react-bootstrap';
 import { Company } from '@prisma/client';
 
@@ -16,11 +18,15 @@ const CompanyCard: React.FC<{ company: Company }> = ({ company }) => (
       </Card.Text>
 
       <Card.Text className="mb-2">
-        <strong>Searching for:</strong> {company.jobs}
+        <strong>Searching for:</strong>
+        <br />
+        {company.jobs}
       </Card.Text>
 
       <Card.Text>
-        <strong>If interested, contact:</strong> {company.contacts}
+        <strong>If interested, contact:</strong>
+        <br />
+        {company.contacts}
       </Card.Text>
     </Card.Body>
   </Card>
