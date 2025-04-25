@@ -100,3 +100,8 @@ model Student {
   image      String
   location   String
 }
+
+model AdminList {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+}
