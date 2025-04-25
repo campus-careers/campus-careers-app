@@ -87,10 +87,9 @@ model Company {
   overview   String
   jobs       String
   contacts   String
-  idealSkill String
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  idealSkill String[]  // Ensure this is an array of strings
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id])
 }
 
 model Filter {
