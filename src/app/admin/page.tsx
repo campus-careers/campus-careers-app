@@ -24,6 +24,12 @@ async function deleteSkill(id: number) {
   revalidatePath('/admin');
 }
 
+function deleteSkillAction(id: number) {
+  'use server';
+
+  return deleteSkill(id);
+}
+
 async function addLocation(formData: FormData) {
   'use server';
 
@@ -39,6 +45,12 @@ async function deleteLocation(id: number) {
 
   await prisma.location.delete({ where: { id } });
   revalidatePath('/admin');
+}
+
+function deleteLocationAction(id: number) {
+  'use server';
+
+  return deleteLocation(id);
 }
 
 // === Page Component ===
@@ -114,7 +126,7 @@ const AdminPage = async () => {
               {skills.map((skill) => (
                 <li key={skill.id} className="list-group-item d-flex justify-content-between align-items-center">
                   {skill.name}
-                  <form action={() => deleteSkill(skill.id)}>
+                  <form action={deleteSkillAction.bind(null, skill.id)}>
                     <button type="submit" className="btn btn-sm btn-danger">Delete</button>
                   </form>
                 </li>
@@ -132,7 +144,7 @@ const AdminPage = async () => {
               {locations.map((loc) => (
                 <li key={loc.id} className="list-group-item d-flex justify-content-between align-items-center">
                   {loc.name}
-                  <form action={() => deleteLocation(loc.id)}>
+                  <form action={deleteLocationAction.bind(null, loc.id)}>
                     <button type="submit" className="btn btn-sm btn-danger">Delete</button>
                   </form>
                 </li>
