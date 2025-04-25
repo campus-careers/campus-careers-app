@@ -1,21 +1,15 @@
-// Updated Prisma schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // or your actual DB
+  url      = env("DATABASE_URL")
+}
 
 enum Role {
   USER
   ADMIN
-}
-
-model User {
-  id         Int        @id @default(autoincrement())
-  email      String     @unique
-  password   String
-  role       Role       @default(USER)
-  name       String?
-  major      String?
-  skills     SkillModel[]
-  interests  String[]
-  location   Locations  @default(Remote)
-  portfolio  String?
 }
 
 enum Condition {
@@ -44,10 +38,25 @@ enum Locations {
   Remote
 }
 
-model SkillModel {  // Renamed model
-  id   Int    @id @default(autoincrement())
-  name String @unique
+model User {
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  password   String
+  role       Role       @default(USER)
+  name       String?
+  major      String?
+  skills     SkillModel[] @relation("UserSkills")
+  interests  String[]
+  location   Locations  @default(Remote)
+  portfolio  String?
 }
+
+model SkillModel {
+  id     Int      @id @default(autoincrement())
+  name   String   @unique
+  users  User[]   @relation("UserSkills") // This is the reverse relation
+}
+
 
 model Stuff {
   id        Int       @id @default(autoincrement())
@@ -69,9 +78,9 @@ model Company {
 }
 
 model Filter {
-  id Int @id @default(autoincrement())
-  skills Skill[]
-  locations Locations @default(Honolulu)
+  id        Int        @id @default(autoincrement())
+  skills    Skill[]
+  locations Locations  @default(Honolulu)
 }
 
 model Location {
@@ -80,12 +89,12 @@ model Location {
 }
 
 model Student {
-  id         Int       @id @default(autoincrement())
-  name       String
-  email      String    @unique
-  skills     String[]
-  image      String
-  location   String
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  skills    String[]
+  image     String
+  location  String
 }
 
 model AdminList {
