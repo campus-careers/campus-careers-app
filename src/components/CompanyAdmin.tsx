@@ -12,7 +12,7 @@ const CompanyAdmin = ({ company }: { company: Company }) => (
       </Card.Title>
       <Card.Subtitle>
         {company.location}
-        <b>Skills</b>
+        <b>Recommended Skills</b>
         {company.idealSkill}
       </Card.Subtitle>
     </Card.Header>

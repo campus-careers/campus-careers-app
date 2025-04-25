@@ -31,6 +31,7 @@ const skills = [
 ];
 
 const AddCompanyForm: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: session, status } = useSession();
   // console.log('AddCompanyForm', status, session);
   // const currentUser = session?.user?.email || '';

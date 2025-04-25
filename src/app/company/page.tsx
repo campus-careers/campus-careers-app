@@ -22,6 +22,7 @@ const CompaniesPage = async () => {
   );
 
   const companies: Company[] = await prisma.company.findMany({
+
   });
   // console.log(companies);
 

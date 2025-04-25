@@ -13,7 +13,7 @@ const CompanyCard = ({ company }: { company: Company }) => (
       <Card.Subtitle>
         <p>{company.location}</p>
         <p>
-          <b>Skills: </b>
+          <b>Recommended Skills: </b>
           {company.idealSkill.map((skill) => (
             <span>
               {skill}
