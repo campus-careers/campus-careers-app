@@ -45,18 +45,30 @@ enum Locations {
 
 // === MODELS ===
 
+model Interview {
+  id        Int    @id @default(autoincrement())
+  date      DateTime
+  company   String
+  notes     String?
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId Int
+}
+
 model User {
-  id        Int         @id @default(autoincrement())
-  email     String      @unique
-  password  String
-  role      Role        @default(USER)
-  name      String
-  location  Locations
-  skills    Skill[]
-  companies Company[]
-  interests String[]
-  image     String      @default("default-image.jpg")
-  Interview Interview[]
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  password   String
+  role       Role       @default(USER)
+  name       String
+  location   Locations
+  skills     Skill[]
+  companies  Company[]
+  interests  String[]
+  image      String     @default("default-image.jpg")
+  major      String?
+  portfolio  String?
+  
+  interviews Interview[] // <-- Add this line to establish reverse relation
 }
 
 model Stuff {
@@ -121,11 +133,3 @@ model adminList {
   companies  String[] // Ensure the companies field is here
 }
 
-model Interview {
-  id        Int      @id @default(autoincrement())
-  date      DateTime
-  company   String
-  notes     String?
-  student   User     @relation(fields: [studentId], references: [id])
-  studentId Int
-}
