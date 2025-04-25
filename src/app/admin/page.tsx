@@ -16,6 +16,7 @@ const AdminPage = async () => {
 
   const companies: Company[] = await prisma.company.findMany({
   });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const students: Student[] = await prisma.student.findMany({});
 
   return (
@@ -34,11 +35,6 @@ const AdminPage = async () => {
             </Row>
             <Row xs={1} md={2} lg={3} className="g-4">
               <h2>Students</h2>
-              {students.map((student) => (
-                <Col key={student.name}>
-                  <Student student={student} />
-                </Col>
-              ))}
             </Row>
           </Col>
         </Row>
