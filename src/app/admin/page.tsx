@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 import AdminDashboard from '@/components/AdminDashboard';
-import { Student, User } from '@prisma/client'; // ✅ import correct types
+import { adminList, User } from '@prisma/client'; // ✅ fixed
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
@@ -14,7 +14,7 @@ const AdminPage = async () => {
     } | null,
   );
 
-  const adminListItem: Student[] = await prisma.student.findMany({}); // ✅ fix model
+  const adminListItem: adminList[] = await prisma.adminList.findMany(); // ✅ fixed
   const users: User[] = await prisma.user.findMany();
 
   return (
@@ -24,7 +24,7 @@ const AdminPage = async () => {
           <Col>
             <h1>Admin Portal</h1>
             <Row xs={1} md={2} lg={3} className="g-4">
-              {adminListItem.map((item: Student) => (
+              {adminListItem.map((item: adminList) => (
                 <Col key={item.id}>
                   <AdminDashboard {...item} />
                 </Col>

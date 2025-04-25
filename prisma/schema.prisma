@@ -87,3 +87,23 @@ model Location {
   id   Int    @id @default(autoincrement())
   name String @unique
 }
+
+model Company {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  salary     Int
+  overview   String
+  location   String
+  jobs       String
+  contacts   String
+  idealSkill String[]
+}
+
+model Student {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String    @unique
+  skills     String[]
+  image      String
+  location   String
+}
