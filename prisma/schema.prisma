@@ -102,6 +102,7 @@ model Student {
   location   String
   companies  String[]
   interviews String[]
+  interests  String[]  // ✅ Add this line
 }
 
 model adminList {
