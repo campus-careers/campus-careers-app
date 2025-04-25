@@ -1,10 +1,10 @@
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
-import { adminProtectedPage } from '@/lib/page-protection';
+import { AdminList, User } from '@prisma/client'; // ✅ fixed capitalization
 import authOptions from '@/lib/authOptions';
 import AdminDashboard from '@/components/AdminDashboard';
-import { adminList, User } from '@prisma/client'; // ✅ fixed
+import { adminProtectedPage } from '@/lib/page-protection';
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
@@ -14,7 +14,7 @@ const AdminPage = async () => {
     } | null,
   );
 
-  const adminListItem: adminList[] = await prisma.adminList.findMany(); // ✅ fixed
+  const adminListItem: AdminList[] = await prisma.adminList.findMany(); // ✅ fixed
   const users: User[] = await prisma.user.findMany();
 
   return (
@@ -24,7 +24,7 @@ const AdminPage = async () => {
           <Col>
             <h1>Admin Portal</h1>
             <Row xs={1} md={2} lg={3} className="g-4">
-              {adminListItem.map((item: adminList) => (
+              {adminListItem.map((item: AdminList) => (
                 <Col key={item.id}>
                   <AdminDashboard {...item} />
                 </Col>
