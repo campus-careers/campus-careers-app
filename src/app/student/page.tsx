@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import EditableProfile from '@/components/EditStudent';
 
 const StudentHomePage = () => (
