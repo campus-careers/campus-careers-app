@@ -49,9 +49,10 @@ async function main() {
     config.company.map(async (company) => {
       console.log(`  Creating company: ${company.name}`);
       await prisma.company.upsert({
-        where: { name: company.name }, // assumes name is @unique
+        where: { id: company.id }, // assumes name is @unique
         update: {},
         create: {
+          id: company.id,
           name: company.name,
           overview: company.overview,
           location: company.location,
