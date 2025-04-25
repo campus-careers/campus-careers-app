@@ -106,7 +106,3 @@ model AdminList {
   email String @unique
 }
 
-model Skill {
-  id   Int    @id @default(autoincrement())
-  name String
-}
