@@ -1,16 +1,33 @@
-import { adminList } from '@prisma/client';
+'use client';
 
-/* Renders a single row in the List Stuff table. See list/page.tsx. */
-const StuffItemAdmin = ({ name, skills, interests, location, companies, image, interviews, id }: adminList) => (
+import { Student } from '@prisma/client';
+import Image from 'next/image';
+
+const StuffItemAdmin = ({
+  id,
+  name,
+  skills,
+  interests,
+  location,
+  companies,
+  interviews,
+  image,
+}: Student) => (
   <tr>
     <td>{name}</td>
-    <td>{skills}</td>
-    <td>{interests}</td>
+    <td>{skills.join(', ')}</td>
+    <td>{interests.join(', ')}</td>
     <td>{location}</td>
-    <td>{companies}</td>
-    <td>{interviews}</td>
+    <td>{companies.join(', ')}</td>
+    <td>{interviews.join(', ')}</td>
     <td>
-      {image}
+      <Image
+        src={image}
+        alt={name}
+        width={50}
+        height={50}
+        style={{ objectFit: 'cover', borderRadius: '4px' }}
+      />
     </td>
     <td>
       <a href={`/edit/${id}`}>Edit</a>
