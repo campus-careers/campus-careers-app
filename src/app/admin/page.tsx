@@ -3,57 +3,12 @@ import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
-import { revalidatePath } from 'next/cache';
-
-// === Server Actions ===
-
-export async function addSkill(formData: FormData) {
-  'use server';
-
-  const name = formData.get('skill') as string;
-  if (name) {
-    await prisma.skill.create({ data: { name } });
-    revalidatePath('/admin');
-  }
-}
-
-export async function deleteSkill(id: number) {
-  'use server';
-
-  await prisma.skill.delete({ where: { id } });
-  revalidatePath('/admin');
-}
-
-export async function deleteSkillAction(id: number) {
-  'use server';
-
-  return deleteSkill(id);
-}
-
-export async function addLocation(formData: FormData) {
-  'use server';
-
-  const name = formData.get('location') as string;
-  if (name) {
-    await prisma.location.create({ data: { name } });
-    revalidatePath('/admin');
-  }
-}
-
-export async function deleteLocation(id: number) {
-  'use server';
-
-  await prisma.location.delete({ where: { id } });
-  revalidatePath('/admin');
-}
-
-export async function deleteLocationAction(id: number) {
-  'use server';
-
-  return deleteLocation(id);
-}
-
-// === Page Component ===
+import {
+  addSkill,
+  deleteSkillAction,
+  addLocation,
+  deleteLocationAction,
+} from './actions';
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
