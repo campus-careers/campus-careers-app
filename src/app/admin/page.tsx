@@ -4,8 +4,8 @@ import CompanyAdmin from '@/components/CompanyAdmin';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
-import { Company, Skill, Location } from '@prisma/client';
-import { addSkill, deleteSkillAction, addLocation, deleteLocationAction } from './actions'; // ✅ import server actions
+import { revalidatePath } from 'next/cache';
+import { Company, Skill, Location as LocationModel } from '@prisma/client'; // ✅ Fixed type imports
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
@@ -16,8 +16,8 @@ const AdminPage = async () => {
   );
 
   const companies: Company[] = await prisma.company.findMany();
-  const skills: Skill[] = await prisma.skill.findMany(); // ✅ fetch skills
-  const locations: Location[] = await prisma.location.findMany(); // ✅ fetch locations
+  const skills: Skill[] = await prisma.skill.findMany();
+  const locations: LocationModel[] = await prisma.location.findMany(); // ✅ Renamed type
 
   return (
     <main>
@@ -45,16 +45,47 @@ const AdminPage = async () => {
         <Row className="mt-5">
           <Col md={6}>
             <h2>Manage Skills</h2>
-            <form action={addSkill} className="mb-3 d-flex gap-2">
-              <input type="text" name="skill" placeholder="New skill" className="form-control" required />
-              <button type="submit" className="btn btn-primary">Add</button>
+            <form
+              action={async (formData) => {
+                'use server';
+
+                const name = formData.get('skill') as string;
+                if (name) {
+                  await prisma.skill.create({ data: { name } });
+                  revalidatePath('/admin');
+                }
+              }}
+              className="mb-3 d-flex gap-2"
+            >
+              <input
+                type="text"
+                name="skill"
+                placeholder="New skill"
+                className="form-control"
+                required
+              />
+              <button type="submit" className="btn btn-primary">
+                Add
+              </button>
             </form>
             <ul className="list-group">
-              {skills.map((skill: Skill) => (
-                <li key={skill.id} className="list-group-item d-flex justify-content-between align-items-center">
+              {skills.map((skill) => (
+                <li
+                  key={skill.id}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
                   {skill.name}
-                  <form action={() => deleteSkillAction(skill.id)}>
-                    <button type="submit" className="btn btn-sm btn-danger">Delete</button>
+                  <form
+                    action={async () => {
+                      'use server';
+
+                      await prisma.skill.delete({ where: { id: skill.id } });
+                      revalidatePath('/admin');
+                    }}
+                  >
+                    <button type="submit" className="btn btn-sm btn-danger">
+                      Delete
+                    </button>
                   </form>
                 </li>
               ))}
@@ -63,16 +94,47 @@ const AdminPage = async () => {
 
           <Col md={6}>
             <h2>Manage Locations</h2>
-            <form action={addLocation} className="mb-3 d-flex gap-2">
-              <input type="text" name="location" placeholder="New location" className="form-control" required />
-              <button type="submit" className="btn btn-primary">Add</button>
+            <form
+              action={async (formData) => {
+                'use server';
+
+                const name = formData.get('location') as string;
+                if (name) {
+                  await prisma.location.create({ data: { name } });
+                  revalidatePath('/admin');
+                }
+              }}
+              className="mb-3 d-flex gap-2"
+            >
+              <input
+                type="text"
+                name="location"
+                placeholder="New location"
+                className="form-control"
+                required
+              />
+              <button type="submit" className="btn btn-primary">
+                Add
+              </button>
             </form>
             <ul className="list-group">
-              {locations.map((loc: Location) => (
-                <li key={loc.id} className="list-group-item d-flex justify-content-between align-items-center">
+              {locations.map((loc) => (
+                <li
+                  key={loc.id}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
                   {loc.name}
-                  <form action={() => deleteLocationAction(loc.id)}>
-                    <button type="submit" className="btn btn-sm btn-danger">Delete</button>
+                  <form
+                    action={async () => {
+                      'use server';
+
+                      await prisma.location.delete({ where: { id: loc.id } });
+                      revalidatePath('/admin');
+                    }}
+                  >
+                    <button type="submit" className="btn btn-sm btn-danger">
+                      Delete
+                    </button>
                   </form>
                 </li>
               ))}
