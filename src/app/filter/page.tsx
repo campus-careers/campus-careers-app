@@ -6,19 +6,29 @@ import authOptions from '@/lib/authOptions';
 import FilterSkillOrLocation from '@/components/FilterSkillOrLocation';
 import { Skill, Locations } from '@prisma/client';
 
-// import { adminList } from '@prisma/client';
 const FilterSkillPage = async () => {
   const session = await getServerSession(authOptions);
+
   adminProtectedPage(
     session as {
       user: { email: string; id: string; randomKey: string };
     } | null,
   );
-  // const filterListItem = await prisma.filter.findMany({});
+
+  // Get all enum values for skills and locations
   const allSkills = Object.values(Skill) as Skill[];
   const allLocations = Object.values(Locations) as Locations[];
 
-  const adminList = (await prisma.adminList.findMany({
+  // 1. Get all admin emails from AdminList
+  const adminEmails = (await prisma.adminList.findMany({
+    select: { email: true },
+  })).map((admin) => admin.email);
+
+  // 2. Fetch matching Students with full profile info
+  const adminList = (await prisma.student.findMany({
+    where: {
+      email: { in: adminEmails },
+    },
     select: {
       id: true,
       name: true,
@@ -30,17 +40,16 @@ const FilterSkillPage = async () => {
     },
   })).map(admin => ({
     ...admin,
-    id: admin.id.toString(),
-    skills: admin.skills.map(skill => skill.toString()),
-    location: admin.location.toString(),
+    id: admin.id.toString(), // convert id to string if needed
   }));
+
   return (
     <main>
       <Container id="list" fluid className="py-3">
         <Row>
           <Col>
             <h1>Browse by Skill or Location</h1>
-            {/* Render FilterSkillOrLocation once and pass allSkills and allLocations */}
+            {/* Pass down skills, locations, and filtered users */}
             <FilterSkillOrLocation
               skills={allSkills}
               locations={allLocations}
