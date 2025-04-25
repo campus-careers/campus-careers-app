@@ -20,17 +20,17 @@ enum Role {
 
 model User {
   id         Int      @id @default(autoincrement())
-  name       String
   email      String   @unique
   password   String
-  role       Role     @default(USER)
+  name       String
+  major      String?  // Add 'major' field here (optional if using `?`)
   skills     Skill[]
-  location   Locations @default(Remote)
-  image      String
-  companies  String[]  // Add companies if required
-  interviews String[]  // Add interviews if required
-  interests  String[]  // Add interests if required
+  location   Locations
+  interests  String[]
+  portfolio  String?
+  image      String?
 }
+
 
 enum Condition {
   excellent
