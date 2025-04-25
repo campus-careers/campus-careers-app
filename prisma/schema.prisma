@@ -99,7 +99,10 @@ model Student {
   skills     String[]
   image      String
   location   String
+  companies  String[]  // ✅
+  interviews String[]  // ✅
 }
+
 
 model adminList {
   id    Int    @id @default(autoincrement())
