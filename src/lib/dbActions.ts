@@ -1,6 +1,6 @@
 'use server';
 
-import { Company } from '@prisma/client'; // If 'User' is used, keep this import, otherwise remove it
+import { Company, Locations } from '@prisma/client'; // Ensure Locations enum is imported
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -63,14 +63,26 @@ export async function deleteCompany(id: number) {
 /**
  * Creates a new user in the database.
  */
-export async function createUser(credentials: { email: string; password: string; name: string }) {
+export async function createUser(credentials: { email: string; password: string; name: string; location: string }) {
   const password = await hash(credentials.password, 10); // Hash the password for storage
+
+  // Ensure location is a valid Locations enum value
+  const validLocation = credentials.location as Locations;
+
+  // Check if the location is valid, otherwise throw an error
+  const validLocations: Locations[] = ['Honolulu', 'NewYork', 'SanFrancisco', 'London', 'Tokyo', 'Remote'];
+  if (!validLocations.includes(validLocation)) {
+    throw new Error('Invalid location');
+  }
+
+  // Create the user in the database
   await prisma.user.create({
     data: {
       email: credentials.email,
       password,
       name: credentials.name,
       image: 'default-image.jpg', // Provide a default value for image
+      location: validLocation, // Pass the validLocation here
     },
   });
 }

@@ -25,14 +25,15 @@ model User {
   name       String
   role       Role     @default(USER)
   skills     Skill[]
-  location   Locations
+  location   Locations  // Required field
   interests  String[]
   image      String?
   companies  String[]
   interviews String[]
-  major      String?  // Add the 'major' field (optional if using 'String?')
-  portfolio  String?  // Add the 'portfolio' field (optional if using 'String?')
+  major      String?  // Optional
+  portfolio  String?  // Optional
 }
+
 
 
 
@@ -64,6 +65,7 @@ enum Locations {
   Tokyo
   Remote
 }
+
 
 model Stuff {
   id        Int       @id @default(autoincrement())
