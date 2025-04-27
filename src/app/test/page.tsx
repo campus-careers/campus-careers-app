@@ -1,5 +1,5 @@
-export const dynamic = 'force-dynamic';
-
+// This is a server component, so we can use async/await directly
+// and we don't need to wrap it in a function.
 import { prisma } from '@/lib/prisma';
 
 export default async function TestDBPage() {
