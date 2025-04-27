@@ -1,9 +1,7 @@
-/* eslint-disable import/extensions */
-
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import swal from 'sweetalert';
@@ -12,42 +10,58 @@ import { addCompany } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddCompanySchema } from '@/lib/validationSchemas';
 
-// eslint-disable-next-line max-len
-const onSubmit = async (data: { name: string; salary: number; overview: string; location: string; jobs: string; contacts: string; idealSkill: string[] }) => {
-  // console.log(`onSubmit data: ${JSON.stringify(data, null, 2)}`);
-  await addCompany(data);
-  swal('Success', 'Your item has been added', 'success', {
-    timer: 2000,
-  });
+type FormValues = {
+  name: string;
+  location: string;
+  salary: number;
+  overview: string;
+  jobs: string;
+  contacts: string;
+  idealSkill: string; // User inputs comma-separated string
 };
 
-const skills = [
-  { id: 'engLicense', label: 'Engineering License' },
-  { id: 'compTIACert', label: 'CompTIA Certificate' },
-  { id: 'python', label: 'Python' },
-  { id: 'java', label: 'Java' },
-  { id: 'aiExperience', label: 'AI Experience' },
-  { id: 'c', label: 'C' },
-];
-
 const AddCompanyForm: React.FC = () => {
-  const { data: session, status } = useSession();
-  // console.log('AddCompanyForm', status, session);
-  // const currentUser = session?.user?.email || '';
+  const { data: session, status } = useSession(); // ✅ fetch both session and status
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormValues>({
     resolver: yupResolver(AddCompanySchema),
   });
+
   if (status === 'loading') {
     return <LoadingSpinner />;
   }
+
   if (status === 'unauthenticated') {
     redirect('/auth/signin');
   }
+
+  const onSubmit = async (data: FormValues) => {
+    if (!session?.user?.id) {
+      console.error('User ID not found');
+      return;
+    }
+
+    const companyData = {
+      name: data.name,
+      salary: Number(data.salary),
+      overview: data.overview,
+      location: data.location,
+      jobs: data.jobs,
+      contacts: data.contacts,
+      idealSkill: data.idealSkill.split(',').map((s) => s.trim()),
+      userId: Number(session.user.id), // ✅ fix here
+    };
+
+    await addCompany(companyData);
+    swal('Success', 'Your company has been added', 'success', {
+      timer: 2000,
+    });
+  };
 
   return (
     <Container className="py-3">
@@ -56,117 +70,103 @@ const AddCompanyForm: React.FC = () => {
           <Col className="text-center">
             <h2>Add Company</h2>
           </Col>
+          <Card>
+            <Card.Body>
+              <Form onSubmit={handleSubmit(onSubmit)}>
+                <Form.Group>
+                  <Form.Label>Name</Form.Label>
+                  <input
+                    type="text"
+                    {...register('name')}
+                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                  />
+                  <div className="invalid-feedback">{errors.name?.message}</div>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Location</Form.Label>
+                  <input
+                    type="text"
+                    {...register('location')}
+                    className={`form-control ${errors.location ? 'is-invalid' : ''}`}
+                  />
+                  <div className="invalid-feedback">{errors.location?.message}</div>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Salary</Form.Label>
+                  <input
+                    type="number"
+                    {...register('salary')}
+                    className={`form-control ${errors.salary ? 'is-invalid' : ''}`}
+                  />
+                  <div className="invalid-feedback">{errors.salary?.message}</div>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Overview</Form.Label>
+                  <textarea
+                    {...register('overview')}
+                    className={`form-control ${errors.overview ? 'is-invalid' : ''}`}
+                    rows={3}
+                  />
+                  <div className="invalid-feedback">{errors.overview?.message}</div>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Jobs (comma-separated)</Form.Label>
+                  <input
+                    type="text"
+                    {...register('jobs')}
+                    className={`form-control ${errors.jobs ? 'is-invalid' : ''}`}
+                  />
+                  <div className="invalid-feedback">{errors.jobs?.message}</div>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Contacts (email, phone)</Form.Label>
+                  <input
+                    type="text"
+                    {...register('contacts')}
+                    className={`form-control ${errors.contacts ? 'is-invalid' : ''}`}
+                  />
+                  <div className="invalid-feedback">{errors.contacts?.message}</div>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Ideal Skills (comma-separated)</Form.Label>
+                  <input
+                    type="text"
+                    {...register('idealSkill')}
+                    className={`form-control ${errors.idealSkill ? 'is-invalid' : ''}`}
+                  />
+                  <div className="invalid-feedback">{errors.idealSkill?.message}</div>
+                </Form.Group>
+
+                <Form.Group className="form-group">
+                  <Row className="pt-3">
+                    <Col>
+                      <Button type="submit" variant="primary">
+                        Submit
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button
+                        type="button"
+                        onClick={() => reset()}
+                        variant="warning"
+                        className="float-right"
+                      >
+                        Reset
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              </Form>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Row>
-          <Col>
-            <Form.Group>
-              <Form.Label>Name</Form.Label>
-              <input
-                type="text"
-                {...register('name')}
-                required
-                className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-              />
-              <div className="invalid-feedback">{errors.name?.message}</div>
-            </Form.Group>
-            {' '}
-
-          </Col>
-          <Col>
-            <Form.Group>
-              <Form.Label>Salary</Form.Label>
-              <input
-                type="number"
-                {...register('salary')}
-                className={`form-control ${errors.salary ? 'is-invalid' : ''}`}
-              />
-              <div className="invalid-feedback">{errors.salary?.message}</div>
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group>
-              <Form.Label>Location</Form.Label>
-              <input
-                type="text"
-                {...register('location')}
-                className={`form-control ${errors.location ? 'is-invalid' : ''}`}
-              />
-              <div className="invalid-feedback">{errors.location?.message}</div>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Group>
-              <Form.Label>Overview</Form.Label>
-              <input
-                type="field"
-                {...register('overview')}
-                required
-                className={`form-control ${errors.overview ? 'is-invalid' : ''}`}
-              />
-              <div className="invalid-feedback">{errors.overview?.message}</div>
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group>
-              <Form.Label>Jobs</Form.Label>
-              <input
-                type="text"
-                {...register('jobs')}
-                required
-                className={`form-control ${errors.jobs ? 'is-invalid' : ''}`}
-              />
-              <div className="invalid-feedback">{errors.jobs?.message}</div>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Form.Group>
-            <Form.Label>Contact</Form.Label>
-            <input
-              type="text"
-              {...register('contacts')}
-              required
-              className={`form-control ${errors.contacts ? 'is-invalid' : ''}`}
-            />
-            <div className="invalid-feedback">{errors.contacts?.message}</div>
-          </Form.Group>
-        </Row>
-        <Row style={{ paddingTop: '20px' }}>
-          <Form.Group>
-            <Form.Label><h5>Suggested Skills</h5></Form.Label>
-            {skills.map((skill) => (
-              <div key={skill.id}>
-                <input
-                  type="checkbox"
-                  id={skill.id}
-                  value={skill.id}
-                  {...register('idealSkill')}
-                  className={`form-check-input ${errors.idealSkill ? 'is-invalid' : ''}`}
-                />
-                <Form.Label for={skill.id} className="form-check-label">{skill.label}</Form.Label>
-              </div>
-            ))}
-          </Form.Group>
-        </Row>
-        <Form.Group className="form-group">
-          <Row className="pt-3">
-            <Col>
-              <Button type="submit" variant="primary">
-                Submit
-              </Button>
-            </Col>
-            <Col>
-              <Button type="button" onClick={() => reset()} variant="warning" className="float-right">
-                Reset
-              </Button>
-            </Col>
-          </Row>
-        </Form.Group>
-      </Form>
     </Container>
   );
 };

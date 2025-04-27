@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// This is your Prisma schema file
+// Learn more at https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -10,23 +7,14 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // for local development
   url      = env("DATABASE_URL")
-  // for Vercel
-  // url       = env("POSTGRES_PRISMA_URL")
-  // directUrl = env("POSTGRES_URL_NON_POOLING")
 }
+
+// === ENUMS ===
 
 enum Role {
   USER
   ADMIN
-}
-
-model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  role     Role   @default(USER)
 }
 
 enum Condition {
@@ -34,6 +22,53 @@ enum Condition {
   good
   fair
   poor
+}
+
+enum Skill {
+  JavaScript
+  Python
+  Java
+  CSharp
+  Ruby
+  CPlusPlus
+  Design
+}
+
+enum Locations {
+  Honolulu
+  NewYork
+  SanFrancisco
+  London
+  Tokyo
+  Remote
+}
+
+// === MODELS ===
+
+model Interview {
+  id        Int    @id @default(autoincrement())
+  date      DateTime
+  company   String
+  notes     String?
+  student   User   @relation(fields: [studentId], references: [id])
+  studentId Int
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  password   String
+  role       Role       @default(USER)
+  name       String
+  location   Locations
+  skills     Skill[]
+  companies  Company[]
+  interests  String[]
+  image      String     @default("default-image.jpg")
+  major      String?
+  portfolio  String?
+  
+  interviews Interview[] // <-- Add this line to establish reverse relation
 }
 
 model Stuff {
@@ -45,23 +80,55 @@ model Stuff {
 }
 
 model Company {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique
-  salary     Int      @default(50000)
+  id         Int       @id @default(autoincrement())
+  name       String
+  location   Locations
+  salary     Int
   overview   String
-  location   String
   jobs       String
   contacts   String
-  idealSkill String[] @default(["python","c"])
+  idealSkill String[]  // Ensure this is an array of strings
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id])
+}
+
+model Filter {
+  id        Int       @id @default(autoincrement())
+  skills    Skill[] // Using enum Skill[]
+  locations Locations @default(Honolulu)
+}
+
+model SkillEntry {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}
+
+model Location {
+  id   Int    @id @default(autoincrement())
+  name String @unique
 }
 
 model Student {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   name       String
-  interests  String[]
+  email      String   @unique
+  skills     String[]
+  image      String
+  location   String
   companies  String[]
   interviews String[]
-  location   String
-  skills     String[] @default(["python","c"]) 
-  image      String
+  interests  String[] // ✅ Add this line
 }
+
+model adminList {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  name       String
+  skills     Skill[]
+  location   Locations
+  interests  String[]
+  image      String
+  interviews String[]
+  companies  String[] // Ensure the companies field is here
+}
+

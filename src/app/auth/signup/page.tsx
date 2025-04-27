@@ -8,15 +8,16 @@ import { Card, Col, Container, Button, Form, Row } from 'react-bootstrap';
 import { createUser } from '@/lib/dbActions';
 
 type SignUpForm = {
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
-  // acceptTerms: boolean;
+  location: string; // Add location here
 };
 
-/** The sign up page. */
 const SignUp = () => {
   const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email is invalid'),
     password: Yup.string()
       .required('Password is required')
@@ -25,6 +26,7 @@ const SignUp = () => {
     confirmPassword: Yup.string()
       .required('Confirm Password is required')
       .oneOf([Yup.ref('password'), ''], 'Confirm Password does not match'),
+    location: Yup.string().required('Location is required'), // Validate location
   });
 
   const {
@@ -37,9 +39,7 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data: SignUpForm) => {
-    // console.log(JSON.stringify(data, null, 2));
-    await createUser(data);
-    // After creating, signIn with redirect to the add page
+    await createUser(data); // Pass the location field along with other data
     await signIn('credentials', { callbackUrl: '/add', ...data });
   };
 
@@ -52,6 +52,16 @@ const SignUp = () => {
             <Card>
               <Card.Body>
                 <Form onSubmit={handleSubmit(onSubmit)}>
+                  <Form.Group className="form-group">
+                    <Form.Label>Name</Form.Label>
+                    <input
+                      type="text"
+                      {...register('name')}
+                      className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.name?.message}</div>
+                  </Form.Group>
+
                   <Form.Group className="form-group">
                     <Form.Label>Email</Form.Label>
                     <input
@@ -71,6 +81,7 @@ const SignUp = () => {
                     />
                     <div className="invalid-feedback">{errors.password?.message}</div>
                   </Form.Group>
+
                   <Form.Group className="form-group">
                     <Form.Label>Confirm Password</Form.Label>
                     <input
@@ -80,6 +91,17 @@ const SignUp = () => {
                     />
                     <div className="invalid-feedback">{errors.confirmPassword?.message}</div>
                   </Form.Group>
+
+                  <Form.Group className="form-group">
+                    <Form.Label>Location</Form.Label>
+                    <input
+                      type="text"
+                      {...register('location')}
+                      className={`form-control ${errors.location ? 'is-invalid' : ''}`}
+                    />
+                    <div className="invalid-feedback">{errors.location?.message}</div>
+                  </Form.Group>
+
                   <Form.Group className="form-group py-3">
                     <Row>
                       <Col>
@@ -98,6 +120,7 @@ const SignUp = () => {
               </Card.Body>
               <Card.Footer>
                 Already have an account?
+                {' '}
                 <a href="/auth/signin">Sign in</a>
               </Card.Footer>
             </Card>

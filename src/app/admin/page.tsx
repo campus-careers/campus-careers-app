@@ -1,45 +1,85 @@
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row } from 'react-bootstrap';
-import CompanyAdmin from '@/components/CompanyAdmin';
+import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
-import { adminProtectedPage } from '@/lib/page-protection';
+import { Student, User } from '@prisma/client';
 import authOptions from '@/lib/authOptions';
-import { Company, Student } from '@prisma/client';
+import AdminDashboard from '@/components/AdminDashboard';
+import { adminProtectedPage } from '@/lib/page-protection';
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
+
   adminProtectedPage(
     session as {
       user: { email: string; id: string; randomKey: string };
     } | null,
   );
 
-  const companies: Company[] = await prisma.company.findMany({
+  // 1. Get admin emails from AdminList
+  const adminEmails = (await prisma.adminList.findMany({
+    select: { email: true },
+  })).map((admin) => admin.email);
+
+  // 2. Find matching Students
+  const adminListItem: Student[] = await prisma.student.findMany({
+    where: {
+      email: { in: adminEmails },
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+      skills: true,
+      location: true,
+      companies: true,
+      interests: true, // Add interests if needed!
+      interviews: true,
+    },
   });
-  const students: Student[] = await prisma.student.findMany({});
+
+  const users: User[] = await prisma.user.findMany();
 
   return (
     <main>
-      <Container id="list" fluid className="py-3">
+      <Container id="admin" fluid className="py-4">
         <Row>
           <Col>
-            <h1>Admin Dashboard</h1>
+            <h1>Admin Portal</h1>
             <Row xs={1} md={2} lg={3} className="g-4">
-              <h2>Companies</h2>
-              {companies.map((company) => (
-                <Col key={company.name}>
-                  <CompanyAdmin company={company} />
+              {adminListItem.map((item) => (
+                <Col key={item.id}>
+                  <AdminDashboard {...{
+                    ...item,
+                    id: item.id.toString(), // ✅ convert id to string here
+                  }}
+                  />
                 </Col>
               ))}
             </Row>
-            <Row xs={1} md={2} lg={3} className="g-4">
-              <h2>Students</h2>
-              {students.map((student) => (
-                <Col key={student.name}>
-                  <Student student={student} />
-                </Col>
-              ))}
-            </Row>
+
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            <h1>List Users Admin</h1>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.email}</td>
+                    <td>{user.role}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
           </Col>
         </Row>
       </Container>

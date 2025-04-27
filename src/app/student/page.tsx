@@ -1,51 +1,60 @@
-import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import BrowseDataSet from '@/components/BrowseDataSet';
 
-const StudentHomePage = () => (
-  <main>
-    {/* Page Title */}
-    <Container className="mt-4">
-      <h2 className="text-center mb-4">Student Home Page</h2>
-      <Row className="justify-content-center">
-        <Col md={4}>
-          <Card className="p-3">
-            <Row>
-              <Col xs={4}>
-                <div style={{
-                  width: '100%',
-                  paddingBottom: '100%',
-                  backgroundColor: '#eee',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                }}
-                />
-              </Col>
-              <Col xs={8}>
-                <h5 className="fw-bold">Full Name</h5>
-                <p className="mb-1">Preferred Location</p>
-                <p className="mb-0">Skills: Skill 1, Skill 2, Skill 3</p>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
+const StudentHomePage = async () => {
+  const session = await getServerSession();
+  const email = session?.user?.email;
 
-        <Col md={4} className="d-flex flex-column gap-3">
-          <Button variant="light" className="border">Browse Companies</Button>
-          <Button variant="light" className="border">Browse by Skill</Button>
-          <Button variant="light" className="border">Browse by Location</Button>
-        </Col>
-      </Row>
+  if (!email) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <h1>Please log in to view your data</h1>
+        </div>
+      </main>
+    );
+  }
 
-      <Row className="mt-5">
-        <Col md={8} className="mx-auto">
-          <h5 className="fw-bold">Recent Matches</h5>
-          <ul className="list-unstyled">
-            <li>Company A</li>
-            <li>Company B</li>
-          </ul>
-        </Col>
-      </Row>
-    </Container>
-  </main>
-);
+  const student = await prisma.user.findFirst({
+    where: { email: email || undefined },
+    select: {
+      name: true,
+      email: true,
+      location: true,
+      skills: true,
+    },
+  });
+
+  // Fetch all job listings from the adminList table
+  const jobListings = await prisma.adminList.findMany({
+    select: {
+      id: true,
+      name: true,
+      location: true,
+      skills: true,
+      companies: true, // Include 'companies' in the query
+      image: true,
+      interviews: true,
+      interests: true,
+    },
+  }).then((listings) => listings.map((job) => ({
+    ...job,
+    id: job.id.toString(), // Convert id to string
+  })));
+
+  if (!student || jobListings.length === 0) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <h1>No data available</h1>
+          <p>Please check back later.</p>
+        </div>
+      </main>
+    );
+  }
+
+  return <BrowseDataSet student={student} jobListings={jobListings} />;
+};
 
 export default StudentHomePage;

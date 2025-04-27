@@ -1,14 +1,9 @@
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row } from 'react-bootstrap';
-// eslint-disable-next-line import/extensions
 import { Company } from '@prisma/client';
-// eslint-disable-next-line import/extensions
 import { loggedInProtectedPage } from '@/lib/page-protection';
-// eslint-disable-next-line import/extensions
 import authOptions from '@/lib/authOptions';
-// eslint-disable-next-line import/extensions
 import CompanyCard from '@/components/CompanyCard';
-// eslint-disable-next-line import/extensions
 import { prisma } from '@/lib/prisma';
 
 /** Render a list of stuff for the logged in user. */
@@ -22,6 +17,7 @@ const CompaniesPage = async () => {
   );
 
   const companies: Company[] = await prisma.company.findMany({
+
   });
   // console.log(companies);
 

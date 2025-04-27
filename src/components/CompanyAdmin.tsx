@@ -11,9 +11,16 @@ const CompanyAdmin = ({ company }: { company: Company }) => (
         {company.name}
       </Card.Title>
       <Card.Subtitle>
-        {company.location}
-        <b>Skills</b>
-        {company.idealSkill}
+        <p>{company.location}</p>
+        <p>
+          <b>Recommended Skills: </b>
+          {company.idealSkill.map((skill, index) => (
+            <span key={`${company.id}-${skill.trim()}`}>
+              {skill.trim()}
+              {index < company.idealSkill.length - 1 ? ', ' : ''}
+            </span>
+          ))}
+        </p>
       </Card.Subtitle>
     </Card.Header>
     <Card.Body>
