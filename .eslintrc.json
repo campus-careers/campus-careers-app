@@ -21,15 +21,14 @@
     "react/jsx-props-no-spreading": "off",
     "react/one-expression-per-line": "off",
     "react/react-in-jsx-scope": "off",
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
+    "import/extensions": "off",  // 🛠️ Turn off extensions checking
+    "import/prefer-default-export": "off" // (Optional) disable prefer-default-export too
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
-    ]
+    }
   }
 }
