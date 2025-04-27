@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TestDBPage() {
   // Only try connecting if DATABASE_URL exists
   if (!process.env.DATABASE_URL) {
