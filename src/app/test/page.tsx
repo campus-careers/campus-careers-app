@@ -1,5 +1,7 @@
 export const dynamic = 'force-dynamic';
 
+export const fetchCache = 'force-no-store';
+
 import { prisma } from '@/lib/prisma';
 
 export default async function TestDBPage() {
