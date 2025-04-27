@@ -1,22 +1,25 @@
-export const dynamic = 'force-dynamic';
+'use client';
 
-export const fetchCache = 'force-no-store';
+// import { prisma } from '@/lib/prisma';
+import { useEffect, useState } from 'react';
 
-import { prisma } from '@/lib/prisma';
+interface User {
+  id: number;
+  email: string;
+}
 
-export default async function TestDBPage() {
-  // Only try connecting if DATABASE_URL exists
-  if (!process.env.DATABASE_URL) {
-    return (
-      <main>
-        <h1>Database URL not set. Cannot fetch data.</h1>
-      </main>
-    );
-  }
+export default function TestDBPage() {
+  const [users, setUsers] = useState<User[]>([]);
 
-  const users = await prisma.user.findMany();
+  useEffect(() => {
+    async function fetchUsers() {
+      const res = await fetch('/api/test');
+      const data = await res.json();
+      setUsers(data);
+    }
+    fetchUsers();
+  }, []);
 
-  // Yes
   return (
     <main>
       <h1>Users from Database:</h1>
@@ -28,3 +31,27 @@ export default async function TestDBPage() {
     </main>
   );
 }
+
+// export default async function TestDBPage() {
+//   // Only try connecting if DATABASE_URL exists
+//   if (!process.env.DATABASE_URL) {
+//     return (
+//       <main>
+//         <h1>Database URL not set. Cannot fetch data.</h1>
+//       </main>
+//     );
+//   }
+
+//   const users = await prisma.user.findMany();
+
+//   return (
+//     <main>
+//       <h1>Users from Database:</h1>
+//       <ul>
+//         {users.map((user) => (
+//           <li key={user.id}>{user.email}</li>
+//         ))}
+//       </ul>
+//     </main>
+//   );
+// }
