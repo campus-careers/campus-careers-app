@@ -1,6 +1,6 @@
-import { prisma } from '@/lib/prisma';
-
 export const dynamic = 'force-dynamic';
+
+import { prisma } from '@/lib/prisma';
 
 export default async function TestDBPage() {
   // Only try connecting if DATABASE_URL exists
