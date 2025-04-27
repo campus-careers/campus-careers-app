@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript", "eslint:recommended"],
+  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
@@ -20,15 +20,6 @@
     "react/function-component-definition": "off",
     "react/jsx-props-no-spreading": "off",
     "react/one-expression-per-line": "off",
-    "react/react-in-jsx-scope": "off",
-    "import/extensions": "off",  // 🛠️ Turn off extensions checking
-    "import/prefer-default-export": "off" // (Optional) disable prefer-default-export too
-  },
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
-    }
+    "react/react-in-jsx-scope": "off"
   }
 }
