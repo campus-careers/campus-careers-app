@@ -23,3 +23,7 @@ export const prisma =
   } as any);
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV === 'production') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
+  (prisma as any).__internal.engine.enablePgBouncer = true;
+}
