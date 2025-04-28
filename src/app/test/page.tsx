@@ -2,7 +2,6 @@
 import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
 export const revalidate = 0; // Disable revalidation
 
 export default async function TestDBPage() {
