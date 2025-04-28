@@ -1,11 +1,9 @@
-// This is a server component, so we can use async/await directly
-// and we don't need to wrap it in a function.
 import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export default async function TestDBPage() {
-  // Only try connecting if DATABASE_URL exists
   if (!process.env.DATABASE_URL) {
     return (
       <main>
