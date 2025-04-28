@@ -15,15 +15,6 @@ export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     log: ['query'], // CAM: is this the right level of logging?
-    datasources: {
-      db: {
-        url: process.env.DATABASE_URL,
-      },
-    },
-  } as any);
+  });
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
-if (process.env.NODE_ENV === 'production') {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-underscore-dangle
-  (prisma as any).__internal.engine.enablePgBouncer = true;
-}

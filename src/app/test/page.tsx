@@ -1,10 +1,8 @@
-/* eslint-disable import/no-named-as-default */
-import prisma from '@/lib/prisma';
-
-export const dynamic = 'force-dynamic';
-export const revalidate = 0; // Disable revalidation
+// eslint-disable-next-line import/no-named-as-default
+import { prisma } from '@/lib/prisma';
 
 export default async function TestDBPage() {
+  // Only try connecting if DATABASE_URL exists
   if (!process.env.DATABASE_URL) {
     return (
       <main>
