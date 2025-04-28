@@ -20,6 +20,6 @@ export const prisma =
         url: process.env.DATABASE_URL,
       },
     },
-  } as any); // cast to any to avoid type errors
+  } as any);
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
