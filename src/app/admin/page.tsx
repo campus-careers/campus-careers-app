@@ -9,14 +9,23 @@ import { adminProtectedPage } from '@/lib/page-protection';
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
 
-  adminProtectedPage(session); // ✅ No need to cast manually now
+  // ✅ Safely extract only necessary fields
+  const safeSession = session
+    ? {
+      user: {
+        email: session.user?.email ?? '',
+        id: session.user?.id ?? '',
+        randomKey: session.user?.randomKey ?? '',
+      },
+    }
+    : null;
 
-  // 1. Get admin emails from AdminList
+  adminProtectedPage(safeSession);
+
   const adminEmails = (await prisma.adminList.findMany({
     select: { email: true },
   })).map((admin) => admin.email);
 
-  // 2. Find matching Students
   const adminListItem: Student[] = await prisma.student.findMany({
     where: {
       email: { in: adminEmails },
@@ -45,11 +54,10 @@ const AdminPage = async () => {
             <Row xs={1} md={2} lg={3} className="g-4">
               {adminListItem.map((item) => (
                 <Col key={item.id}>
-                  <AdminDashboard
-                    {...{
-                      ...item,
-                      id: item.id.toString(),
-                    }}
+                  <AdminDashboard {...{
+                    ...item,
+                    id: item.id.toString(),
+                  }}
                   />
                 </Col>
               ))}
