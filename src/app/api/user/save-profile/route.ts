@@ -23,7 +23,7 @@ export const POST = async (req: Request) => {
       return NextResponse.json({ success: false, error: 'Invalid location' }, { status: 400 });
     }
 
-    // 🔥 Update User table
+    // ✅ Update User table
     const updatedUser = await prisma.user.update({
       where: { email: session.user.email },
       data: {
@@ -36,27 +36,27 @@ export const POST = async (req: Request) => {
       },
     });
 
-    // 🔥 Update or create in Student table
+    // ✅ Update or Insert Student table
     await prisma.student.upsert({
       where: { email: session.user.email },
       update: {
         name,
         skills: skills.map((s: string) => s.trim()),
-        interests: interests.map((i: string) => i.trim()),
         location: trimmedLocation,
         image: updatedUser.image,
-        companies: [],
-        interviews: [],
+        interests: interests.map((i: string) => i.trim()),
+        // ❌ companies: (no need)
+        // ❌ interviews: (no need)
       },
       create: {
         name,
         email: session.user.email,
         skills: skills.map((s: string) => s.trim()),
-        interests: interests.map((i: string) => i.trim()),
         location: trimmedLocation,
         image: updatedUser.image,
-        companies: [],
-        interviews: [],
+        interests: interests.map((i: string) => i.trim()),
+        companies: [], // default empty
+        interviews: [], // default empty
       },
     });
 
