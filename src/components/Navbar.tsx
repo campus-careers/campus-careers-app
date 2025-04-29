@@ -28,23 +28,21 @@ const NavBar: React.FC = () => {
                 <Nav.Link as={Link} href="/setup" active={pathName === '/setup'}>
                   Add Student Info
                 </Nav.Link>
+                <Nav.Link as={Link} href="/setup/edit" active={pathName === '/setup/edit'}>
+                  Edit Student Info
+                </Nav.Link>
                 <Nav.Link as={Link} href="/filter" active={pathName === '/filter'}>
                   Browse By Skill/Location
                 </Nav.Link>
                 <Nav.Link as={Link} href="/company" active={pathName === '/company'}>
                   List Companies
                 </Nav.Link>
-                {role === 'ADMIN' && (
-                  <>
-                    <Nav.Link as={Link} href="/add" active={pathName === '/add'}>
-                      Add Company
-                    </Nav.Link>
-                    <Nav.Link as={Link} href="/admin" active={pathName === '/admin'}>
-                      Admin
-                    </Nav.Link>
-                  </>
-                )}
               </>
+            )}
+            {currentUser && role === 'ADMIN' && (
+              <Nav.Link as={Link} href="/admin" active={pathName === '/admin'}>
+                Admin
+              </Nav.Link>
             )}
           </Nav>
 
@@ -53,22 +51,22 @@ const NavBar: React.FC = () => {
               <NavDropdown title={currentUser} id="login-dropdown" align="end">
                 <NavDropdown.Item as={Link} href="/auth/signout">
                   <BoxArrowRight className="me-2" />
-                  <span>Sign Out</span>
+                  Sign Out
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} href="/auth/change-password">
                   <Lock className="me-2" />
-                  <span>Change Password</span>
+                  Change Password
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
               <NavDropdown title="Login" id="login-dropdown" align="end">
                 <NavDropdown.Item as={Link} href="/auth/signin">
                   <PersonFill className="me-2" />
-                  <span>Sign In</span>
+                  Sign In
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} href="/auth/signup">
                   <PersonPlusFill className="me-2" />
-                  <span>Sign Up</span>
+                  Sign Up
                 </NavDropdown.Item>
               </NavDropdown>
             )}
