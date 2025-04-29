@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
+import { prisma } from '@/lib/prisma';
 import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
 
@@ -17,18 +17,27 @@ const StudentHomePage = async () => {
     );
   }
 
-  // 🔥 Get student from Student table, not User
-  const student = await prisma.student.findUnique({
+  const user = await prisma.user.findUnique({
     where: { email },
     select: {
       id: true,
       name: true,
-      skills: true,
+      email: true,
       location: true,
-      companies: true,
+      skills: true,
       interests: true,
-      interviews: true,
+      portfolio: true,
       image: true,
+      companies: {
+        select: {
+          name: true,
+        },
+      },
+      interviews: {
+        select: {
+          company: true,
+        },
+      },
     },
   });
 
@@ -50,16 +59,29 @@ const StudentHomePage = async () => {
     id: job.id.toString(),
   }));
 
-  if (!student || jobListings.length === 0) {
+  if (!user) {
     return (
       <main>
         <div className="text-center mt-5">
-          <h1>No data available</h1>
-          <p>Please check back later.</p>
+          <h1>No profile found</h1>
+          <p>Please complete your profile to view opportunities.</p>
         </div>
       </main>
     );
   }
+
+  const student = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    location: user.location,
+    skills: user.skills,
+    interests: user.interests,
+    portfolio: user.portfolio || '',
+    image: user.image,
+    companies: user.companies.map((c) => c.name),
+    interviews: user.interviews.map((i) => i.company),
+  };
 
   return <BrowseDataSet student={student} jobListings={jobListings} />;
 };
