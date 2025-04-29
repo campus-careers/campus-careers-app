@@ -2,6 +2,7 @@
 
 import { useState, CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
+import swal from 'sweetalert'; // ✅ Import SweetAlert
 
 const styles = {
   page: {
@@ -109,9 +110,11 @@ export default function SetupPage() {
     });
 
     if (response.ok) {
-      router.push('/student');
+      swal('✅ Success!', 'Your profile has been saved.', 'success').then(() => {
+        router.push('/student');
+      });
     } else {
-      console.error('❌ Failed to save profile');
+      swal('❌ Error', 'Failed to save your profile. Please try again.', 'error');
       setSubmitting(false);
     }
   };
@@ -130,18 +133,10 @@ export default function SetupPage() {
             {
               label: 'Skills',
               key: 'skills',
-              description: 'Separate each skill with a comma (e.g. Python, React, SQL).',
+              description: 'Separate each skill with commas (e.g. Python, React, SQL).',
             },
-            {
-              label: 'Interests',
-              key: 'interests',
-              description: 'What roles or industries you are interested in.',
-            },
-            {
-              label: 'Location',
-              key: 'location',
-              description: 'Where are you based or looking for opportunities?',
-            },
+            { label: 'Interests', key: 'interests', description: 'What roles or industries you are interested in.' },
+            { label: 'Location', key: 'location', description: 'Where are you based or looking for opportunities?' },
             {
               label: 'Portfolio URL',
               key: 'portfolio',
@@ -149,9 +144,7 @@ export default function SetupPage() {
             },
           ].map(({ label, key, description }) => (
             <div key={key} style={styles.inputGroup}>
-              <label htmlFor={key} style={styles.label}>
-                {label}
-              </label>
+              <label htmlFor={key} style={styles.label}>{label}</label>
               <input
                 id={key}
                 name={key}
