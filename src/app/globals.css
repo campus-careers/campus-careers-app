@@ -1,3 +1,6 @@
+/* === globals.css === */
+
+/* Global box model and layout */
 html,
 body {
   --bs-light-rgb: 236, 236, 236;
@@ -6,6 +9,8 @@ body {
   padding: 0;
   margin: 0;
 }
+
+/* Wrapper for flex column layout */
 .wrapper {
   box-sizing: border-box;
   min-height: 100%;
@@ -13,23 +18,30 @@ body {
   flex-direction: column;
 }
 
+/* Root variables for theming */
 :root {
   --nat-navbar-bg: #223866;
   --nat-navbar-bg-rgb: 34, 56, 102;
   --nat-navbar-text-color: white;
+  --nat-navbar-highlight-text: #ffd700; /* 🆕 You were missing this before! Added GOLD color */
 }
 
+/* Footer styling */
 footer, footer a {
   color: var(--nat-navbar-text-color);
 }
 
+/* Body background and Bootstrap override */
 body {
   --bs-dark: var(--nat-navbar-bg);
   --bs-dark-rgb: var(--nat-navbar-bg-rgb);
-  /*background: fixed center url("images/<your image filename>");
-  background-size: cover;*/
+  /* Uncomment and set your background image if needed
+  background: fixed center url("images/<your image filename>");
+  background-size: cover;
+  */
 }
 
+/* Bootstrap Navbar color variables */
 body .navbar {
   --bs-navbar-active-color: var(--nat-navbar-highlight-text);
   --bs-navbar-brand-color: var(--nat-navbar-text-color);
@@ -38,17 +50,26 @@ body .navbar {
   --bs-navbar-hover-color: var(--nat-navbar-highlight-text);
 }
 
+/* Dropdown menu items */
 .bg-dark a.dropdown-item {
   color: var(--nat-navbar-bg);
 }
 
-/* Fix navbar text hover and active color */
+/* === Navbar text color fixes === */
+
+/* Default: white */
 .navbar-dark .nav-link,
 .navbar-dark .navbar-brand {
-  color: #ffffff; /* Default color: White */
+  color: var(--nat-navbar-text-color);
 }
 
+/* Hover + Active: Gold */
 .navbar-dark .nav-link:hover,
 .navbar-dark .nav-link.active {
-  color: #ffd700 !important; /* Hover + Active: Gold */
+  color: var(--nat-navbar-highlight-text) !important;
+}
+
+/* Smooth hover transition */
+.navbar-dark .nav-link {
+  transition: color 0.3s ease;
 }
