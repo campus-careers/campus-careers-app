@@ -17,13 +17,16 @@ const StudentHomePage = async () => {
     );
   }
 
-  const student = await prisma.user.findFirst({
+  const student = await prisma.user.findUnique({
     where: { email },
     select: {
       name: true,
       email: true,
       location: true,
       skills: true,
+      interests: true,
+      portfolio: true,
+      image: true,
     },
   });
 
