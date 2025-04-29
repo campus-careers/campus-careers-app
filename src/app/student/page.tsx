@@ -1,5 +1,5 @@
-import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
 
@@ -17,27 +17,12 @@ const StudentHomePage = async () => {
     );
   }
 
-  const user = await prisma.user.findUnique({
+  const student = await prisma.user.findUnique({
     where: { email },
     select: {
-      id: true,
       name: true,
-      email: true,
       location: true,
       skills: true,
-      interests: true,
-      portfolio: true,
-      image: true,
-      companies: {
-        select: {
-          name: true,
-        },
-      },
-      interviews: {
-        select: {
-          company: true,
-        },
-      },
     },
   });
 
@@ -48,9 +33,6 @@ const StudentHomePage = async () => {
       location: true,
       skills: true,
       companies: true,
-      image: true,
-      interviews: true,
-      interests: true,
     },
   });
 
@@ -59,7 +41,7 @@ const StudentHomePage = async () => {
     id: job.id.toString(),
   }));
 
-  if (!user) {
+  if (!student) {
     return (
       <main>
         <div className="text-center mt-5">
@@ -70,20 +52,16 @@ const StudentHomePage = async () => {
     );
   }
 
-  const student = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    location: user.location,
-    skills: user.skills,
-    interests: user.interests,
-    portfolio: user.portfolio || '',
-    image: user.image,
-    companies: user.companies.map((c) => c.name),
-    interviews: user.interviews.map((i) => i.company),
-  };
-
-  return <BrowseDataSet student={student} jobListings={jobListings} />;
+  return (
+    <BrowseDataSet
+      student={{
+        name: student.name,
+        location: student.location,
+        skills: student.skills,
+      }}
+      jobListings={jobListings}
+    />
+  );
 };
 
 export default StudentHomePage;
