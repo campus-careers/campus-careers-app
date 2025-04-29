@@ -42,11 +42,13 @@ body .navbar {
   color: var(--nat-navbar-bg);
 }
 
-.navbar-dark .nav-link {
-  color: #ffffff; /* Normal state: White */
+/* Fix navbar text hover and active color */
+.navbar-dark .nav-link,
+.navbar-dark .navbar-brand {
+  color: #ffffff; /* Default color: White */
 }
 
 .navbar-dark .nav-link:hover,
 .navbar-dark .nav-link.active {
-  color: #ffd700 !important; /* Hovered and Active state: Gold */
+  color: #ffd700 !important; /* Hover + Active: Gold */
 }
