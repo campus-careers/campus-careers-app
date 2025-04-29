@@ -1,4 +1,4 @@
-import { getServerSession, Session } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { Student, User } from '@prisma/client';
@@ -9,14 +9,18 @@ import { adminProtectedPage } from '@/lib/page-protection';
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
 
-  adminProtectedPage(session as Session & { user: { email: string; id: string; randomKey: string } });
+  adminProtectedPage(session); // ✅ No need to cast manually now
 
+  // 1. Get admin emails from AdminList
   const adminEmails = (await prisma.adminList.findMany({
     select: { email: true },
   })).map((admin) => admin.email);
 
+  // 2. Find matching Students
   const adminListItem: Student[] = await prisma.student.findMany({
-    where: { email: { in: adminEmails } },
+    where: {
+      email: { in: adminEmails },
+    },
     select: {
       id: true,
       name: true,

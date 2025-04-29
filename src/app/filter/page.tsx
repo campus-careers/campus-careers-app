@@ -1,19 +1,16 @@
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
-import { loggedInProtectedPage } from '@/lib/page-protection'; // ✅ correct now
+import { adminProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 import FilterSkillOrLocation from '@/components/FilterSkillOrLocation';
 
 const FilterSkillPage = async () => {
   const session = await getServerSession(authOptions);
 
-  loggedInProtectedPage(
-    session as {
-      user: { email: string; id: string; randomKey: string };
-    } | null,
-  );
+  adminProtectedPage(session); // ✅ Correct: pass full session
 
+  // 1. Fetch distinct skills and locations from Students
   const students = await prisma.student.findMany({
     select: {
       skills: true,
@@ -21,6 +18,7 @@ const FilterSkillPage = async () => {
     },
   });
 
+  // Flatten skills and collect unique
   const allSkillsSet = new Set<string>();
   const allLocationsSet = new Set<string>();
 
@@ -36,6 +34,7 @@ const FilterSkillPage = async () => {
   const allSkills = Array.from(allSkillsSet);
   const allLocations = Array.from(allLocationsSet);
 
+  // 2. Fetch Admin Students
   const adminEmails = (await prisma.adminList.findMany({
     select: { email: true },
   })).map((admin) => admin.email);
