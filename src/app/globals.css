@@ -44,6 +44,5 @@ body .navbar {
 
 /* Highlight active navbar link */
 .navbar-dark .nav-link.active {
-  color: #ffc107 !important; /* Gold color when active */
-  font-weight: 600;
-}
+    color: #ffd700 !important; /* Gold color */
+  }
