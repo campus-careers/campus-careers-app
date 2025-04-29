@@ -7,12 +7,20 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const isSetupPage = pathname === '/setup';
-  const isApiRoute = pathname.startsWith('/api');
-  const isAuthRoute = pathname.startsWith('/auth'); // ✅ Allow auth pages
+  // Pages that should NOT require authentication
+  const publicPaths = ['/', '/filter', '/company', '/setup', '/auth', '/favicon.ico'];
 
-  if (!token || isApiRoute || isSetupPage || isAuthRoute) {
+  const isPublic = publicPaths.some((path) => pathname.startsWith(path))
+    || pathname.startsWith('/_next')
+    || pathname.startsWith('/static');
+
+  if (isPublic) {
     return NextResponse.next();
+  }
+
+  if (!token) {
+    // If the page is protected but no token, redirect to login
+    return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
   const baseUrl = request.nextUrl.origin;
@@ -38,7 +46,7 @@ export async function middleware(request: NextRequest) {
     }
   } catch (error) {
     console.error('Middleware error (profile check):', error);
-    // Continue normally if error happens
+    // Allow if profile check fails
     return NextResponse.next();
   }
 
@@ -46,7 +54,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next|static|favicon.ico|setup|auth).*)',
-  ],
+  matcher: ['/((?!api).*)'], // ✅ Only match non-api routes
 };

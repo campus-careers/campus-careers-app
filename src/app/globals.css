@@ -46,13 +46,18 @@ body .navbar {
   color: var(--nat-navbar-bg);
 }
 
-/* Fix navbar text hover and active color */
 .navbar-dark .nav-link,
 .navbar-dark .navbar-brand {
-  color: #ffffff; /* ✅ Default color: White */
+  color: #ffffff; /* Default color: White */
 }
 
 .navbar-dark .nav-link:hover,
 .navbar-dark .nav-link.active {
-  color: #ffd700 !important; /* ✅ Hover + Active: Gold */
+  color: #3399ff !important; /* Hover + Active: Bright blue */
 }
+
+/* Optional: Smooth fade transition */
+.navbar-dark .nav-link {
+  transition: color 0.2s ease-in-out;
+}
+
