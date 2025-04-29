@@ -8,7 +8,11 @@ import FilterSkillOrLocation from '@/components/FilterSkillOrLocation';
 const FilterSkillPage = async () => {
   const session = await getServerSession(authOptions);
 
-  adminProtectedPage(session); // ✅ Correct: pass full session
+  adminProtectedPage(
+    session as {
+      user: { email: string; id: string; randomKey: string };
+    } | null,
+  );
 
   // 1. Fetch distinct skills and locations from Students
   const students = await prisma.student.findMany({

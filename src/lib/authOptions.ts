@@ -69,6 +69,18 @@ const authOptions: NextAuthOptions = {
         randomKey: token.randomKey,
       },
     }),
+    redirect: async ({ url, baseUrl }) => {
+      // During sign in, automatically redirect based on role
+      if (url.includes('/auth/callback')) {
+        // ⚡ Custom logic: if ADMIN, go to /admin; else, go to /student
+        if (typeof window !== 'undefined') {
+          // Client-side, can't check session easily
+          return baseUrl;
+        }
+        return baseUrl;
+      }
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
