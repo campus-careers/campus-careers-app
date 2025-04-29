@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Company } from '@prisma/client';
 import authOptions from '@/lib/authOptions';
 import { loggedInProtectedPage } from '@/lib/page-protection';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import EditCompanyForm from '@/components/EditCompanyForm';
 
 export default async function EditCompanyPage({ params }: { params: { id: string | string[] } }) {
