@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
-import authOptions from '@/lib/authOptions';
+import authOptions from '@/lib/authOptions'; // ✅ Needed
 import BrowseDataSet from '@/components/BrowseDataSet';
 
 const StudentHomePage = async () => {
@@ -30,17 +30,6 @@ const StudentHomePage = async () => {
     },
   });
 
-  if (!student) {
-    return (
-      <main>
-        <div className="text-center mt-5">
-          <h1>No student profile found</h1>
-          <p>Please complete your student profile first.</p>
-        </div>
-      </main>
-    );
-  }
-
   const jobListingsRaw = await prisma.adminList.findMany({
     select: {
       id: true,
@@ -58,6 +47,17 @@ const StudentHomePage = async () => {
     ...job,
     id: job.id.toString(),
   }));
+
+  if (!student) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <h1>No profile found</h1>
+          <p>Please complete your profile to view opportunities.</p>
+        </div>
+      </main>
+    );
+  }
 
   return <BrowseDataSet student={student} jobListings={jobListings} />;
 };
