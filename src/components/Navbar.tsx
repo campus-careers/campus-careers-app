@@ -4,6 +4,7 @@
 
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link'; // ✅ Import Link
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { BoxArrowRight, Lock, PersonFill, PersonPlusFill } from 'react-bootstrap-icons';
 
@@ -13,64 +14,80 @@ const NavBar: React.FC = () => {
   const userWithRole = session?.user as { email: string; randomKey: string };
   const role = userWithRole?.randomKey;
   const pathName = usePathname();
+
   return (
     <Navbar bg="dark" expand="lg">
       <Container>
-        <Navbar.Brand href="/">Campus Careers</Navbar.Brand>
+        <Link href="/" passHref legacyBehavior>
+          <Navbar.Brand>Campus Careers</Navbar.Brand>
+        </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto justify-content-start">
-            {currentUser
-              ? [
-                  // <Nav.Link id="list-stuff-nav" href="/list" key="list" active={pathName === '/list'}>
-                  //   List Stuff
-                  // </Nav.Link>,
-                  <Nav.Link id="list-stuff-nav" href="/student" key="list" active={pathName === '/list'}>
-                    Student Home
-                  </Nav.Link>,
-                  <Nav.Link id="list-stuff-nav" href="/add" key="list" active={pathName === '/list'}>
-                    Add Company
-                  </Nav.Link>,
-                  <Nav.Link id="list-stuff-nav" href="/company" key="list" active={pathName === '/list'}>
-                    List Company
-                  </Nav.Link>,
-                ]
-              : ''}
-            {currentUser && role === 'ADMIN' ? (
+            {currentUser && (
               <>
-<Nav.Link id="admin-stuff-nav" href="/admin" key="admin" active={pathName === '/admin'}>
-                Admin
-</Nav.Link>
-<Nav.Link id="admin-stuff-nav" href="/add" key="add" active={pathName === '/add'}>
-                  New Company
-</Nav.Link>
+                <Link href="/student" passHref legacyBehavior>
+                  <Nav.Link active={pathName === '/student'}>
+                    Student Home
+                  </Nav.Link>
+                </Link>
+                <Link href="/add" passHref legacyBehavior>
+                  <Nav.Link active={pathName === '/add'}>
+                    Add Company
+                  </Nav.Link>
+                </Link>
+                <Link href="/company" passHref legacyBehavior>
+                  <Nav.Link active={pathName === '/company'}>
+                    List Company
+                  </Nav.Link>
+                </Link>
               </>
-            ) : (
-              ''
+            )}
+            {currentUser && role === 'ADMIN' && (
+              <>
+                <Link href="/admin" passHref legacyBehavior>
+                  <Nav.Link active={pathName === '/admin'}>
+                    Admin
+                  </Nav.Link>
+                </Link>
+                <Link href="/add" passHref legacyBehavior>
+                  <Nav.Link active={pathName === '/add'}>
+                    New Company
+                  </Nav.Link>
+                </Link>
+              </>
             )}
           </Nav>
           <Nav>
             {session ? (
               <NavDropdown id="login-dropdown" title={currentUser}>
-                <NavDropdown.Item id="login-dropdown-sign-out" href="/api/auth/signout">
-                  <BoxArrowRight />
-                  Sign Out
-                </NavDropdown.Item>
-                <NavDropdown.Item id="login-dropdown-change-password" href="/auth/change-password">
-                  <Lock />
-                  Change Password
-                </NavDropdown.Item>
+                <Link href="/auth/signout" passHref legacyBehavior>
+                  <NavDropdown.Item id="login-dropdown-sign-out">
+                    <BoxArrowRight className="me-2" />
+                    Sign Out
+                  </NavDropdown.Item>
+                </Link>
+                <Link href="/auth/change-password" passHref legacyBehavior>
+                  <NavDropdown.Item id="login-dropdown-change-password">
+                    <Lock className="me-2" />
+                    Change Password
+                  </NavDropdown.Item>
+                </Link>
               </NavDropdown>
             ) : (
               <NavDropdown id="login-dropdown" title="Login">
-                <NavDropdown.Item id="login-dropdown-sign-in" href="/auth/signin">
-                  <PersonFill />
-                  Sign in
-                </NavDropdown.Item>
-                <NavDropdown.Item id="login-dropdown-sign-up" href="/auth/signup">
-                  <PersonPlusFill />
-                  Sign up
-                </NavDropdown.Item>
+                <Link href="/auth/signin" passHref legacyBehavior>
+                  <NavDropdown.Item id="login-dropdown-sign-in">
+                    <PersonFill className="me-2" />
+                    Sign In
+                  </NavDropdown.Item>
+                </Link>
+                <Link href="/auth/signup" passHref legacyBehavior>
+                  <NavDropdown.Item id="login-dropdown-sign-up">
+                    <PersonPlusFill className="me-2" />
+                    Sign Up
+                  </NavDropdown.Item>
+                </Link>
               </NavDropdown>
             )}
           </Nav>
