@@ -1,15 +1,13 @@
 /* eslint-disable import/prefer-default-export */
-
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
-import { Locations } from '@prisma/client'; // ✅ only Locations needed
+import { Locations } from '@prisma/client';
 
 export const POST = async (req: Request) => {
   try {
     const session = await getServerSession(authOptions);
-
     if (!session?.user?.email) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
@@ -17,8 +15,10 @@ export const POST = async (req: Request) => {
     const body = await req.json();
     const { name, major, skills, interests, location, portfolio } = body;
 
-    // Validate location properly
-    if (!Object.values(Locations).includes(location)) {
+    const trimmedLocation = location.trim();
+    const validLocations = Object.values(Locations) as string[];
+
+    if (!validLocations.includes(trimmedLocation)) {
       return NextResponse.json({ success: false, error: 'Invalid location' }, { status: 400 });
     }
 
@@ -27,9 +27,9 @@ export const POST = async (req: Request) => {
       data: {
         name,
         major,
-        skills: skills.split(',').map((s: string) => s.trim()),
-        interests: interests.split(',').map((i: string) => i.trim()),
-        location: location as Locations,
+        skills: skills.map((s: string) => s.trim()),
+        interests: interests.map((i: string) => i.trim()),
+        location: trimmedLocation as Locations,
         portfolio,
       },
     });
