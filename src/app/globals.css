@@ -41,3 +41,9 @@ body .navbar {
 .bg-dark a.dropdown-item {
   color: var(--nat-navbar-bg);
 }
+
+/* Highlight active navbar link */
+.navbar-dark .nav-link.active {
+  color: #ffc107 !important; /* Gold color when active */
+  font-weight: 600;
+}

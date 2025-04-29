@@ -61,7 +61,9 @@ const AdminPage = async () => {
           </Col>
         </Row>
 
-        <Row>
+        <Row className="mt-4">
+          {' '}
+          {/* <-- add margin top here */}
           <Col>
             <h1>List Users Admin</h1>
             <Table striped bordered hover>
