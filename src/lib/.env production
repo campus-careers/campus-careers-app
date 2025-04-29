@@ -1,4 +1,19 @@
-DATABASE_URL="postgresql://postgres.cybolwljscbefxllonrp:A90ToySupra@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+# Supabase PostgreSQL connection (used by Prisma)
+DATABASE_URL="postgres://postgres.cybolwljscbefxllonrp:A90ToySupra2025!@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true&statement_cache_size=0"
 
-NEXTAUTH_SECRET=your-production-secret
-NEXTAUTH_URL=https://your-vercel-deployment.vercel.app
+# Supabase URL (if you ever use Supabase client directly)
+SUPABASE_URL="https://cybolwljscbefxllonrp.supabase.co"
+NEXT_PUBLIC_SUPABASE_URL="https://cybolwljscbefxllonrp.supabase.co"
+
+# PostgreSQL raw credentials (optional)
+POSTGRES_USER="postgres"
+POSTGRES_PASSWORD="A90ToySupra"
+POSTGRES_HOST="aws-0-us-east-1.pooler.supabase.com"
+POSTGRES_PORT="6543"
+POSTGRES_DATABASE="postgres"
+
+# NextAuth.js secret and URL
+NEXTAUTH_SECRET=u0dP5OapZ/Nry99hT0f8dLU8A0ocEulOti+9nNpKH0k=  # 🔥 generate a strong random secret
+NEXTAUTH_URL=https://campus-careers-app.vercel.app
+
+# --- DO NOT include Vercel Postgres settings ---
