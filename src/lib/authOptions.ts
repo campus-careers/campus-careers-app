@@ -39,6 +39,7 @@ const authOptions: NextAuthOptions = {
 
         return {
           id: `${user.id}`,
+          name: user.name, // ✅ add this line
           email: user.email,
           randomKey: user.role,
         };
