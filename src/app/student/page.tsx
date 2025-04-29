@@ -17,12 +17,16 @@ const StudentHomePage = async () => {
     );
   }
 
-  const student = await prisma.user.findUnique({
+  const student = await prisma.student.findUnique({
     where: { email },
     select: {
       name: true,
       location: true,
       skills: true,
+      interests: true,
+      companies: true,
+      interviews: true,
+      image: true,
     },
   });
 
@@ -33,6 +37,9 @@ const StudentHomePage = async () => {
       location: true,
       skills: true,
       companies: true,
+      image: true,
+      interviews: true,
+      interests: true,
     },
   });
 
@@ -58,6 +65,10 @@ const StudentHomePage = async () => {
         name: student.name,
         location: student.location,
         skills: student.skills,
+        interests: student.interests,
+        companies: student.companies,
+        interviews: student.interviews,
+        image: student.image,
       }}
       jobListings={jobListings}
     />

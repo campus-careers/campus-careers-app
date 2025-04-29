@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import Image from 'next/image'; // ✅ Import Next.js Image
 
+// --- TYPES --- //
 type JobListing = {
   id: string;
   name: string;
@@ -15,6 +17,10 @@ type Student = {
   name: string;
   location: string;
   skills: string[];
+  interests: string[];
+  companies: string[];
+  interviews: string[];
+  image: string;
 };
 
 type BrowseDataSetProps = {
@@ -22,6 +28,7 @@ type BrowseDataSetProps = {
   jobListings: JobListing[];
 };
 
+// --- COMPONENT --- //
 const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
   const [filteredJobs, setFilteredJobs] = useState<JobListing[]>(jobListings);
 
@@ -44,7 +51,7 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
         filtered = jobListings.filter((job) => job.location === student?.location);
         break;
       default:
-        filtered = jobListings; // If no filter, return all jobs
+        filtered = jobListings;
         break;
     }
 
@@ -70,32 +77,47 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
           <p>Find your perfect match!</p>
         </Container>
       </div>
+
       <Container className="mt-4">
         <h2 className="text-center mb-4">Student Home Page</h2>
+
         <Row className="justify-content-center">
           <Col md={4}>
             <Card className="p-3">
               <Row>
                 <Col xs={4}>
-                  <div
-                    style={{
-                      width: '100%',
-                      paddingBottom: '100%',
-                      backgroundColor: '#eee',
-                      border: '1px solid #ccc',
-                      borderRadius: '4px',
-                    }}
-                  />
+                  {student.image ? (
+                    <div style={{ position: 'relative', width: '100%', paddingBottom: '100%' }}>
+                      <Image
+                        src={student.image}
+                        alt="Profile"
+                        fill
+                        style={{ objectFit: 'cover', borderRadius: '4px' }}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        width: '100%',
+                        paddingBottom: '100%',
+                        backgroundColor: '#eee',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                      }}
+                    />
+                  )}
                 </Col>
                 <Col xs={8}>
-                  <h5 className="fw-bold">{student?.name || 'Unknown Student'}</h5>
+                  <h5 className="fw-bold">{student.name || 'Unknown Student'}</h5>
                   <p className="mb-1">
                     Preferred Location:
-                    {student?.location || 'Unknown'}
+                    {' '}
+                    {student.location || 'Unknown'}
                   </p>
                   <p className="mb-0">
                     Skills:
-                    {student?.skills && student.skills.length > 0 ? student.skills.join(', ') : 'None'}
+                    {' '}
+                    {student.skills?.length > 0 ? student.skills.join(', ') : 'None'}
                   </p>
                 </Col>
               </Row>
@@ -118,7 +140,6 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
           </Col>
         </Row>
 
-        {/* Filtered Matches Section */}
         <Row className="mt-5">
           <Col md={8} className="mx-auto">
             <h5 className="fw-bold">Filtered Matches</h5>
