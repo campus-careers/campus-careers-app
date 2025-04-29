@@ -1,37 +1,44 @@
-html,
-body {
-  --bs-light-rgb: 236, 236, 236;
-  box-sizing: border-box;
+html, body {
   height: 100%;
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
+  --bs-light-rgb: 236, 236, 236;
 }
 
-.wrapper {
-  box-sizing: border-box;
-  min-height: 100%;
+body {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  --bs-dark: var(--nat-navbar-bg);
+  --bs-dark-rgb: var(--nat-navbar-bg-rgb);
+  overflow-x: hidden; /* Prevent weird horizontal scrolling */
 }
 
+main {
+  flex: 1 0 auto; /* Let main content expand naturally */
+  width: 100%;
+  overflow-x: hidden;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+/* === Theme Colors === */
 :root {
-  --nat-navbar-bg: #000000; /* 🔥 Changed to black background */
+  --nat-navbar-bg: #000000; /* Black background for navbar */
   --nat-navbar-bg-rgb: 0, 0, 0;
   --nat-navbar-text-color: white;
+  --nat-navbar-highlight-text: #3399FF; /* Contrasting blue */
 }
 
-/* Footer text */
+/* === Footer Links Color === */
 footer, footer a {
   color: var(--nat-navbar-text-color);
 }
 
-/* Body setup */
-body {
-  --bs-dark: var(--nat-navbar-bg);
-  --bs-dark-rgb: var(--nat-navbar-bg-rgb);
-}
-
-/* Navbar base colors */
+/* === Navbar Theming === */
 body .navbar {
   --bs-navbar-active-color: var(--nat-navbar-highlight-text);
   --bs-navbar-brand-color: var(--nat-navbar-text-color);
@@ -40,31 +47,25 @@ body .navbar {
   --bs-navbar-hover-color: var(--nat-navbar-highlight-text);
 }
 
-/* Dropdown fix inside dark navbar */
+/* Dropdown items inside a dark navbar */
 .bg-dark a.dropdown-item {
   color: var(--nat-navbar-bg);
 }
 
-/* === Navbar Link Text === */
+/* Fix navbar text hover and active color */
 .navbar-dark .nav-link,
 .navbar-dark .navbar-brand {
-  color: #ffffff !important; /* Default: white */
-  transition: color 0.3s ease;
+  color: var(--nat-navbar-text-color); /* Default text color (white) */
 }
 
 .navbar-dark .nav-link:hover,
 .navbar-dark .nav-link.active {
-  color: #4da6ff !important; /* 🔵 Hover/Active: bright blue */
+  color: var(--nat-navbar-highlight-text) !important; /* Hover + Active color */
 }
 
-/* === Dropdown Menu Items === */
-.dropdown-menu .dropdown-item {
-  color: black;
-  transition: color 0.3s ease, background-color 0.3s ease;
-}
-
-.dropdown-menu .dropdown-item:hover,
-.dropdown-menu .dropdown-item:focus {
-  color: #4da6ff !important;           /* 🔵 Blue text */
-  background-color: #f0f0f0 !important; /* Light gray background */
+/* Ensure dropdown menu items are styled nicely too */
+.navbar-dark .dropdown-menu .dropdown-item:hover,
+.navbar-dark .dropdown-menu .dropdown-item:focus {
+  color: var(--nat-navbar-highlight-text);
+  background-color: transparent;
 }
