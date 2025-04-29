@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-indent, @typescript-eslint/indent */
+
 'use client';
 
 import { useSession } from 'next-auth/react';
@@ -14,14 +16,17 @@ const NavBar: React.FC = () => {
   const pathName = usePathname();
 
   return (
-    <Navbar bg="dark" expand="lg" variant="dark">
-      <Container>
+    <Navbar bg="dark" expand="lg" className="navbar-dark">
+      <Container fluid className="flex-nowrap overflow-auto">
         <Link href="/" passHref legacyBehavior>
           <Navbar.Brand>Campus Careers</Navbar.Brand>
         </Link>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav
+            className="me-auto justify-content-start flex-nowrap"
+            style={{ whiteSpace: 'nowrap', overflowX: 'auto' }}
+          >
             {currentUser && (
               <>
                 <Link href="/student" passHref legacyBehavior>
@@ -47,34 +52,39 @@ const NavBar: React.FC = () => {
               </Link>
             )}
           </Nav>
+
           <Nav>
             {session ? (
               <NavDropdown id="login-dropdown" title={currentUser}>
                 <Link href="/auth/signout" passHref legacyBehavior>
-                  <NavDropdown.Item>
+                  <NavDropdown.Item id="login-dropdown-sign-out">
                     <BoxArrowRight className="me-2" />
-                    Sign Out
+{' '}
+Sign Out
                   </NavDropdown.Item>
                 </Link>
                 <Link href="/auth/change-password" passHref legacyBehavior>
-                  <NavDropdown.Item>
+                  <NavDropdown.Item id="login-dropdown-change-password">
                     <Lock className="me-2" />
-                    Change Password
+{' '}
+Change Password
                   </NavDropdown.Item>
                 </Link>
               </NavDropdown>
             ) : (
               <NavDropdown id="login-dropdown" title="Login">
                 <Link href="/auth/signin" passHref legacyBehavior>
-                  <NavDropdown.Item>
+                  <NavDropdown.Item id="login-dropdown-sign-in">
                     <PersonFill className="me-2" />
-                    Sign In
+{' '}
+Sign In
                   </NavDropdown.Item>
                 </Link>
                 <Link href="/auth/signup" passHref legacyBehavior>
-                  <NavDropdown.Item>
+                  <NavDropdown.Item id="login-dropdown-sign-up">
                     <PersonPlusFill className="me-2" />
-                    Sign Up
+{' '}
+Sign Up
                   </NavDropdown.Item>
                 </Link>
               </NavDropdown>
