@@ -1,160 +1,90 @@
 'use client';
 
-import { useState, CSSProperties } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import swal from 'sweetalert';
 
-const styles: Record<string, CSSProperties> = {
-  page: {
-    backgroundColor: '#f9fafb',
-    paddingTop: '2rem',
-    paddingBottom: '2rem',
-    paddingLeft: '1rem',
-    paddingRight: '1rem',
-    display: 'block', // remove centering and fixed height
-  },
+const SetupPage = () => {
+  const { register, handleSubmit, reset } = useForm();
+  const [loading, setLoading] = useState(false);
 
-  card: {
-    backgroundColor: '#ffffff',
-    padding: '2.5rem',
-    borderRadius: '1rem',
-    boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
-    width: '100%',
-    maxWidth: '600px',
-    margin: '0 auto', // ← centers the card horizontally
-  },
-  title: {
-    fontSize: '2.65rem',
-    fontWeight: 700,
-    textAlign: 'center',
-    marginBottom: '0.5rem',
-  },
-  subtitle: {
-    textAlign: 'center',
-    marginBottom: '2rem',
-    color: '#555',
-    fontSize: '0.95rem',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.5rem',
-  },
-  inputGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  label: {
-    fontSize: '1.1rem',
-    marginBottom: '0.4rem',
-    fontWeight: 'bold',
-  },
-  description: {
-    fontSize: '0.8rem',
-    color: '#000000',
-    marginTop: '0.35rem',
-  },
-  input: {
-    padding: '0.75rem 1rem',
-    borderRadius: '0.5rem',
-    border: '1px solid #ccc',
-    fontSize: '1rem',
-    color: '#333',
-    outline: 'none',
-    transition: 'border 0.2s ease, box-shadow 0.2s ease',
-  },
-  button: {
-    backgroundColor: '#2F855A',
-    color: 'white',
-    border: 'none',
-    borderRadius: '0.5rem',
-    padding: '0.85rem 1rem',
-    fontSize: '1rem',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease-in-out',
-  },
-};
+  const onSubmit = async (data: any) => {
+    try {
+      setLoading(true);
 
-export default function SetupPage() {
-  const [form, setForm] = useState({
-    name: '',
-    major: '',
-    skills: '',
-    interests: '',
-    location: '',
-    portfolio: '',
-  });
+      const response = await fetch('/api/user/save-profile', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+      const result = await response.json();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const payload = {
-      ...form,
-      skills: form.skills.split(',').map((skill) => skill.trim()),
-      interests: form.interests.split(',').map((interest) => interest.trim()),
-      location: form.location.trim(),
-    };
-
-    const response = await fetch('/api/user/save-profile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-
-    if (response.ok) {
-      window.location.href = '/student';
-    } else {
-      console.error('❌ Failed to save profile');
-      window.location.href = '/setup?error=save_failed';
+      if (response.ok && result.success) {
+        swal('Success', 'Student info saved successfully!', 'success');
+        reset();
+      } else {
+        swal('Error', result.error || 'Failed to save student info.', 'error');
+      }
+    } catch (error) {
+      console.error('❌ Unexpected error:', error);
+      swal('Error', 'Something went wrong. Please try again.', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>🎓 Complete Your Profile</h1>
-        <p style={styles.subtitle}>
-          Let us know more about you to match you with the best opportunities.
-        </p>
-        <form onSubmit={handleSubmit} style={styles.form}>
-          {[
-            { label: 'Full Name', key: 'name', description: 'Your legal first and last name.' },
-            { label: 'Major', key: 'major', description: 'Your field of study or concentration.' },
-            {
-              label: 'Skills',
-              key: 'skills',
-              description: 'Separate each skill with a comma (e.g. Python, React, SQL).',
-            },
-            { label: 'Interests', key: 'interests', description: 'What roles or industries you are interested in.' },
-            { label: 'Location', key: 'location', description: 'Where are you based or looking for opportunities?' },
-            {
-              label: 'Portfolio URL',
-              key: 'portfolio',
-              description: 'Link to your personal website, GitHub, or resume.',
-            },
-          ].map(({ label, key, description }) => (
-            <div key={key} style={styles.inputGroup}>
-              <label htmlFor={key} style={styles.label}>{label}</label>
-              <input
-                id={key}
-                name={key}
-                value={(form as any)[key]}
-                onChange={handleChange}
-                placeholder={label}
-                style={styles.input}
-                required
-              />
-              <p style={styles.description}>{description}</p>
-            </div>
-          ))}
-          <button type="submit" style={styles.button}>
-            Save and Continue →
-          </button>
-        </form>
-      </div>
-    </div>
+    <Container className="py-4">
+      <Row className="justify-content-center">
+        <Col md={8}>
+          <Card>
+            <Card.Body>
+              <h2 className="text-center mb-4">Add Student Info</h2>
+              <Form onSubmit={handleSubmit(onSubmit)}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control {...register('name')} placeholder="Enter your full name" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Major</Form.Label>
+                  <Form.Control {...register('major')} placeholder="Enter your major" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Skills (comma-separated)</Form.Label>
+                  <Form.Control {...register('skills')} placeholder="e.g., JavaScript, Python" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Interests (comma-separated)</Form.Label>
+                  <Form.Control {...register('interests')} placeholder="e.g., AI, Web Development" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Location</Form.Label>
+                  <Form.Control {...register('location')} placeholder="Enter your location" />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Portfolio Link</Form.Label>
+                  <Form.Control {...register('portfolio')} placeholder="e.g., https://yourportfolio.com" />
+                </Form.Group>
+
+                <Button type="submit" variant="primary" disabled={loading} className="w-100">
+                  {loading ? 'Saving...' : 'Save Info'}
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
-}
+};
+
+export default SetupPage;

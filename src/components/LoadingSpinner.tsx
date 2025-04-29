@@ -1,10 +1,16 @@
-import { Container, Row, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 
 const LoadingSpinner = () => (
-  <Container>
-    <Row className="justify-content-md-center">
-      <Spinner animation="border" />
-      Getting data
+  <Container className="text-center py-5">
+    <Row className="justify-content-center">
+      <Col xs="auto">
+        <Spinner animation="border" role="status" />
+      </Col>
+    </Row>
+    <Row className="justify-content-center mt-3">
+      <Col xs="auto">
+        <p>Loading, please wait...</p>
+      </Col>
     </Row>
   </Container>
 );

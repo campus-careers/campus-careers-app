@@ -17,11 +17,11 @@ type FormValues = {
   overview: string;
   jobs: string;
   contacts: string;
-  idealSkill: string; // User inputs comma-separated string
+  idealSkill: string; // comma-separated
 };
 
 const AddCompanyForm: React.FC = () => {
-  const { data: session, status } = useSession(); // ✅ fetch both session and status
+  const { data: session, status } = useSession();
 
   const {
     register,
@@ -42,25 +42,31 @@ const AddCompanyForm: React.FC = () => {
 
   const onSubmit = async (data: FormValues) => {
     if (!session?.user?.id) {
-      console.error('User ID not found');
+      console.error('❌ User ID not found');
+      swal('Error', 'User not authenticated. Please sign in again.', 'error');
       return;
     }
 
-    const companyData = {
-      name: data.name,
-      salary: Number(data.salary),
-      overview: data.overview,
-      location: data.location,
-      jobs: data.jobs,
-      contacts: data.contacts,
-      idealSkill: data.idealSkill.split(',').map((s) => s.trim()),
-      userId: Number(session.user.id), // ✅ fix here
-    };
+    try {
+      const companyData = {
+        name: data.name,
+        salary: Number(data.salary),
+        overview: data.overview,
+        location: data.location,
+        jobs: data.jobs,
+        contacts: data.contacts,
+        idealSkill: data.idealSkill.split(',').map((s) => s.trim()),
+        userId: Number(session.user.id),
+      };
 
-    await addCompany(companyData);
-    swal('Success', 'Your company has been added', 'success', {
-      timer: 2000,
-    });
+      await addCompany(companyData);
+
+      swal('Success', 'Company added successfully!', 'success');
+      reset(); // ✅ Clear the form after successful submission
+    } catch (error) {
+      console.error('❌ Failed to add company:', error);
+      swal('Error', 'Failed to add company. Please try again.', 'error');
+    }
   };
 
   return (
@@ -73,6 +79,7 @@ const AddCompanyForm: React.FC = () => {
           <Card>
             <Card.Body>
               <Form onSubmit={handleSubmit(onSubmit)}>
+                {/* Fields */}
                 <Form.Group>
                   <Form.Label>Name</Form.Label>
                   <input
@@ -143,19 +150,19 @@ const AddCompanyForm: React.FC = () => {
                   <div className="invalid-feedback">{errors.idealSkill?.message}</div>
                 </Form.Group>
 
-                <Form.Group className="form-group">
-                  <Row className="pt-3">
+                <Form.Group className="form-group pt-3">
+                  <Row>
                     <Col>
-                      <Button type="submit" variant="primary">
+                      <Button type="submit" variant="primary" className="w-100">
                         Submit
                       </Button>
                     </Col>
                     <Col>
                       <Button
                         type="button"
-                        onClick={() => reset()}
                         variant="warning"
-                        className="float-right"
+                        className="w-100"
+                        onClick={() => reset()}
                       >
                         Reset
                       </Button>
