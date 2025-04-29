@@ -22,23 +22,23 @@ const styles: Record<string, CSSProperties> = {
   title: {
     fontSize: '2.65rem',
     fontWeight: 700,
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: '0.5rem',
   },
   subtitle: {
-    textAlign: 'center' as const,
+    textAlign: 'center',
     marginBottom: '2rem',
     color: '#555',
     fontSize: '0.95rem',
   },
   form: {
     display: 'flex',
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
     gap: '1.5rem',
   },
   inputGroup: {
     display: 'flex',
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
   },
   label: {
     fontSize: '1.1rem',
@@ -89,13 +89,25 @@ export default function SetupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await fetch('/api/user/save-profile', {
+    const payload = {
+      ...form,
+      skills: form.skills.split(',').map((skill) => skill.trim()),
+      interests: form.interests.split(',').map((interest) => interest.trim()),
+      location: form.location.trim(),
+    };
+
+    const response = await fetch('/api/user/save-profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify(payload),
     });
 
-    window.location.href = '/student';
+    if (response.ok) {
+      window.location.href = '/student';
+    } else {
+      console.error('❌ Failed to save profile');
+      window.location.href = '/setup?error=save_failed';
+    }
   };
 
   return (
@@ -107,31 +119,15 @@ export default function SetupPage() {
         </p>
         <form onSubmit={handleSubmit} style={styles.form}>
           {[
-            {
-              label: 'Full Name',
-              key: 'name',
-              description: 'Your legal first and last name.',
-            },
-            {
-              label: 'Major',
-              key: 'major',
-              description: 'Your field of study or concentration.',
-            },
+            { label: 'Full Name', key: 'name', description: 'Your legal first and last name.' },
+            { label: 'Major', key: 'major', description: 'Your field of study or concentration.' },
             {
               label: 'Skills',
               key: 'skills',
               description: 'Separate each skill with a comma (e.g. Python, React, SQL).',
             },
-            {
-              label: 'Interests',
-              key: 'interests',
-              description: 'Let us know what roles or industries you are interested in.',
-            },
-            {
-              label: 'Location',
-              key: 'location',
-              description: 'Where are you based or looking for opportunities?',
-            },
+            { label: 'Interests', key: 'interests', description: 'What roles or industries you are interested in.' },
+            { label: 'Location', key: 'location', description: 'Where are you based or looking for opportunities?' },
             {
               label: 'Portfolio URL',
               key: 'portfolio',
@@ -139,9 +135,7 @@ export default function SetupPage() {
             },
           ].map(({ label, key, description }) => (
             <div key={key} style={styles.inputGroup}>
-              <label htmlFor={key} style={styles.label}>
-                {label}
-              </label>
+              <label htmlFor={key} style={styles.label}>{label}</label>
               <input
                 id={key}
                 name={key}
