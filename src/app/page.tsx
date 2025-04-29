@@ -9,7 +9,7 @@ const Home = () => (
     <Container id="landing-page" fluid className="py-5" style={{ backgroundColor: '#f9fafb' }}>
       <Row className="align-items-center justify-content-center text-center mb-5">
         <Col xs={10} md={8}>
-          <h1 className="display-4 fw-bold mb-3">🚀 Welcome to Campus Careers!</h1>
+          <h1 className="display-4 fw-bold mb-3">Welcome to Campus Careers!</h1>
           <p className="lead text-muted">
             Discover internships and career opportunities tailored just for you. Start building your future today!
           </p>
@@ -34,7 +34,7 @@ const Home = () => (
 
       <Row className="justify-content-center">
         <Col xs={10} md={8}>
-          <h2 className="text-center fw-bold mb-4">🌟 Featured Companies</h2>
+          <h2 className="text-center fw-bold mb-4">Featured Companies</h2>
           <Row xs={1} md={3} className="g-4">
             {[
               { name: 'Oceanic Tech', description: 'Innovating Hawaii\'s marine technologies.' },

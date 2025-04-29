@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
-import authOptions from '@/lib/authOptions'; // ✅ Needed
+import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
 
 const StudentHomePage = async () => {
@@ -30,22 +30,31 @@ const StudentHomePage = async () => {
     },
   });
 
-  const jobListingsRaw = await prisma.adminList.findMany({
+  const jobListingsRaw = await prisma.company.findMany({
     select: {
       id: true,
       name: true,
       location: true,
-      skills: true,
-      companies: true,
-      image: true,
-      interviews: true,
-      interests: true,
+      idealSkill: true,
+      overview: true,
+      jobs: true,
+      contacts: true,
+      salary: true,
+      user: {
+        select: { name: true, image: true },
+      },
     },
   });
 
-  const jobListings = jobListingsRaw.map((job) => ({
-    ...job,
-    id: job.id.toString(),
+  const jobListings = jobListingsRaw.map((company) => ({
+    id: company.id.toString(),
+    name: company.name,
+    location: company.location,
+    skills: company.idealSkill,
+    companies: [company.name],
+    image: company.user.image || '',
+    interviews: [],
+    interests: [],
   }));
 
   if (!student) {
@@ -54,6 +63,17 @@ const StudentHomePage = async () => {
         <div className="text-center mt-5">
           <h1>No profile found</h1>
           <p>Please complete your profile to view opportunities.</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (jobListings.length === 0) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <h1>No job listings available</h1>
+          <p>Please check back later.</p>
         </div>
       </main>
     );
