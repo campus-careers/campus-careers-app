@@ -1,19 +1,8 @@
-import { getServerSession } from 'next-auth';
 import { Col, Container, Row } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
-import { adminProtectedPage } from '@/lib/page-protection';
-import authOptions from '@/lib/authOptions';
 import FilterSkillOrLocation from '@/components/FilterSkillOrLocation';
 
 const FilterSkillPage = async () => {
-  const session = await getServerSession(authOptions);
-
-  adminProtectedPage(
-    session as {
-      user: { email: string; id: string; randomKey: string };
-    } | null,
-  );
-
   // 1. Fetch distinct skills and locations from Students
   const students = await prisma.student.findMany({
     select: {

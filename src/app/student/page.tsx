@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
-import authOptions from '@/lib/authOptions'; // ✅ You forgot this import
+import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
 
 const StudentHomePage = async () => {
@@ -45,7 +45,7 @@ const StudentHomePage = async () => {
 
   const jobListings = jobListingsRaw.map((job) => ({
     ...job,
-    id: job.id.toString(), // Convert id to string
+    id: job.id.toString(),
   }));
 
   if (!student || jobListings.length === 0) {
