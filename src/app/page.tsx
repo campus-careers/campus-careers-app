@@ -1,3 +1,6 @@
+'use client';
+
+import Link from 'next/link'; // ✅ Import Link
 import { Col, Container, Row, Button } from 'react-bootstrap';
 
 /** The Home page. */
@@ -10,15 +13,25 @@ const Home = () => (
           <h2>Connect with Internships and Jobs tailored to you</h2>
         </Col>
       </Row>
+
       <div className="d-grid gap-3 col-8 mx-auto my-4">
-        <Button variant="outline-primary" size="lg">➜ Explore Companies</Button>
-        <Button variant="outline-primary" size="lg">➜ Browse Student Profiles</Button>
-        <Button variant="outline-primary" size="lg">➜ Learn How It Works</Button>
+        <Link href="/company" passHref legacyBehavior>
+          <Button variant="outline-primary" size="lg" className="w-100">➜ Explore Companies</Button>
+        </Link>
+        <Link href="/filter" passHref legacyBehavior>
+          <Button variant="outline-primary" size="lg" className="w-100">➜ Browse Student Profiles</Button>
+        </Link>
+        <Link href="/setup" passHref legacyBehavior>
+          <Button variant="outline-primary" size="lg" className="w-100">➜ Learn How It Works</Button>
+        </Link>
       </div>
+
       <h3 className="fw-bold mt-5 text-center">Featured Companies</h3>
       <ul className="list-unstyled text-center">
         <li>Oceanic Tech</li>
-        <li>Hawaiian Airlines IT Dirision</li>
+        <li>Hawaiian Airlines IT Division</li>
+        {' '}
+        {/* Fixed typo from Dirision to Division */}
         <li>Inovatech</li>
       </ul>
     </Container>
