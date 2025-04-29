@@ -5,8 +5,6 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: #000000; /* 🛑 Set full background black */
-  color: #f8f9fa; /* ✅ Light text for contrast */
 }
 
 .wrapper {
@@ -17,22 +15,23 @@ body {
 }
 
 :root {
-  --nat-navbar-bg: #000000; /* 🛑 Navbar background: black */
-  --nat-navbar-bg-rgb: 0, 0, 0; /* 🛑 Navbar background RGB: black */
-  --nat-navbar-text-color: #ffffff; /* ✅ Navbar text: white */
-  --nat-navbar-highlight-text: #ffd700; /* ✅ Hover or active color: gold */
+  --nat-navbar-bg: #000000; /* 🔥 Changed to black background */
+  --nat-navbar-bg-rgb: 0, 0, 0;
+  --nat-navbar-text-color: white;
 }
 
+/* Footer text */
 footer, footer a {
   color: var(--nat-navbar-text-color);
 }
 
+/* Body setup */
 body {
   --bs-dark: var(--nat-navbar-bg);
   --bs-dark-rgb: var(--nat-navbar-bg-rgb);
 }
 
-/* Navbar Styles */
+/* Navbar base colors */
 body .navbar {
   --bs-navbar-active-color: var(--nat-navbar-highlight-text);
   --bs-navbar-brand-color: var(--nat-navbar-text-color);
@@ -41,23 +40,31 @@ body .navbar {
   --bs-navbar-hover-color: var(--nat-navbar-highlight-text);
 }
 
-/* Dropdown items */
+/* Dropdown fix inside dark navbar */
 .bg-dark a.dropdown-item {
   color: var(--nat-navbar-bg);
 }
 
+/* === Navbar Link Text === */
 .navbar-dark .nav-link,
 .navbar-dark .navbar-brand {
-  color: #ffffff; /* Default color: White */
+  color: #ffffff !important; /* Default: white */
+  transition: color 0.3s ease;
 }
 
 .navbar-dark .nav-link:hover,
 .navbar-dark .nav-link.active {
-  color: #3399ff !important; /* Hover + Active: Bright blue */
+  color: #4da6ff !important; /* 🔵 Hover/Active: bright blue */
 }
 
-/* Optional: Smooth fade transition */
-.navbar-dark .nav-link {
-  transition: color 0.2s ease-in-out;
+/* === Dropdown Menu Items === */
+.dropdown-menu .dropdown-item {
+  color: black;
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+  color: #4da6ff !important;           /* 🔵 Blue text */
+  background-color: #f0f0f0 !important; /* Light gray background */
+}
