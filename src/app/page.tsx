@@ -22,7 +22,7 @@ const Home = () => (
           <Button variant="outline-primary" size="lg" className="w-100">➜ Browse Student Profiles</Button>
         </Link>
         <Link href="/setup" passHref legacyBehavior>
-          <Button variant="outline-primary" size="lg" className="w-100">➜ Learn How It Works</Button>
+          <Button variant="outline-primary" size="lg" className="w-100">➜ Start Your Profile</Button>
         </Link>
       </div>
 

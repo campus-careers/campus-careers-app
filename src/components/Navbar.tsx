@@ -31,33 +31,42 @@ const NavBar: React.FC = () => {
                     Student Home
                   </Nav.Link>
                 </Link>
+
+                <Link href="/setup" passHref legacyBehavior>
+                  <Nav.Link active={pathName === '/setup'}>
+                    Add Student Info
+                  </Nav.Link>
+                </Link>
+
+                <Link href="/filter" passHref legacyBehavior>
+                  <Nav.Link active={pathName === '/filter'}>
+                    Browse by Skill/Location
+                  </Nav.Link>
+                </Link>
+
+                <Link href="/company" passHref legacyBehavior>
+                  <Nav.Link active={pathName === '/company'}>
+                    List Companies
+                  </Nav.Link>
+                </Link>
+
                 <Link href="/add" passHref legacyBehavior>
                   <Nav.Link active={pathName === '/add'}>
                     Add Company
                   </Nav.Link>
                 </Link>
-                <Link href="/company" passHref legacyBehavior>
-                  <Nav.Link active={pathName === '/company'}>
-                    List Company
-                  </Nav.Link>
-                </Link>
               </>
             )}
+
             {currentUser && role === 'ADMIN' && (
-              <>
-                <Link href="/admin" passHref legacyBehavior>
-                  <Nav.Link active={pathName === '/admin'}>
-                    Admin
-                  </Nav.Link>
-                </Link>
-                <Link href="/add" passHref legacyBehavior>
-                  <Nav.Link active={pathName === '/add'}>
-                    New Company
-                  </Nav.Link>
-                </Link>
-              </>
+              <Link href="/admin" passHref legacyBehavior>
+                <Nav.Link active={pathName === '/admin'}>
+                  Admin
+                </Nav.Link>
+              </Link>
             )}
           </Nav>
+
           <Nav>
             {session ? (
               <NavDropdown id="login-dropdown" title={currentUser}>
