@@ -1,168 +1,174 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { Col, Container, Row, Card, Form, Button, Spinner } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { EditStudentSchema } from '@/lib/validationSchemas'; // ✅ Correct
-import { editStudent } from '@/lib/dbActions'; // ✅ Correct
+import { useState, CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
-import swal from 'sweetalert';
 
-type FormValues = {
-  id: string;
-  email: string;
-  fullName: string;
-  location: string;
-  skills: string;
-  image: string;
+const styles = {
+  page: {
+    backgroundColor: '#f9fafb',
+    paddingTop: '2rem',
+    paddingBottom: '2rem',
+    paddingLeft: '1rem',
+    paddingRight: '1rem',
+    display: 'block',
+  } as CSSProperties,
+  card: {
+    backgroundColor: '#ffffff',
+    padding: '2.5rem',
+    borderRadius: '1rem',
+    boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
+    width: '100%',
+    maxWidth: '600px',
+    margin: '0 auto',
+  } as CSSProperties,
+  title: {
+    fontSize: '2.65rem',
+    fontWeight: 700,
+    textAlign: 'center' as const,
+    marginBottom: '0.5rem',
+  } as CSSProperties,
+  subtitle: {
+    textAlign: 'center' as const,
+    marginBottom: '2rem',
+    color: '#555',
+    fontSize: '0.95rem',
+  } as CSSProperties,
+  form: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '1.5rem',
+  } as CSSProperties,
+  inputGroup: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+  } as CSSProperties,
+  label: {
+    fontSize: '1.1rem',
+    marginBottom: '0.4rem',
+    fontWeight: 'bold',
+  } as CSSProperties,
+  description: {
+    fontSize: '0.8rem',
+    color: '#000000',
+    marginTop: '0.35rem',
+  } as CSSProperties,
+  input: {
+    padding: '0.75rem 1rem',
+    borderRadius: '0.5rem',
+    border: '1px solid #ccc',
+    fontSize: '1rem',
+    color: '#333',
+    outline: 'none',
+    transition: 'border 0.2s ease, box-shadow 0.2s ease',
+  } as CSSProperties,
+  button: {
+    backgroundColor: '#2F855A',
+    color: 'white',
+    border: 'none',
+    borderRadius: '0.5rem',
+    padding: '0.85rem 1rem',
+    fontSize: '1rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease-in-out',
+  } as CSSProperties,
 };
 
-const SetupPage = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    resolver: yupResolver(EditStudentSchema),
-    defaultValues: {
-      id: '',
-      email: '',
-      fullName: '',
-      location: '',
-      skills: '',
-      image: '',
-    },
+export default function SetupPage() {
+  const [form, setForm] = useState({
+    name: '',
+    major: '',
+    skills: '',
+    interests: '',
+    location: '',
+    portfolio: '',
   });
 
-  const onSubmit = async (data: FormValues) => {
-    try {
-      const id = Number(data.id); // because Prisma expects number id
-      await editStudent({
-        id,
-        email: data.email,
-        fullName: data.fullName,
-        location: data.location,
-        skills: data.skills,
-        image: data.image,
-      });
+  const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
 
-      swal('Success!', 'Student profile saved successfully!', 'success');
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    const payload = {
+      ...form,
+      skills: form.skills.split(',').map((skill) => skill.trim()),
+      interests: form.interests.split(',').map((interest) => interest.trim()),
+      location: form.location.trim(),
+    };
+
+    const response = await fetch('/api/user/save-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
       router.push('/student');
-    } catch (error) {
-      console.error('❌ Error saving student profile:', error);
-      swal('Error', 'Failed to save student profile.', 'error');
+    } else {
+      console.error('❌ Failed to save profile');
+      setSubmitting(false);
     }
   };
 
-  if (status === 'loading') {
-    return (
-      <Container className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
-        <Spinner animation="border" />
-      </Container>
-    );
-  }
-
-  if (!session) {
-    return (
-      <Container className="text-center mt-5">
-        <h2>Please sign in to add your student info.</h2>
-      </Container>
-    );
-  }
-
   return (
-    <Container className="py-5">
-      <Row className="justify-content-center">
-        <Col xs={12} md={8} lg={6}>
-          <h1 className="text-center mb-4">Add Student Info</h1>
-          <Card className="shadow-sm">
-            <Card.Body>
-              <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Full Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter full name"
-                    {...register('fullName')}
-                    isInvalid={!!errors.fullName}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.fullName?.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    {...register('email')}
-                    isInvalid={!!errors.email}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.email?.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Skills (comma separated)</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Example: JavaScript, Python"
-                    {...register('skills')}
-                    isInvalid={!!errors.skills}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.skills?.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Location</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter location"
-                    {...register('location')}
-                    isInvalid={!!errors.location}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.location?.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Profile Image URL</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Optional profile picture URL"
-                    {...register('image')}
-                    isInvalid={!!errors.image}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.image?.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <div className="d-grid gap-2">
-                  <Button type="submit" variant="primary" disabled={isSubmitting}>
-                    {isSubmitting ? 'Saving...' : 'Submit'}
-                  </Button>
-                  <Button type="button" variant="secondary" onClick={() => reset()}>
-                    Reset
-                  </Button>
-                </div>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <div style={styles.page}>
+      <div style={styles.card}>
+        <h1 style={styles.title}>🎓 Complete Your Profile</h1>
+        <p style={styles.subtitle}>
+          Let us know more about you to match you with the best opportunities.
+        </p>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          {[
+            { label: 'Full Name', key: 'name', description: 'Your legal first and last name.' },
+            { label: 'Major', key: 'major', description: 'Your field of study or concentration.' },
+            {
+              label: 'Skills',
+              key: 'skills',
+              description: 'Separate each skill with a comma (e.g. Python, React, SQL).',
+            },
+            {
+              label: 'Interests',
+              key: 'interests',
+              description: 'What roles or industries you are interested in.',
+            },
+            {
+              label: 'Location',
+              key: 'location',
+              description: 'Where are you based or looking for opportunities?',
+            },
+            {
+              label: 'Portfolio URL',
+              key: 'portfolio',
+              description: 'Link to your personal website, GitHub, or resume.',
+            },
+          ].map(({ label, key, description }) => (
+            <div key={key} style={styles.inputGroup}>
+              <label htmlFor={key} style={styles.label}>
+                {label}
+              </label>
+              <input
+                id={key}
+                name={key}
+                value={(form as any)[key]}
+                onChange={handleChange}
+                placeholder={label}
+                style={styles.input}
+                required
+              />
+              <p style={styles.description}>{description}</p>
+            </div>
+          ))}
+          <button type="submit" style={styles.button} disabled={submitting}>
+            {submitting ? 'Saving...' : 'Save and Continue →'}
+          </button>
+        </form>
+      </div>
+    </div>
   );
-};
-
-export default SetupPage;
+}
