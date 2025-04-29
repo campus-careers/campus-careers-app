@@ -4,6 +4,7 @@ import * as config from '../config/settings.development.json';
 
 const prisma = new PrismaClient();
 
+// real
 async function main() {
   console.log('Seeding the database');
 
