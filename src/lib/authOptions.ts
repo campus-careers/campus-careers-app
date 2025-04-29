@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import { compare } from 'bcrypt';
 import { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -21,8 +20,6 @@ const authOptions: NextAuthOptions = {
           return null;
         }
 
-        console.log('🔵 Attempting login for:', credentials.email);
-
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
@@ -32,8 +29,6 @@ const authOptions: NextAuthOptions = {
           return null;
         }
 
-        console.log('✅ Found user:', user.email);
-
         const isPasswordValid = await compare(credentials.password, user.password);
 
         if (!isPasswordValid) {
@@ -41,13 +36,11 @@ const authOptions: NextAuthOptions = {
           return null;
         }
 
-        console.log('✅ Password is valid for:', user.email);
-
         return {
-          id: String(user.id),
+          id: `${user.id}`,
           name: user.name,
           email: user.email,
-          randomKey: user.role,
+          randomKey: user.role, // saving role here
         };
       },
     }),
@@ -57,7 +50,7 @@ const authOptions: NextAuthOptions = {
     signOut: '/auth/signout',
   },
   callbacks: {
-    jwt({ token, user }) {
+    jwt: async ({ token, user }) => {
       if (user) {
         const u = user as { id: string; randomKey: string };
         return {
@@ -68,16 +61,14 @@ const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id,
-          randomKey: token.randomKey,
-        },
-      };
-    },
+    session: async ({ session, token }) => ({
+      ...session,
+      user: {
+        ...session.user,
+        id: token.id,
+        randomKey: token.randomKey,
+      },
+    }),
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
