@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-named-as-default
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic'; // Force revalidation on every request
 export const revalidate = 0; // Disable static generation
