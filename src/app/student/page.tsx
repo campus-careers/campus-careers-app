@@ -3,6 +3,16 @@ import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
 
+type MinimalStudent = {
+  name: string;
+  email: string;
+  location: string;
+  skills: string[];
+  interests: string[];
+  portfolio: string;
+  image: string;
+};
+
 const StudentHomePage = async () => {
   const session = await getServerSession(authOptions);
   const email = session?.user?.email;
@@ -17,7 +27,7 @@ const StudentHomePage = async () => {
     );
   }
 
-  const student = await prisma.user.findUnique({
+  const studentRaw = await prisma.user.findUnique({
     where: { email },
     select: {
       name: true,
@@ -30,34 +40,7 @@ const StudentHomePage = async () => {
     },
   });
 
-  const jobListingsRaw = await prisma.company.findMany({
-    select: {
-      id: true,
-      name: true,
-      location: true,
-      idealSkill: true,
-      overview: true,
-      jobs: true,
-      contacts: true,
-      salary: true,
-      user: {
-        select: { name: true, image: true },
-      },
-    },
-  });
-
-  const jobListings = jobListingsRaw.map((company) => ({
-    id: company.id.toString(),
-    name: company.name,
-    location: company.location,
-    skills: company.idealSkill,
-    companies: [company.name],
-    image: company.user.image || '',
-    interviews: [],
-    interests: [],
-  }));
-
-  if (!student) {
+  if (!studentRaw) {
     return (
       <main>
         <div className="text-center mt-5">
@@ -68,16 +51,33 @@ const StudentHomePage = async () => {
     );
   }
 
-  if (jobListings.length === 0) {
-    return (
-      <main>
-        <div className="text-center mt-5">
-          <h1>No job listings available</h1>
-          <p>Please check back later.</p>
-        </div>
-      </main>
-    );
-  }
+  const student: MinimalStudent = {
+    name: studentRaw.name ?? '',
+    email: studentRaw.email ?? '',
+    location: studentRaw.location ?? '',
+    skills: studentRaw.skills ?? [],
+    interests: studentRaw.interests ?? [],
+    portfolio: studentRaw.portfolio ?? '',
+    image: studentRaw.image ?? '',
+  };
+
+  const jobListingsRaw = await prisma.adminList.findMany({
+    select: {
+      id: true,
+      name: true,
+      location: true,
+      skills: true,
+      companies: true,
+      image: true,
+      interviews: true,
+      interests: true,
+    },
+  });
+
+  const jobListings = jobListingsRaw.map((job) => ({
+    ...job,
+    id: job.id.toString(),
+  }));
 
   return <BrowseDataSet student={student} jobListings={jobListings} />;
 };

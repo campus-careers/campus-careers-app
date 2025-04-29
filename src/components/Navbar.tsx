@@ -28,9 +28,6 @@ const NavBar: React.FC = () => {
                 <Nav.Link as={Link} href="/setup" active={pathName === '/setup'}>
                   Add Student Info
                 </Nav.Link>
-                <Nav.Link as={Link} href="/setup/edit" active={pathName === '/setup/edit'}>
-                  Edit Student Info
-                </Nav.Link>
                 <Nav.Link as={Link} href="/filter" active={pathName === '/filter'}>
                   Browse By Skill/Location
                 </Nav.Link>
