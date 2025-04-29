@@ -1,9 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
+import authOptions from '@/lib/authOptions'; // ✅ You forgot this import
 import BrowseDataSet from '@/components/BrowseDataSet';
 
 const StudentHomePage = async () => {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const email = session?.user?.email;
 
   if (!email) {
@@ -17,7 +18,7 @@ const StudentHomePage = async () => {
   }
 
   const student = await prisma.user.findFirst({
-    where: { email: email || undefined },
+    where: { email },
     select: {
       name: true,
       email: true,
@@ -26,22 +27,23 @@ const StudentHomePage = async () => {
     },
   });
 
-  // Fetch all job listings from the adminList table
-  const jobListings = await prisma.adminList.findMany({
+  const jobListingsRaw = await prisma.adminList.findMany({
     select: {
       id: true,
       name: true,
       location: true,
       skills: true,
-      companies: true, // Include 'companies' in the query
+      companies: true,
       image: true,
       interviews: true,
       interests: true,
     },
-  }).then((listings) => listings.map((job) => ({
+  });
+
+  const jobListings = jobListingsRaw.map((job) => ({
     ...job,
     id: job.id.toString(), // Convert id to string
-  })));
+  }));
 
   if (!student || jobListings.length === 0) {
     return (
