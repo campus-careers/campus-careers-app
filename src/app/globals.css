@@ -1,26 +1,28 @@
+/* === Base Reset === */
 html, body {
   height: 100%;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  overflow-x: hidden;
   --bs-light-rgb: 236, 236, 236;
 }
 
-body {
+/* === Wrapper to ensure full page height === */
+.wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  --bs-dark: var(--nat-navbar-bg);
-  --bs-dark-rgb: var(--nat-navbar-bg-rgb);
-  overflow-x: hidden; /* Prevent weird horizontal scrolling */
 }
 
+/* === Main content area === */
 main {
-  flex: 1 0 auto; /* Let main content expand naturally */
+  flex: 1;
   width: 100%;
   overflow-x: hidden;
 }
 
+/* === Footer === */
 footer {
   flex-shrink: 0;
 }
@@ -47,23 +49,24 @@ body .navbar {
   --bs-navbar-hover-color: var(--nat-navbar-highlight-text);
 }
 
-/* Dropdown items inside a dark navbar */
+/* === Dropdown items inside a dark navbar === */
 .bg-dark a.dropdown-item {
   color: var(--nat-navbar-bg);
 }
 
-/* Fix navbar text hover and active color */
+/* === Navbar link text === */
 .navbar-dark .nav-link,
 .navbar-dark .navbar-brand {
-  color: var(--nat-navbar-text-color); /* Default text color (white) */
+  color: var(--nat-navbar-text-color); /* Default: white text */
 }
 
+/* === Navbar link hover + active state === */
 .navbar-dark .nav-link:hover,
 .navbar-dark .nav-link.active {
-  color: var(--nat-navbar-highlight-text) !important; /* Hover + Active color */
+  color: var(--nat-navbar-highlight-text) !important; /* Hover/Active: blue */
 }
 
-/* Ensure dropdown menu items are styled nicely too */
+/* === Dropdown Menu Styling === */
 .navbar-dark .dropdown-menu .dropdown-item:hover,
 .navbar-dark .dropdown-menu .dropdown-item:focus {
   color: var(--nat-navbar-highlight-text);

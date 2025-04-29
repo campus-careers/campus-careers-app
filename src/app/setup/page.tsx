@@ -4,12 +4,14 @@ import { useState, CSSProperties } from 'react';
 
 const styles: Record<string, CSSProperties> = {
   page: {
-    minHeight: '100vh',
     backgroundColor: '#f9fafb',
-    padding: '2rem 1rem',
-    display: 'block', // ← allows natural vertical stacking
-    overflowY: 'auto', // ← enables scroll if needed
+    paddingTop: '2rem',
+    paddingBottom: '2rem',
+    paddingLeft: '1rem',
+    paddingRight: '1rem',
+    display: 'block', // remove centering and fixed height
   },
+
   card: {
     backgroundColor: '#ffffff',
     padding: '2.5rem',

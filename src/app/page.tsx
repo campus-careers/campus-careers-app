@@ -16,10 +16,10 @@ const Home = () => (
 
       <div className="d-grid gap-3 col-8 mx-auto my-4">
         <Link href="/company" passHref legacyBehavior>
-          <Button variant="outline-primary" size="lg" className="w-100">➜ Explore Companies</Button>
+          <Button variant="outline-primary" size="lg" className="w-100">➜ Explore Company Profiles</Button>
         </Link>
         <Link href="/filter" passHref legacyBehavior>
-          <Button variant="outline-primary" size="lg" className="w-100">➜ Browse Student Profiles</Button>
+          <Button variant="outline-primary" size="lg" className="w-100">➜ Browse By Skill/Location</Button>
         </Link>
         <Link href="/setup" passHref legacyBehavior>
           <Button variant="outline-primary" size="lg" className="w-100">➜ Start Your Profile</Button>
