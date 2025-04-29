@@ -1,4 +1,3 @@
-// determine
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -6,10 +5,13 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('next-auth.session-token')?.value
     || request.cookies.get('__Secure-next-auth.session-token')?.value;
 
-  const isSetupPage = request.nextUrl.pathname === '/setup';
-  const isApiRoute = request.nextUrl.pathname.startsWith('/api');
+  const { pathname } = request.nextUrl;
 
-  if (!token || isApiRoute || isSetupPage) {
+  const isSetupPage = pathname === '/setup';
+  const isApiRoute = pathname.startsWith('/api');
+  const isAuthRoute = pathname.startsWith('/auth'); // ✅ NEW: allow /auth paths
+
+  if (!token || isApiRoute || isSetupPage || isAuthRoute) {
     return NextResponse.next();
   }
 
@@ -42,8 +44,8 @@ export const config = {
      * - /static
      * - /favicon.ico
      * - /setup (the profile form)
+     * - /auth (login and logout)
      */
-    '/((?!api|_next|static|favicon.ico|setup).*)',
+    '/((?!api|_next|static|favicon.ico|setup|auth).*)',
   ],
 };
-//
