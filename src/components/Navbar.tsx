@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-indent, @typescript-eslint/indent */
-
 'use client';
 
 import { useSession } from 'next-auth/react';
@@ -17,76 +15,51 @@ const NavBar: React.FC = () => {
 
   return (
     <Navbar bg="dark" expand="lg" className="navbar-dark">
-      <Container fluid className="flex-nowrap overflow-auto">
-        <Link href="/" passHref legacyBehavior>
-          <Navbar.Brand>Campus Careers</Navbar.Brand>
-        </Link>
+      <Container fluid>
+        <Navbar.Brand as={Link} href="/">Campus Careers</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav
-            className="me-auto justify-content-start flex-nowrap"
-            style={{ whiteSpace: 'nowrap', overflowX: 'auto' }}
-          >
+          <Nav className="me-auto flex-nowrap">
             {currentUser && (
               <>
-                <Link href="/student" passHref legacyBehavior>
-                  <Nav.Link active={pathName === '/student'}>Student Home</Nav.Link>
-                </Link>
-                <Link href="/setup" passHref legacyBehavior>
-                  <Nav.Link active={pathName === '/setup'}>Add Student Info</Nav.Link>
-                </Link>
-                <Link href="/filter" passHref legacyBehavior>
-                  <Nav.Link active={pathName === '/filter'}>Browse By Skill/Location</Nav.Link>
-                </Link>
-                <Link href="/company" passHref legacyBehavior>
-                  <Nav.Link active={pathName === '/company'}>List Companies</Nav.Link>
-                </Link>
-                <Link href="/add" passHref legacyBehavior>
-                  <Nav.Link active={pathName === '/add'}>Add Company</Nav.Link>
-                </Link>
+                <Nav.Link as={Link} href="/student" active={pathName === '/student'}>Student Home</Nav.Link>
+                <Nav.Link as={Link} href="/setup" active={pathName === '/setup'}>Add Student Info</Nav.Link>
+                <Nav.Link as={Link} href="/filter" active={pathName === '/filter'}>Browse By Skill/Location</Nav.Link>
+                <Nav.Link as={Link} href="/company" active={pathName === '/company'}>List Companies</Nav.Link>
+                <Nav.Link as={Link} href="/add" active={pathName === '/add'}>Add Company</Nav.Link>
               </>
             )}
             {currentUser && role === 'ADMIN' && (
-              <Link href="/admin" passHref legacyBehavior>
-                <Nav.Link active={pathName === '/admin'}>Admin</Nav.Link>
-              </Link>
+              <Nav.Link as={Link} href="/admin" active={pathName === '/admin'}>Admin</Nav.Link>
             )}
           </Nav>
 
           <Nav>
             {session ? (
-              <NavDropdown id="login-dropdown" title={currentUser}>
-              <NavDropdown.Item as="span" id="login-dropdown-sign-out">
-                <Link href="/auth/signout" className="dropdown-item">
+              <NavDropdown title={currentUser} id="login-dropdown" align="end">
+                <NavDropdown.Item as={Link} href="/auth/signout">
                   <BoxArrowRight className="me-2" />
-{' '}
-Sign Out
-                </Link>
-              </NavDropdown.Item>
-              <NavDropdown.Item as="span" id="login-dropdown-change-password">
-                <Link href="/auth/change-password" className="dropdown-item">
+                  {' '}
+                  Sign Out
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} href="/auth/change-password">
                   <Lock className="me-2" />
-{' '}
-Change Password
-                </Link>
-              </NavDropdown.Item>
+                  {' '}
+                  Change Password
+                </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <NavDropdown id="login-dropdown" title="Login">
-                <Link href="/auth/signin" passHref legacyBehavior>
-                  <NavDropdown.Item id="login-dropdown-sign-in">
-                    <PersonFill className="me-2" />
-{' '}
-Sign In
-                  </NavDropdown.Item>
-                </Link>
-                <Link href="/auth/signup" passHref legacyBehavior>
-                  <NavDropdown.Item id="login-dropdown-sign-up">
-                    <PersonPlusFill className="me-2" />
-{' '}
-Sign Up
-                  </NavDropdown.Item>
-                </Link>
+              <NavDropdown title="Login" id="login-dropdown" align="end">
+                <NavDropdown.Item as={Link} href="/auth/signin">
+                  <PersonFill className="me-2" />
+                  {' '}
+                  Sign In
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} href="/auth/signup">
+                  <PersonPlusFill className="me-2" />
+                  {' '}
+                  Sign Up
+                </NavDropdown.Item>
               </NavDropdown>
             )}
           </Nav>
