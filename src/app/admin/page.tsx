@@ -1,4 +1,4 @@
-import { getServerSession } from 'next-auth';
+import { getServerSession, Session } from 'next-auth';
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { Student, User } from '@prisma/client';
@@ -9,22 +9,14 @@ import { adminProtectedPage } from '@/lib/page-protection';
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
 
-  adminProtectedPage(
-    session as {
-      user: { email: string; id: string; randomKey: string };
-    } | null,
-  );
+  adminProtectedPage(session as Session & { user: { email: string; id: string; randomKey: string } });
 
-  // 1. Get admin emails from AdminList
   const adminEmails = (await prisma.adminList.findMany({
     select: { email: true },
   })).map((admin) => admin.email);
 
-  // 2. Find matching Students
   const adminListItem: Student[] = await prisma.student.findMany({
-    where: {
-      email: { in: adminEmails },
-    },
+    where: { email: { in: adminEmails } },
     select: {
       id: true,
       name: true,
@@ -33,7 +25,7 @@ const AdminPage = async () => {
       skills: true,
       location: true,
       companies: true,
-      interests: true, // Add interests if needed!
+      interests: true,
       interviews: true,
     },
   });
@@ -49,21 +41,19 @@ const AdminPage = async () => {
             <Row xs={1} md={2} lg={3} className="g-4">
               {adminListItem.map((item) => (
                 <Col key={item.id}>
-                  <AdminDashboard {...{
-                    ...item,
-                    id: item.id.toString(), // ✅ convert id to string here
-                  }}
+                  <AdminDashboard
+                    {...{
+                      ...item,
+                      id: item.id.toString(),
+                    }}
                   />
                 </Col>
               ))}
             </Row>
-
           </Col>
         </Row>
 
         <Row className="mt-4">
-          {' '}
-          {/* <-- add margin top here */}
           <Col>
             <h1>List Users Admin</h1>
             <Table striped bordered hover>

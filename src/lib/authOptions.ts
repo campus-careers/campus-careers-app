@@ -12,15 +12,10 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Email and Password',
       credentials: {
-        email: {
-          label: 'Email',
-          type: 'email',
-          placeholder: 'john@foo.com',
-        },
+        email: { label: 'Email', type: 'email', placeholder: 'john@foo.com' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        // 🔥 Debug logs start
         if (!credentials?.email || !credentials.password) {
           console.log('❌ Missing credentials');
           return null;
@@ -29,9 +24,7 @@ const authOptions: NextAuthOptions = {
         console.log('🔵 Attempting login for:', credentials.email);
 
         const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
+          where: { email: credentials.email },
         });
 
         if (!user) {
@@ -50,13 +43,11 @@ const authOptions: NextAuthOptions = {
 
         console.log('✅ Password is valid for:', user.email);
 
-        // 🔥 Debug logs end
-
         return {
-          id: `${user.id}`,
+          id: String(user.id),
           name: user.name,
           email: user.email,
-          randomKey: user.role, // (You can rename this to "role" later for clarity)
+          randomKey: user.role,
         };
       },
     }),
@@ -64,12 +55,20 @@ const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
-    // error: '/auth/error',
-    // verifyRequest: '/auth/verify-request',
-    // newUser: '/auth/new-user'
   },
   callbacks: {
-    session: ({ session, token }) => {
+    jwt({ token, user }) {
+      if (user) {
+        const u = user as { id: string; randomKey: string };
+        return {
+          ...token,
+          id: u.id,
+          randomKey: u.randomKey,
+        };
+      }
+      return token;
+    },
+    session({ session, token }) {
       return {
         ...session,
         user: {
@@ -78,17 +77,6 @@ const authOptions: NextAuthOptions = {
           randomKey: token.randomKey,
         },
       };
-    },
-    jwt: ({ token, user }) => {
-      if (user) {
-        const u = user as unknown as any;
-        return {
-          ...token,
-          id: u.id,
-          randomKey: u.randomKey,
-        };
-      }
-      return token;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
