@@ -4,24 +4,24 @@ import * as config from '../config/settings.development.json';
 
 const prisma = new PrismaClient();
 
-// real
 async function main() {
   console.log('Seeding the database');
 
   const password = await hash('changeme', 10);
 
-  // Seeding users
   await Promise.all(
     config.defaultAccounts.map(async (account) => {
       const role = (account.role as Role) || Role.USER;
+
       console.log(`  Creating user: ${account.email} with role: ${role}`);
+
       await prisma.user.upsert({
         where: { email: account.email },
         update: {},
         create: {
           name: account.name,
-          location: account.location as Locations,
-          skills: account.skills as Skill[],
+          location: account.location as Locations, // Locations enum OK
+          skills: (account.skills || []).map((skill: string) => skill as Skill), // 🛠 convert string to Skill enum
           email: account.email,
           password,
           role,
@@ -30,15 +30,14 @@ async function main() {
           companies: {
             create: (account.companies || []).map((companyName: string) => ({
               name: companyName,
-              location: Locations.Honolulu,
+              location: Locations.Honolulu, // dummy location for seeded companies
               salary: 0,
               overview: '',
               jobs: '',
               contacts: '',
-              idealSkill: [], // ✅ Correct: must be array, not string
+              idealSkill: [],
             })),
           },
-          // interviews: [] <-- leave out for now unless you have Interview seeded
         },
       });
     }),
