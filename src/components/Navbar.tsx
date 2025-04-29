@@ -40,7 +40,7 @@ const NavBar: React.FC = () => {
 
                 <Link href="/filter" passHref legacyBehavior>
                   <Nav.Link active={pathName === '/filter'}>
-                    Browse by Skill/Location
+                    Browse By Skill/Location
                   </Nav.Link>
                 </Link>
 

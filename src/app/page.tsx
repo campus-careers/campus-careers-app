@@ -10,7 +10,7 @@ const Home = () => (
       <Row className="h-100 align-items-center justify-content-center text-center">
         <Col xs={8} className="d-flex flex-column justify-content-center">
           <h1>Welcome to Campus Careers!</h1>
-          <h2>Connect with Internships and Jobs tailored to you</h2>
+          <h2>Connect With Internship Opportunities Tailored To You!</h2>
         </Col>
       </Row>
 
