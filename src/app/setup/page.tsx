@@ -5,11 +5,10 @@ import { useState, CSSProperties } from 'react';
 const styles: Record<string, CSSProperties> = {
   page: {
     minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#f9fafb',
-    padding: '1rem',
+    padding: '2rem 1rem',
+    display: 'block', // ← allows natural vertical stacking
+    overflowY: 'auto', // ← enables scroll if needed
   },
   card: {
     backgroundColor: '#ffffff',
@@ -18,6 +17,7 @@ const styles: Record<string, CSSProperties> = {
     boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
     width: '100%',
     maxWidth: '600px',
+    margin: '0 auto', // ← centers the card horizontally
   },
   title: {
     fontSize: '2.65rem',
