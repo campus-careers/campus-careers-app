@@ -108,3 +108,25 @@ export async function changePassword(credentials: { email: string; password: str
     },
   });
 }
+/**
+ * Edits an existing student in the database.
+ */
+export async function editStudent(studentData: {
+  id: number;
+  email: string;
+  fullName: string;
+  location: string;
+  skills: string;
+  image: string;
+}) {
+  await prisma.student.update({
+    where: { id: studentData.id },
+    data: {
+      email: studentData.email,
+      name: studentData.fullName,
+      location: studentData.location,
+      skills: studentData.skills.split(',').map((skill) => skill.trim()),
+      image: studentData.image,
+    },
+  });
+}
