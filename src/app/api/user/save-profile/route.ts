@@ -8,6 +8,7 @@ import { Locations } from '@prisma/client';
 export const POST = async (req: Request) => {
   try {
     const session = await getServerSession(authOptions);
+
     if (!session?.user?.email) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
@@ -22,6 +23,7 @@ export const POST = async (req: Request) => {
       return NextResponse.json({ success: false, error: 'Invalid location' }, { status: 400 });
     }
 
+    // 🔥 Update User table
     const updatedUser = await prisma.user.update({
       where: { email: session.user.email },
       data: {
@@ -31,6 +33,30 @@ export const POST = async (req: Request) => {
         interests: interests.map((i: string) => i.trim()),
         location: trimmedLocation as Locations,
         portfolio,
+      },
+    });
+
+    // 🔥 Update or create in Student table
+    await prisma.student.upsert({
+      where: { email: session.user.email },
+      update: {
+        name,
+        skills: skills.map((s: string) => s.trim()),
+        interests: interests.map((i: string) => i.trim()),
+        location: trimmedLocation,
+        image: updatedUser.image,
+        companies: [],
+        interviews: [],
+      },
+      create: {
+        name,
+        email: session.user.email,
+        skills: skills.map((s: string) => s.trim()),
+        interests: interests.map((i: string) => i.trim()),
+        location: trimmedLocation,
+        image: updatedUser.image,
+        companies: [],
+        interviews: [],
       },
     });
 
