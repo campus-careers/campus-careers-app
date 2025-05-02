@@ -1,8 +1,10 @@
+'use client';
+
 import { getServerSession } from 'next-auth';
+import { useState, useEffect } from 'react';
 import { prisma } from '@/lib/prisma';
 import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
-import { useEffect, useState } from 'react';
 
 const StudentHomePage = async () => {
   const session = await getServerSession(authOptions);
@@ -25,7 +27,7 @@ const StudentHomePage = async () => {
       const response = await fetch('/api/get');
       const data = await response.json();
       if (data.success) {
-        console.log('Student data fetched:', data.user); // Log the student data here
+        console.log('Student data fetched:', data.user);
         setStudent(data.user);
       } else {
         console.log('Error fetching student data:', data.error);
