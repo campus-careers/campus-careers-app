@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 'use client';
@@ -163,12 +162,26 @@ export default function EditProfilePage() {
 
           <div>
             <label style={styles.label} htmlFor="interests">Interests (comma separated)</label>
-            <input id="interests" name="interests" value={form.interests} onChange={handleChange} style={styles.input} required />
+            <input
+              id="interests"
+              name="interests"
+              value={form.interests}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            />
           </div>
 
           <div>
             <label style={styles.label} htmlFor="location">Location</label>
-            <select id="location" name="location" value={form.location} onChange={handleChange} style={styles.input} required>
+            <select
+              id="location"
+              name="location"
+              value={form.location}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            >
               <option value="">Select a state</option>
               {US_STATES.map((state) => (
                 <option key={state} value={state}>{state}</option>
@@ -178,7 +191,14 @@ export default function EditProfilePage() {
 
           <div>
             <label style={styles.label} htmlFor="portfolio">Portfolio URL</label>
-            <input id="portfolio" name="portfolio" value={form.portfolio} onChange={handleChange} style={styles.input} />
+            <input
+              type="text"
+              id="portfolio"
+              name="portfolio"
+              value={form.portfolio}
+              onChange={handleChange}
+              style={styles.input}
+            />
           </div>
 
           <button type="submit" style={styles.button} disabled={submitting}>

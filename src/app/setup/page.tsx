@@ -24,6 +24,11 @@ const PROGRAMMING_SKILLS = [
   'Shell', 'Assembly', 'Objective-C',
 ];
 
+const skillOptions = PROGRAMMING_SKILLS.map((skill) => ({
+  value: skill,
+  label: skill,
+}));
+
 const styles = {
   page: {
     backgroundColor: '#f9fafb',
@@ -89,11 +94,6 @@ const styles = {
     cursor: 'pointer',
   },
 };
-
-const skillOptions = PROGRAMMING_SKILLS.map((skill) => ({
-  value: skill,
-  label: skill,
-}));
 
 export default function SetupPage() {
   const [form, setForm] = useState({
@@ -194,7 +194,14 @@ export default function SetupPage() {
 
           <div style={styles.inputGroup}>
             <label htmlFor="portfolio" style={styles.label}>Portfolio URL</label>
-            <input type="url" id="portfolio" name="portfolio" value={form.portfolio} onChange={handleChange} style={styles.input} />
+            <input
+              type="text"
+              id="portfolio"
+              name="portfolio"
+              value={form.portfolio}
+              onChange={handleChange}
+              style={styles.input}
+            />
           </div>
 
           <button type="submit" style={styles.button} disabled={submitting}>
