@@ -33,10 +33,10 @@ const styles = {
     marginBottom: '2rem',
   } as CSSProperties,
   title: { fontSize: '2rem', fontWeight: 700, textAlign: 'center' as const, marginBottom: '1rem' },
-  section: { marginBottom: '2rem' },
-  label: { fontWeight: 'bold', marginBottom: '0.5rem' },
-  form: { display: 'flex', flexDirection: 'column' as const, gap: '1.2rem' },
-  input: { padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid #ccc', fontSize: '1rem' },
+  section: { marginBottom: '2rem' } as CSSProperties,
+  label: { fontWeight: 'bold', marginBottom: '0.5rem' } as CSSProperties,
+  form: { display: 'flex', flexDirection: 'column' as const, gap: '1.2rem' } as CSSProperties,
+  input: { padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid #ccc', fontSize: '1rem' } as CSSProperties,
   button: {
     backgroundColor: '#2F855A',
     color: 'white',
@@ -46,7 +46,7 @@ const styles = {
     fontSize: '1rem',
     fontWeight: 600,
     cursor: 'pointer',
-  },
+  } as CSSProperties,
 };
 
 export default function EditProfilePage() {
@@ -58,6 +58,7 @@ export default function EditProfilePage() {
     location: '',
     portfolio: '',
   });
+
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
@@ -66,7 +67,7 @@ export default function EditProfilePage() {
     async function fetchProfile() {
       const res = await fetch('/api/user/get-user');
       if (res.ok) {
-        const user = await res.json();
+        const { user } = await res.json();
         setForm({
           name: user.name || '',
           major: user.major || '',
@@ -82,8 +83,7 @@ export default function EditProfilePage() {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSkillsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -144,19 +144,36 @@ export default function EditProfilePage() {
 
           <div>
             <label style={styles.label} htmlFor="skills">Skills</label>
-            <select
-              id="skills"
-              name="skills"
-              multiple
-              value={form.skills}
-              onChange={handleSkillsChange}
-              style={styles.input}
-            >
+            <select id="skills" name="skills" multiple value={form.skills} onChange={handleSkillsChange} style={styles.input}>
               {PROGRAMMING_SKILLS.map((skill) => (
-                <option key={skill} value={skill}>{skill}</option>
+                <option key={skill} value={skill}>
+                  {skill}
+                </option>
               ))}
             </select>
             <p style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+
+            {form.skills.length > 0 && (
+              <div style={{ marginTop: '0.5rem' }}>
+                <strong>Selected Skills:</strong>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.25rem' }}>
+                  {form.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      style={{
+                        backgroundColor: '#38A169',
+                        color: 'white',
+                        padding: '0.3rem 0.7rem',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.85rem',
+                      }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div>

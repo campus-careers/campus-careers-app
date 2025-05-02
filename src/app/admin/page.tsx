@@ -1,129 +1,219 @@
-import { getServerSession } from 'next-auth';
-import { Col, Container, Row, Table } from 'react-bootstrap';
-import { prisma } from '@/lib/prisma';
-import { Student, User } from '@prisma/client';
-import authOptions from '@/lib/authOptions';
-import { adminProtectedPage } from '@/lib/page-protection';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable max-len */
 
-const AdminPage = async () => {
-  const session = await getServerSession(authOptions);
+'use client';
 
-  const safeSession = session
-    ? {
-      user: {
-        email: session.user?.email ?? '',
-        id: session.user?.id ?? '',
-        randomKey: session.user?.randomKey ?? '',
-      },
-    }
-    : null;
+import { useState, CSSProperties } from 'react';
+import { useRouter } from 'next/navigation';
+import swal from 'sweetalert';
 
-  adminProtectedPage(safeSession);
+const US_STATES = [
+  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+  'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+  'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
+  'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
+  'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
+  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+];
 
-  const adminEmails = (
-    await prisma.adminList.findMany({
-      select: { email: true },
-    })
-  ).map((admin) => admin.email);
+const PROGRAMMING_SKILLS = [
+  'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
+  'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
+  'Shell', 'Assembly', 'Objective-C',
+];
 
-  const adminListItem: Student[] = await prisma.student.findMany({
-    where: {
-      email: { in: adminEmails },
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      image: true,
-      skills: true,
-      location: true,
-      companies: true,
-      interests: true,
-      interviews: true,
-      major: true,
-      portfolio: true,
-    },
-  });
-
-  const users: User[] = await prisma.user.findMany();
-
-  return (
-    <main>
-      <Container id="admin" fluid className="py-4">
-        <Row>
-          <Col>
-            <h1>Admin Portal</h1>
-            <Row xs={1} md={2} lg={3} className="g-4">
-              {adminListItem.map((item) => (
-                <Col key={item.id}>
-                  <div className="p-3 border rounded shadow-sm">
-                    <h5 className="fw-bold">{item.name}</h5>
-                    <p>
-                      <strong>Email:</strong>
-                      {' '}
-                      {item.email}
-                    </p>
-                    <p>
-                      <strong>Major:</strong>
-                      {' '}
-                      {item.major || 'N/A'}
-                    </p>
-                    <p>
-                      <strong>Location:</strong>
-                      {' '}
-                      {item.location}
-                    </p>
-                    <p>
-                      <strong>Portfolio:</strong>
-                      {' '}
-                      {item.portfolio || 'N/A'}
-                    </p>
-
-                    <div>
-                      <strong>Skills:</strong>
-                      {item.skills.length > 0 ? (
-                        <ul className="list-inline mt-2">
-                          {item.skills.map((skill) => (
-                            <li key={skill} className="list-inline-item">
-                              <span className="badge bg-success">{skill}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-muted">No skills listed</p>
-                      )}
-                    </div>
-                  </div>
-                </Col>
-              ))}
-            </Row>
-          </Col>
-        </Row>
-
-        <Row className="mt-4">
-          <Col>
-            <h1>List Users Admin</h1>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-      </Container>
-    </main>
-  );
+const styles = {
+  page: {
+    backgroundColor: '#f9fafb',
+    padding: '2rem',
+    display: 'block',
+  } as CSSProperties,
+  card: {
+    backgroundColor: '#fff',
+    padding: '2.5rem',
+    borderRadius: '1rem',
+    boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
+    width: '100%',
+    maxWidth: '600px',
+    margin: '0 auto',
+  } as CSSProperties,
+  title: {
+    fontSize: '2.65rem',
+    fontWeight: 700,
+    textAlign: 'center' as const,
+    marginBottom: '0.5rem',
+  },
+  subtitle: {
+    textAlign: 'center' as const,
+    marginBottom: '2rem',
+    color: '#555',
+    fontSize: '0.95rem',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '1.5rem',
+  },
+  inputGroup: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+  },
+  label: {
+    fontSize: '1.1rem',
+    marginBottom: '0.4rem',
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: '0.8rem',
+    color: '#000',
+    marginTop: '0.35rem',
+  },
+  input: {
+    padding: '0.75rem 1rem',
+    borderRadius: '0.5rem',
+    border: '1px solid #ccc',
+    fontSize: '1rem',
+    color: '#333',
+    outline: 'none',
+  },
+  button: {
+    backgroundColor: '#2F855A',
+    color: 'white',
+    border: 'none',
+    borderRadius: '0.5rem',
+    padding: '0.85rem 1rem',
+    fontSize: '1rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+  },
 };
 
-export default AdminPage;
+export default function SetupPage() {
+  const [form, setForm] = useState({
+    name: '',
+    major: '',
+    skills: [] as string[],
+    interests: '',
+    location: '',
+    portfolio: '',
+  });
+
+  const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleMultiSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+    setForm({ ...form, skills: selected });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    const payload = {
+      ...form,
+      interests: form.interests.split(',').map((i) => i.trim()),
+      location: form.location.trim(),
+    };
+
+    const response = await fetch('/api/user/save-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      swal('✅ Success!', 'Your profile has been saved.', 'success').then(() => {
+        router.push('/student');
+      });
+    } else {
+      swal('❌ Error', 'Failed to save your profile. Please try again.', 'error');
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div style={styles.page}>
+      <div style={styles.card}>
+        <h1 style={styles.title}>🎓 Complete Your Profile</h1>
+        <p style={styles.subtitle}>
+          Let us know more about you to match you with the best opportunities.
+        </p>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.inputGroup}>
+            <label htmlFor="name" style={styles.label}>Full Name</label>
+            <input type="text" id="name" name="name" value={form.name} onChange={handleChange} style={styles.input} required />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="major" style={styles.label}>Major</label>
+            <input type="text" id="major" name="major" value={form.major} onChange={handleChange} style={styles.input} required />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="skills" style={styles.label}>Skills</label>
+            <select id="skills" name="skills" multiple value={form.skills} onChange={handleMultiSelectChange} style={styles.input}>
+              {PROGRAMMING_SKILLS.map((skill) => (
+                <option key={skill} value={skill}>{skill}</option>
+              ))}
+            </select>
+            <p style={styles.description}>Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+
+            {form.skills.length > 0 && (
+              <div style={{ marginTop: '0.5rem' }}>
+                <strong>Selected Skills:</strong>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.25rem' }}>
+                  {form.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      style={{
+                        backgroundColor: '#38A169',
+                        color: 'white',
+                        padding: '0.3rem 0.7rem',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.85rem',
+                      }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="interests" style={styles.label}>Interests</label>
+            <input type="text" id="interests" name="interests" value={form.interests} onChange={handleChange} style={styles.input} required />
+            <p style={styles.description}>Separate interests with commas (e.g. Web, AI)</p>
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="location" style={styles.label}>Location</label>
+            <select id="location" name="location" value={form.location} onChange={handleChange} style={styles.input} required>
+              <option value="">Select a state</option>
+              {US_STATES.map((state) => (
+                <option key={state} value={state}>{state}</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="portfolio" style={styles.label}>Portfolio URL</label>
+            <input type="url" id="portfolio" name="portfolio" value={form.portfolio} onChange={handleChange} style={styles.input} />
+          </div>
+
+          <button type="submit" style={styles.button} disabled={submitting}>
+            {submitting ? 'Saving...' : 'Save and Continue →'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
