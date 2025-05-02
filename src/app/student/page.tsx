@@ -2,54 +2,45 @@
 
 import { useState, useEffect } from 'react';
 import { getServerSession } from 'next-auth';
-import authOptions from '@/lib/authOptions';
-import BrowseDataSet from '@/components/BrowseDataSet';
 import { prisma } from '@/lib/prisma';
+import BrowseDataSet from '@/components/BrowseDataSet';
+import authOptions from '@/lib/authOptions';
 
 const StudentHomePage = () => {
   const [student, setStudent] = useState<any>(null);
   const [jobListings, setJobListings] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);  // To track if data is still loading
 
-  // Fetch student data and job listings on mount
   useEffect(() => {
     async function fetchStudentData() {
       const session = await getServerSession(authOptions);
       const email = session?.user?.email;
 
       if (!email) {
+        // Handle error or redirection if the user is not logged in
+        console.log('User not logged in');
         return;
       }
 
-      const response = await fetch('/api/get');
-      const data = await response.json();
-
-      if (data.success) {
-        console.log('Student data fetched:', data.user);
-        setStudent(data.user);
+      // Fetch student data from the API
+      const studentResponse = await fetch('/api/get');
+      const studentData = await studentResponse.json();
+      if (studentData.success) {
+        setStudent(studentData.user);
+      } else {
+        console.log('Error fetching student data:', studentData.error);
       }
 
       // Fetch job listings
-      const jobListingsRaw = await prisma.adminList.findMany({
-        select: {
-          id: true,
-          name: true,
-          location: true,
-          skills: true,
-          companies: true,
-          image: true,
-          interviews: true,
-          interests: true,
-        },
-      });
+      const jobResponse = await fetch('/api/jobListings');
+      const jobData = await jobResponse.json();
+      if (jobData.success) {
+        setJobListings(jobData.listings);
+      } else {
+        console.log('Error fetching job listings:', jobData.error);
+      }
 
-      const jobListings = jobListingsRaw.map((job: any) => ({
-        ...job,
-        id: job.id.toString(),
-      }));
-
-      setJobListings(jobListings);
-      setLoading(false);
+      setLoading(false);  // Set loading to false once data is fetched
     }
 
     fetchStudentData();
@@ -59,7 +50,7 @@ const StudentHomePage = () => {
     return (
       <main>
         <div className="text-center mt-5">
-          <h1>Loading...</h1>
+          <h1>Loading data...</h1>
         </div>
       </main>
     );
