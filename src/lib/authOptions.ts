@@ -1,5 +1,5 @@
 import { compare } from 'bcrypt';
-import { type NextAuthOptions } from 'next-auth';
+import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/prisma';
 
@@ -70,11 +70,8 @@ const authOptions: NextAuthOptions = {
       },
     }),
     redirect: async ({ url, baseUrl }) => {
-      // During sign in, automatically redirect based on role
       if (url.includes('/auth/callback')) {
-        // ⚡ Custom logic: if ADMIN, go to /admin; else, go to /student
         if (typeof window !== 'undefined') {
-          // Client-side, can't check session easily
           return baseUrl;
         }
         return baseUrl;
