@@ -6,8 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  // for local development
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -47,11 +46,11 @@ enum Locations {
 // === MODELS ===
 
 model Interview {
-  id        Int    @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   date      DateTime
   company   String
   notes     String?
-  student   User   @relation(fields: [studentId], references: [id])
+  student   User     @relation(fields: [studentId], references: [id])
   studentId Int
 }
 
@@ -68,8 +67,7 @@ model User {
   image      String     @default("default-image.jpg")
   major      String?
   portfolio  String?
-  
-  interviews Interview[] // <-- Add this line to establish reverse relation
+  interviews Interview[]
 }
 
 model Stuff {
@@ -88,16 +86,18 @@ model Company {
   overview   String
   jobs       String
   contacts   String
-  idealSkill String[]  // Ensure this is an array of strings
+  idealSkill String[]
   userId     Int
   user       User      @relation(fields: [userId], references: [id])
 }
 
 model Filter {
   id        Int       @id @default(autoincrement())
-  skills    Skill[] // Using enum Skill[]
+  skills    Skill[]
   locations Locations @default(Honolulu)
 }
+
+// === Lookup Tables for Freeform Inputs ===
 
 model SkillEntry {
   id   Int    @id @default(autoincrement())
@@ -109,6 +109,8 @@ model Location {
   name String @unique
 }
 
+// === Student Profile Form Model ===
+
 model Student {
   id         Int      @id @default(autoincrement())
   name       String
@@ -118,8 +120,12 @@ model Student {
   location   String
   companies  String[]
   interviews String[]
-  interests  String[] // ✅ Add this line
+  interests  String[]
+  major      String?
+  portfolio  String?
 }
+
+// === Admin List Model ===
 
 model adminList {
   id         Int       @id @default(autoincrement())
@@ -130,6 +136,5 @@ model adminList {
   interests  String[]
   image      String
   interviews String[]
-  companies  String[] // Ensure the companies field is here
+  companies  String[]
 }
-

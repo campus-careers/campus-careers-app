@@ -11,7 +11,7 @@ export async function GET() {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   }
 
-  const user = await prisma.user.findUnique({
+  const student = await prisma.student.findUnique({
     where: { email: session.user.email },
     select: {
       name: true,
@@ -21,12 +21,13 @@ export async function GET() {
       interests: true,
       portfolio: true,
       image: true,
+      major: true,
     },
   });
 
-  if (!user) {
-    return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+  if (!student) {
+    return NextResponse.json({ success: false, error: 'Student not found' }, { status: 404 });
   }
 
-  return NextResponse.json({ success: true, user });
+  return NextResponse.json({ success: true, user: student });
 }

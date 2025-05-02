@@ -3,66 +3,46 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
-import { Locations } from '@prisma/client';
 
-export const POST = async (req: Request) => {
-  try {
-    const session = await getServerSession(authOptions);
+export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
 
-    if (!session?.user?.email) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = await req.json();
-    const { name, major, skills, interests, location, portfolio } = body;
-
-    const trimmedLocation = location.trim();
-    const validLocations = Object.values(Locations) as string[];
-
-    if (!validLocations.includes(trimmedLocation)) {
-      return NextResponse.json({ success: false, error: 'Invalid location' }, { status: 400 });
-    }
-
-    // ✅ Update User table
-    const updatedUser = await prisma.user.update({
-      where: { email: session.user.email },
-      data: {
-        name,
-        major,
-        skills: skills.map((s: string) => s.trim()),
-        interests: interests.map((i: string) => i.trim()),
-        location: trimmedLocation as Locations,
-        portfolio,
-      },
-    });
-
-    // ✅ Update or Insert Student table
-    await prisma.student.upsert({
-      where: { email: session.user.email },
-      update: {
-        name,
-        skills: skills.map((s: string) => s.trim()),
-        location: trimmedLocation,
-        image: updatedUser.image,
-        interests: interests.map((i: string) => i.trim()),
-        // ❌ companies: (no need)
-        // ❌ interviews: (no need)
-      },
-      create: {
-        name,
-        email: session.user.email,
-        skills: skills.map((s: string) => s.trim()),
-        location: trimmedLocation,
-        image: updatedUser.image,
-        interests: interests.map((i: string) => i.trim()),
-        companies: [], // default empty
-        interviews: [], // default empty
-      },
-    });
-
-    return NextResponse.json({ success: true, user: updatedUser });
-  } catch (error) {
-    console.error('❌ Error saving profile:', error);
-    return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
+  if (!session?.user?.email) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
   }
-};
+
+  const data = await req.json();
+
+  const studentData = {
+    email: session.user.email,
+    name: data.name,
+    major: data.major || '',
+    location: data.location || '',
+    skills: data.skills || [],
+    interests: data.interests || [],
+    portfolio: data.portfolio || '',
+    companies: [],
+    interviews: [],
+    image: session.user.image || 'default-image.jpg',
+  };
+
+  try {
+    const existing = await prisma.student.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (existing) {
+      await prisma.student.update({
+        where: { email: session.user.email },
+        data: studentData,
+      });
+    } else {
+      await prisma.student.create({ data: studentData });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error saving student profile:', error);
+    return NextResponse.json({ success: false, error: 'Failed to save profile' }, { status: 500 });
+  }
+}

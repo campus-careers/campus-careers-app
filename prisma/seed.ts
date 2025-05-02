@@ -1,55 +1,46 @@
-import { PrismaClient, Skill, Locations, Role } from '@prisma/client';
-import { hash } from 'bcrypt';
-import * as config from '../config/settings.development.json';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding the database');
+  console.log('Seeding Students...');
 
-  const password = await hash('changeme', 10);
+  await prisma.student.createMany({
+    data: [
+      {
+        name: 'Alex Chang',
+        email: 'alex@uh.edu',
+        skills: ['JavaScript', 'Python'],
+        location: 'Hawaii',
+        interests: ['Web Development', 'Machine Learning'],
+        image: 'default-image.jpg',
+        companies: [],
+        interviews: [],
+        major: 'Computer Engineering',
+        portfolio: 'https://alex.dev',
+      },
+      {
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        skills: ['Java', 'C++'],
+        location: 'California',
+        interests: ['Backend', 'Cybersecurity'],
+        image: 'default-image.jpg',
+        companies: [],
+        interviews: [],
+        major: 'Computer Science',
+        portfolio: 'https://janedoe.dev',
+      },
+    ],
+  });
 
-  await Promise.all(
-    config.defaultAccounts.map(async (account) => {
-      const role = (account.role as Role) || Role.USER;
-
-      console.log(`  Creating user: ${account.email} with role: ${role}`);
-
-      await prisma.user.upsert({
-        where: { email: account.email },
-        update: {},
-        create: {
-          name: account.name,
-          location: account.location as Locations, // Locations enum OK
-          skills: (account.skills || []).map((skill: string) => skill as Skill), // 🛠 convert string to Skill enum
-          email: account.email,
-          password,
-          role,
-          image: account.image || 'default-image.jpg',
-          interests: account.interests || [],
-          companies: {
-            create: (account.companies || []).map((companyName: string) => ({
-              name: companyName,
-              location: Locations.Honolulu, // dummy location for seeded companies
-              salary: 0,
-              overview: '',
-              jobs: '',
-              contacts: '',
-              idealSkill: [],
-            })),
-          },
-        },
-      });
-    }),
-  );
-
-  console.log('✅ Seeding complete!');
+  console.log('✅ Students seeded');
 }
 
 main()
   .then(() => prisma.$disconnect())
-  .catch(async (e) => {
-    console.error('❌ Seeding failed:', e);
+  .catch(async (err) => {
+    console.error(err);
     await prisma.$disconnect();
     process.exit(1);
   });

@@ -1,20 +1,36 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable max-len */
+
 'use client';
 
 import { useState, CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
-import swal from 'sweetalert'; // ✅ Import SweetAlert
+import swal from 'sweetalert';
+
+const US_STATES = [
+  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+  'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+  'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
+  'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
+  'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
+  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+];
+
+const PROGRAMMING_SKILLS = [
+  'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
+  'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
+  'Shell', 'Assembly', 'Objective-C',
+];
 
 const styles = {
   page: {
     backgroundColor: '#f9fafb',
-    paddingTop: '2rem',
-    paddingBottom: '2rem',
-    paddingLeft: '1rem',
-    paddingRight: '1rem',
+    padding: '2rem',
     display: 'block',
   } as CSSProperties,
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
     padding: '2.5rem',
     borderRadius: '1rem',
     boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
@@ -27,32 +43,32 @@ const styles = {
     fontWeight: 700,
     textAlign: 'center' as const,
     marginBottom: '0.5rem',
-  } as CSSProperties,
+  },
   subtitle: {
     textAlign: 'center' as const,
     marginBottom: '2rem',
     color: '#555',
     fontSize: '0.95rem',
-  } as CSSProperties,
+  },
   form: {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: '1.5rem',
-  } as CSSProperties,
+  },
   inputGroup: {
     display: 'flex',
     flexDirection: 'column' as const,
-  } as CSSProperties,
+  },
   label: {
     fontSize: '1.1rem',
     marginBottom: '0.4rem',
     fontWeight: 'bold',
-  } as CSSProperties,
+  },
   description: {
     fontSize: '0.8rem',
-    color: '#000000',
+    color: '#000',
     marginTop: '0.35rem',
-  } as CSSProperties,
+  },
   input: {
     padding: '0.75rem 1rem',
     borderRadius: '0.5rem',
@@ -60,8 +76,7 @@ const styles = {
     fontSize: '1rem',
     color: '#333',
     outline: 'none',
-    transition: 'border 0.2s ease, box-shadow 0.2s ease',
-  } as CSSProperties,
+  },
   button: {
     backgroundColor: '#2F855A',
     color: 'white',
@@ -71,15 +86,14 @@ const styles = {
     fontSize: '1rem',
     fontWeight: 600,
     cursor: 'pointer',
-    transition: 'background-color 0.2s ease-in-out',
-  } as CSSProperties,
+  },
 };
 
 export default function SetupPage() {
   const [form, setForm] = useState({
     name: '',
     major: '',
-    skills: '',
+    skills: [] as string[],
     interests: '',
     location: '',
     portfolio: '',
@@ -88,8 +102,14 @@ export default function SetupPage() {
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleMultiSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
+    setForm({ ...form, skills: selected });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,8 +118,7 @@ export default function SetupPage() {
 
     const payload = {
       ...form,
-      skills: form.skills.split(',').map((skill) => skill.trim()),
-      interests: form.interests.split(',').map((interest) => interest.trim()),
+      interests: form.interests.split(',').map((i) => i.trim()),
       location: form.location.trim(),
     };
 
@@ -127,36 +146,47 @@ export default function SetupPage() {
           Let us know more about you to match you with the best opportunities.
         </p>
         <form onSubmit={handleSubmit} style={styles.form}>
-          {[
-            { label: 'Full Name', key: 'name', description: 'Your legal first and last name.' },
-            { label: 'Major', key: 'major', description: 'Your field of study or concentration.' },
-            {
-              label: 'Skills',
-              key: 'skills',
-              description: 'Separate each skill with commas (e.g. Python, React, SQL).',
-            },
-            { label: 'Interests', key: 'interests', description: 'What roles or industries you are interested in.' },
-            { label: 'Location', key: 'location', description: 'Where are you based or looking for opportunities?' },
-            {
-              label: 'Portfolio URL',
-              key: 'portfolio',
-              description: 'Link to your personal website, GitHub, or resume.',
-            },
-          ].map(({ label, key, description }) => (
-            <div key={key} style={styles.inputGroup}>
-              <label htmlFor={key} style={styles.label}>{label}</label>
-              <input
-                id={key}
-                name={key}
-                value={(form as any)[key]}
-                onChange={handleChange}
-                placeholder={label}
-                style={styles.input}
-                required
-              />
-              <p style={styles.description}>{description}</p>
-            </div>
-          ))}
+          <div style={styles.inputGroup}>
+            <label htmlFor="name" style={styles.label}>Full Name</label>
+            <input type="text" id="name" name="name" value={form.name} onChange={handleChange} style={styles.input} required />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="major" style={styles.label}>Major</label>
+            <input type="text" id="major" name="major" value={form.major} onChange={handleChange} style={styles.input} required />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="skills" style={styles.label}>Skills</label>
+            <select id="skills" name="skills" multiple value={form.skills} onChange={handleMultiSelectChange} style={styles.input}>
+              {PROGRAMMING_SKILLS.map((skill) => (
+                <option key={skill} value={skill}>{skill}</option>
+              ))}
+            </select>
+            <p style={styles.description}>Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="interests" style={styles.label}>Interests</label>
+            <input type="text" id="interests" name="interests" value={form.interests} onChange={handleChange} style={styles.input} required />
+            <p style={styles.description}>Separate interests with commas (e.g. Web, AI)</p>
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="location" style={styles.label}>Location</label>
+            <select id="location" name="location" value={form.location} onChange={handleChange} style={styles.input} required>
+              <option value="">Select a state</option>
+              {US_STATES.map((state) => (
+                <option key={state} value={state}>{state}</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="portfolio" style={styles.label}>Portfolio URL</label>
+            <input type="url" id="portfolio" name="portfolio" value={form.portfolio} onChange={handleChange} style={styles.input} />
+          </div>
+
           <button type="submit" style={styles.button} disabled={submitting}>
             {submitting ? 'Saving...' : 'Save and Continue →'}
           </button>
