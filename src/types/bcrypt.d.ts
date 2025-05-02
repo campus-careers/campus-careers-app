@@ -1,1 +1,2 @@
-declare module 'bcrypt';
+
+import bcrypt from 'bcryptjs';
