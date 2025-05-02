@@ -1,59 +1,69 @@
 'use client';
 
-import { getServerSession } from 'next-auth';
 import { useState, useEffect } from 'react';
-import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
+import { prisma } from '@/lib/prisma';
 
-const StudentHomePage = async () => {
-  const session = await getServerSession(authOptions);
-  const email = session?.user?.email;
-
-  if (!email) {
-    return (
-      <main>
-        <div className="text-center mt-5">
-          <h1>Please log in to view your data</h1>
-        </div>
-      </main>
-    );
-  }
-
+const StudentHomePage = () => {
   const [student, setStudent] = useState<any>(null);
+  const [jobListings, setJobListings] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
+  // Fetch student data and job listings on mount
   useEffect(() => {
     async function fetchStudentData() {
+      const session = await getServerSession(authOptions);
+      const email = session?.user?.email;
+
+      if (!email) {
+        return;
+      }
+
       const response = await fetch('/api/get');
       const data = await response.json();
+
       if (data.success) {
         console.log('Student data fetched:', data.user);
         setStudent(data.user);
-      } else {
-        console.log('Error fetching student data:', data.error);
       }
+
+      // Fetch job listings
+      const jobListingsRaw = await prisma.adminList.findMany({
+        select: {
+          id: true,
+          name: true,
+          location: true,
+          skills: true,
+          companies: true,
+          image: true,
+          interviews: true,
+          interests: true,
+        },
+      });
+
+      const jobListings = jobListingsRaw.map((job: any) => ({
+        ...job,
+        id: job.id.toString(),
+      }));
+
+      setJobListings(jobListings);
+      setLoading(false);
     }
 
     fetchStudentData();
   }, []);
 
-  const jobListingsRaw = await prisma.adminList.findMany({
-    select: {
-      id: true,
-      name: true,
-      location: true,
-      skills: true,
-      companies: true,
-      image: true,
-      interviews: true,
-      interests: true,
-    },
-  });
-
-  const jobListings = jobListingsRaw.map((job) => ({
-    ...job,
-    id: job.id.toString(),
-  }));
+  if (loading) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <h1>Loading...</h1>
+        </div>
+      </main>
+    );
+  }
 
   if (!student) {
     return (

@@ -1,42 +1,45 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { getServerSession } from 'next-auth';
-import { Col, Container, Row } from 'react-bootstrap';
-import { prisma } from '@/lib/prisma'; // Import prisma for database queries
-import { loggedInProtectedPage } from '@/lib/page-protection';
+import { prisma } from '@/lib/prisma';
 import authOptions from '@/lib/authOptions';
 import CompanyCard from '@/components/CompanyCard';
-import { Locations } from '@prisma/client'; // Import Locations enum from Prisma
+import { Container, Row, Col } from 'react-bootstrap';
 
-/** Type definition for the company data */
-type Company = {
-  id: number;
-  name: string;
-  location: Locations;
-  salary: number;
-  overview: string;
-  jobs: string;
-  contacts: string;
-  idealSkill: string[];
-  userId: number;
-};
+const CompaniesPage = () => {
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-/** Render a list of companies for the logged-in user. */
-const CompaniesPage = async () => {
-  // Protect the page, only logged-in users can access it.
-  const session = await getServerSession(authOptions);
-  loggedInProtectedPage(
-    session as {
-      user: { email: string; id: string; randomKey: string };
-    } | null,
-  );
+  useEffect(() => {
+    async function fetchCompanies() {
+      const session = await getServerSession(authOptions);
+      if (!session?.user?.email) {
+        return;
+      }
 
-  // Fetch the companies using Prisma
-  const companies = await prisma.company.findMany();
+      // Fetch companies from the database
+      const companiesRaw = await prisma.company.findMany();
+      setCompanies(companiesRaw);
+      setLoading(false);
+    }
+
+    fetchCompanies();
+  }, []);
+
+  if (loading) {
+    return (
+      <main>
+        <Container className="text-center mt-5">
+          <h1>Loading...</h1>
+        </Container>
+      </main>
+    );
+  }
 
   return (
     <main>
-      <Container id="list" fluid className="py-3">
+      <Container fluid className="py-3">
         <Container>
           <Row>
             <Col>
@@ -45,8 +48,8 @@ const CompaniesPage = async () => {
                 <p>No companies found. Please check back later.</p>
               ) : (
                 <Row xs={1} md={2} lg={3} className="g-4">
-                  {companies.map((company: Company) => (
-                    <Col key={company.id}> {/* Use unique company id as key */}
+                  {companies.map((company: any) => (
+                    <Col key={company.id}>
                       <CompanyCard company={company} />
                     </Col>
                   ))}

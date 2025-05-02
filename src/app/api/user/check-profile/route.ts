@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
@@ -9,11 +8,12 @@ export const dynamic = 'force-dynamic'; // <-- ✅ Add this
 
 export async function GET() {
   const session = await getServerSession(authOptions);
+
   if (!session?.user?.email) {
     return NextResponse.json({ hasProfile: false }, { status: 401 });
   }
 
-  const user = await prisma.user.findUnique({
+  const student = await prisma.student.findUnique({
     where: { email: session.user.email },
     select: {
       name: true,
@@ -26,12 +26,12 @@ export async function GET() {
   });
 
   const hasProfile = Boolean(
-    user?.name
-    && user?.major
-    && user?.skills?.length
-    && user?.interests?.length
-    && user?.location
-    && user?.portfolio,
+    student?.name &&
+    student?.major &&
+    student?.skills?.length &&
+    student?.interests?.length &&
+    student?.location &&
+    student?.portfolio
   );
 
   return NextResponse.json({ hasProfile });

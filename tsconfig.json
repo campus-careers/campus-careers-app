@@ -28,6 +28,10 @@
       {
         "name": "next"
       }
+    ],
+    "types": [
+      "node",    // This tells TypeScript to use the Node types
+      "next-auth" // Ensure `next-auth` types are included
     ]
   },
   "include": [
@@ -37,6 +41,7 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/node_modules/semver"   // Exclude the semver directory from type checking
   ]
 }
