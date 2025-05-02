@@ -1,7 +1,8 @@
-import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
+import { prisma } from '@/lib/prisma';
 import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
+import { useEffect, useState } from 'react';
 
 const StudentHomePage = async () => {
   const session = await getServerSession(authOptions);
@@ -17,18 +18,22 @@ const StudentHomePage = async () => {
     );
   }
 
-  const student = await prisma.student.findUnique({
-    where: { email },
-    select: {
-      name: true,
-      location: true,
-      skills: true,
-      interests: true,
-      companies: true,
-      interviews: true,
-      image: true,
-    },
-  });
+  const [student, setStudent] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchStudentData() {
+      const response = await fetch('/api/get');
+      const data = await response.json();
+      if (data.success) {
+        console.log('Student data fetched:', data.user); // Log the student data here
+        setStudent(data.user);
+      } else {
+        console.log('Error fetching student data:', data.error);
+      }
+    }
+
+    fetchStudentData();
+  }, []);
 
   const jobListingsRaw = await prisma.adminList.findMany({
     select: {

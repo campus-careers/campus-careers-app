@@ -27,6 +27,8 @@ export async function POST(req: Request) {
   };
 
   try {
+    console.log('Saving student data:', studentData); // Logging the data before saving
+
     const existing = await prisma.student.findUnique({
       where: { email: session.user.email },
     });

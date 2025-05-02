@@ -25,6 +25,8 @@ export async function GET() {
     },
   });
 
+  console.log('Fetched student data:', student); // Log fetched data to check if it matches
+
   if (!student) {
     return NextResponse.json({ success: false, error: 'Student not found' }, { status: 404 });
   }

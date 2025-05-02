@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import Image from 'next/image'; // ✅ Import Next.js Image
 
-// --- TYPES --- //
 type JobListing = {
   id: string;
   name: string;
@@ -28,7 +27,6 @@ type BrowseDataSetProps = {
   jobListings: JobListing[];
 };
 
-// --- COMPONENT --- //
 const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
   const [filteredJobs, setFilteredJobs] = useState<JobListing[]>(jobListings);
 
