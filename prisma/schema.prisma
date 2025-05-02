@@ -79,7 +79,7 @@ model Student {
   companies  String[]
   interviews String[]
   interests  String[]
-  major      String?  // Make sure this field is here
+  major      String?
   portfolio  String?
 }
 
