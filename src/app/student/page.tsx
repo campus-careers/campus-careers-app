@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/prisma';
 import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
 
@@ -67,23 +66,18 @@ const StudentHomePage = () => {
 
   useEffect(() => {
     async function fetchJobListings() {
-      const jobListingsRaw = await prisma.adminList.findMany({
-        select: {
-          id: true,
-          name: true,
-          location: true,
-          skills: true,
-          companies: true,
-          image: true,
-          interviews: true,
-          interests: true,
-        },
-      });
+      try {
+        const response = await fetch('/api/jobListings');
+        const jobData = await response.json();
 
-      setJobListings(jobListingsRaw.map((job) => ({
-        ...job,
-        id: job.id.toString(),
-      })));
+        if (jobData.success) {
+          setJobListings(jobData.jobListings);
+        } else {
+          console.error('Failed to fetch job listings');
+        }
+      } catch (error) {
+        console.error('Error fetching job listings:', error);
+      }
     }
 
     fetchJobListings();
