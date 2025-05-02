@@ -1,14 +1,28 @@
+import React from 'react'; // Add React import to fix JSX scope issue
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row } from 'react-bootstrap';
-import { Company } from '@prisma/client';
+import { prisma } from '@/lib/prisma'; // Import prisma for database queries
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 import CompanyCard from '@/components/CompanyCard';
-import { prisma } from '@/lib/prisma';
+import { Locations } from '@prisma/client'; // Import Locations enum from Prisma
 
-/** Render a list of stuff for the logged in user. */
+/** Type definition for the company data */
+type Company = {
+  id: number;
+  name: string;
+  location: Locations; // Adjust location to match the Locations enum
+  salary: number;
+  overview: string;
+  jobs: string;
+  contacts: string;
+  idealSkill: string[];
+  userId: number;
+};
+
+/** Render a list of companies for the logged-in user. */
 const CompaniesPage = async () => {
-  // Protect the page, only logged in users can access it.
+  // Protect the page, only logged-in users can access it.
   const session = await getServerSession(authOptions);
   loggedInProtectedPage(
     session as {
@@ -16,10 +30,8 @@ const CompaniesPage = async () => {
     } | null,
   );
 
-  const companies: Company[] = await prisma.company.findMany({
-
-  });
-  // console.log(companies);
+  // Fetch the companies using Prisma
+  const companies = await prisma.company.findMany();
 
   return (
     <main>
@@ -29,8 +41,8 @@ const CompaniesPage = async () => {
             <Col>
               <h1 className="text-center">Company Profiles</h1>
               <Row xs={1} md={2} lg={3} className="g-4">
-                {companies.map((company) => (
-                  <Col key={company.name}>
+                {companies.map((company: Company) => (
+                  <Col key={company.id}> {/* Use unique company id as key */}
                     <CompanyCard company={company} />
                   </Col>
                 ))}

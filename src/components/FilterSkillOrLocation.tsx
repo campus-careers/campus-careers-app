@@ -16,8 +16,8 @@ const FilterSkillOrLocation = ({
     image: string;
     skills: string[];
     location: string;
-    companies: String[];
-    interviews: String[];
+    companies: string[];
+    interviews: string[];
   }[];
   skills: string[];
   locations: string[];
