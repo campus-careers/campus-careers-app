@@ -1,37 +1,74 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/prisma';
+import { useState, useEffect } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { prisma } from '@/lib/prisma'; // Import prisma for database queries
 import authOptions from '@/lib/authOptions';
 import CompanyCard from '@/components/CompanyCard';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Locations } from '@prisma/client'; // Import Locations enum
+
+/** Type definition for the company data */
+type Company = {
+  id: number;
+  name: string;
+  location: Locations; // Ensure location is typed as Locations
+  salary: number;
+  overview: string;
+  jobs: string;
+  contacts: string;
+  idealSkill: string[];
+  userId: number;
+};
 
 const CompaniesPage = () => {
-  const [companies, setCompanies] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [loading, setLoading] = useState(true); // To handle loading state
+  const [error, setError] = useState<string | null>(null); // To handle errors
 
   useEffect(() => {
     async function fetchCompanies() {
-      const session = await getServerSession(authOptions);
-      if (!session?.user?.email) {
-        return;
-      }
+      try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.email) {
+          setError('You need to be logged in to view this page');
+          setLoading(false);
+          return;
+        }
 
-      // Fetch companies from the database
-      const companiesRaw = await prisma.company.findMany();
-      setCompanies(companiesRaw);
-      setLoading(false);
+        // Fetch the companies using Prisma
+        const companiesData = await prisma.company.findMany();
+        if (companiesData) {
+          setCompanies(companiesData);
+        } else {
+          setError('No companies found');
+        }
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+        setError('Failed to load companies');
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchCompanies();
-  }, []);
+  }, []);  // Empty dependency array means this will run once on component mount
 
   if (loading) {
     return (
       <main>
         <Container className="text-center mt-5">
-          <h1>Loading...</h1>
+          <h1>Loading companies...</h1>
+        </Container>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main>
+        <Container className="text-center mt-5">
+          <h1>{error}</h1>
         </Container>
       </main>
     );
@@ -39,7 +76,7 @@ const CompaniesPage = () => {
 
   return (
     <main>
-      <Container fluid className="py-3">
+      <Container id="list" fluid className="py-3">
         <Container>
           <Row>
             <Col>
@@ -48,7 +85,7 @@ const CompaniesPage = () => {
                 <p>No companies found. Please check back later.</p>
               ) : (
                 <Row xs={1} md={2} lg={3} className="g-4">
-                  {companies.map((company: any) => (
+                  {companies.map((company) => (
                     <Col key={company.id}>
                       <CompanyCard company={company} />
                     </Col>

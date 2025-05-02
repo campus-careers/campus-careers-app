@@ -3,59 +3,93 @@
 import { useState, useEffect } from 'react';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/prisma';
-import BrowseDataSet from '@/components/BrowseDataSet';
 import authOptions from '@/lib/authOptions';
+import BrowseDataSet from '@/components/BrowseDataSet';
 
 const StudentHomePage = () => {
-  const [student, setStudent] = useState<any>(null);
-  const [jobListings, setJobListings] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);  // To track if data is still loading
+  const [student, setStudent] = useState<any>(null); // Initialize student state
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [error, setError] = useState<string | null>(null); // Add error handling state
 
   useEffect(() => {
     async function fetchStudentData() {
-      const session = await getServerSession(authOptions);
-      const email = session?.user?.email;
+      try {
+        const session = await getServerSession(authOptions);
+        const email = session?.user?.email;
 
-      if (!email) {
-        // Handle error or redirection if the user is not logged in
-        console.log('User not logged in');
-        return;
+        if (!email) {
+          setError('Please log in to view your data');
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch('/api/get');
+        const data = await response.json();
+
+        if (data.success) {
+          setStudent(data.user); // Set student data
+        } else {
+          setError('Error fetching student data');
+        }
+      } catch (err) {
+        setError('Failed to fetch student data');
+      } finally {
+        setLoading(false);
       }
-
-      // Fetch student data from the API
-      const studentResponse = await fetch('/api/get');
-      const studentData = await studentResponse.json();
-      if (studentData.success) {
-        setStudent(studentData.user);
-      } else {
-        console.log('Error fetching student data:', studentData.error);
-      }
-
-      // Fetch job listings
-      const jobResponse = await fetch('/api/jobListings');
-      const jobData = await jobResponse.json();
-      if (jobData.success) {
-        setJobListings(jobData.listings);
-      } else {
-        console.log('Error fetching job listings:', jobData.error);
-      }
-
-      setLoading(false);  // Set loading to false once data is fetched
     }
 
     fetchStudentData();
-  }, []);
+  }, []); // Run only on initial render
 
+  // Handle loading and error states
   if (loading) {
     return (
       <main>
         <div className="text-center mt-5">
-          <h1>Loading data...</h1>
+          <h1>Loading...</h1>
         </div>
       </main>
     );
   }
 
+  if (error) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <h1>{error}</h1>
+        </div>
+      </main>
+    );
+  }
+
+  // Fetch job listings from Prisma
+  const [jobListings, setJobListings] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function fetchJobListings() {
+      const jobListingsRaw = await prisma.adminList.findMany({
+        select: {
+          id: true,
+          name: true,
+          location: true,
+          skills: true,
+          companies: true,
+          image: true,
+          interviews: true,
+          interests: true,
+        },
+      });
+
+      setJobListings(jobListingsRaw.map((job) => ({
+        ...job,
+        id: job.id.toString(),
+      })));
+    }
+
+    fetchJobListings();
+  }, []);
+
+  // Ensure that the student data exists before rendering
   if (!student) {
     return (
       <main>
