@@ -36,6 +36,7 @@ const authOptions: NextAuthOptions = {
           return null;
         }
 
+        console.log('User authenticated:', user); // Debugging log
         return {
           id: `${user.id}`,
           name: user.name,
