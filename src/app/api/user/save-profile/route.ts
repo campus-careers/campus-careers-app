@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
   const studentData = {
     email: session.user.email,
-    name: data.name,
+    name: data.name || '',
     major: data.major || '',
     location: data.location || '',
     skills: data.skills || [],
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     portfolio: data.portfolio || '',
     companies: [],
     interviews: [],
-    image: session.user.image || 'default-image.jpg',
+    image: typeof session.user.image === 'string' ? session.user.image : 'default-image.jpg',
   };
 
   try {
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error saving student profile:', error);
+    console.error('❌ Error saving student profile:', error);
     return NextResponse.json({ success: false, error: 'Failed to save profile' }, { status: 500 });
   }
 }
