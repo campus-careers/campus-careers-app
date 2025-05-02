@@ -1,7 +1,6 @@
 'use client';
 
-/* eslint-disable react/prop-types */
-
+import React from 'react'; // Add React import to fix JSX scope issue
 import { Card } from 'react-bootstrap';
 import { Company } from '@prisma/client';
 

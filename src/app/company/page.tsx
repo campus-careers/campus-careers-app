@@ -1,4 +1,5 @@
-import React from 'react'; // Add React import to fix JSX scope issue
+'use client';
+
 import { getServerSession } from 'next-auth';
 import { Col, Container, Row } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma'; // Import prisma for database queries
@@ -11,7 +12,7 @@ import { Locations } from '@prisma/client'; // Import Locations enum from Prisma
 type Company = {
   id: number;
   name: string;
-  location: Locations; // Adjust location to match the Locations enum
+  location: Locations;
   salary: number;
   overview: string;
   jobs: string;
@@ -40,13 +41,17 @@ const CompaniesPage = async () => {
           <Row>
             <Col>
               <h1 className="text-center">Company Profiles</h1>
-              <Row xs={1} md={2} lg={3} className="g-4">
-                {companies.map((company: Company) => (
-                  <Col key={company.id}> {/* Use unique company id as key */}
-                    <CompanyCard company={company} />
-                  </Col>
-                ))}
-              </Row>
+              {companies.length === 0 ? (
+                <p>No companies found. Please check back later.</p>
+              ) : (
+                <Row xs={1} md={2} lg={3} className="g-4">
+                  {companies.map((company: Company) => (
+                    <Col key={company.id}> {/* Use unique company id as key */}
+                      <CompanyCard company={company} />
+                    </Col>
+                  ))}
+                </Row>
+              )}
             </Col>
           </Row>
         </Container>

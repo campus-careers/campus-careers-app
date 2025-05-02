@@ -42,7 +42,7 @@ model Stuff {
 
 model Company {
   id         Int       @id @default(autoincrement())
-  name       String
+  name       String    @unique  // Make name unique
   location   Locations
   salary     Int
   overview   String
@@ -56,8 +56,8 @@ model Company {
 model Filter {
   id        Int       @id @default(autoincrement())
   skills    Skill[]
-  locations Locations @default(Honolulu)
-}
+  locations Locations 
+  }
 
 model SkillEntry {
   id   Int    @id @default(autoincrement())
@@ -115,13 +115,71 @@ enum Skill {
   Ruby
   CPlusPlus
   Design
+  HTML // Add HTML
+  CSS // Add CSS
+  SQL // Add SQL
+  R
+  PHP
+  Perl
+  Scala
+  MATLAB
+  Dart
+  Elixir
+  Shell
+  Assembly
+  ObjectiveC
 }
 
 enum Locations {
-  Honolulu
+  Alabama
+  Alaska
+  Arizona
+  Arkansas
+  California
+  Colorado
+  Connecticut
+  Delaware
+  Florida
+  Georgia
+  Hawaii
+  Idaho
+  Illinois
+  Indiana
+  Iowa
+  Kansas
+  Kentucky
+  Louisiana
+  Maine
+  Maryland
+  Massachusetts
+  Michigan
+  Minnesota
+  Mississippi
+  Missouri
+  Montana
+  Nebraska
+  Nevada
+  NewHampshire
+  NewJersey
+  NewMexico
   NewYork
-  SanFrancisco
-  London
-  Tokyo
+  NorthCarolina
+  NorthDakota
+  Ohio
+  Oklahoma
+  Oregon
+  Pennsylvania
+  RhodeIsland
+  SouthCarolina
+  SouthDakota
+  Tennessee
+  Texas
+  Utah
+  Vermont
+  Virginia
+  Washington
+  WestVirginia
+  Wisconsin
+  Wyoming
   Remote
 }
