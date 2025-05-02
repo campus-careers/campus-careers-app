@@ -20,7 +20,17 @@ export async function addCompany(company: {
 }) {
   const validLocation = company.location as Locations;
 
-  const validLocations: Locations[] = ['Honolulu', 'NewYork', 'SanFrancisco', 'London', 'Tokyo', 'Remote'];
+  // Updated valid locations with all U.S. states and Remote
+  const validLocations: Locations[] = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+    'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+    'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri',
+    'Montana', 'Nebraska', 'Nevada', 'NewHampshire', 'NewJersey', 'NewMexico', 'NewYork', 'NorthCarolina',
+    'NorthDakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'RhodeIsland', 'SouthCarolina', 'SouthDakota',
+    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'WestVirginia', 'Wisconsin', 'Wyoming',
+    'Remote'
+  ];
+
   if (!validLocations.includes(validLocation)) {
     throw new Error(`Invalid location provided: ${company.location}`);
   }
@@ -45,13 +55,28 @@ export async function addCompany(company: {
  * Edits an existing company in the database.
  */
 export async function editCompany(company: Company) {
+  const validLocations: Locations[] = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+    'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+    'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri',
+    'Montana', 'Nebraska', 'Nevada', 'NewHampshire', 'NewJersey', 'NewMexico', 'NewYork', 'NorthCarolina',
+    'NorthDakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'RhodeIsland', 'SouthCarolina', 'SouthDakota',
+    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'WestVirginia', 'Wisconsin', 'Wyoming',
+    'Remote'
+  ];
+
+  const validLocation = company.location as Locations;
+  if (!validLocations.includes(validLocation)) {
+    throw new Error(`Invalid location provided: ${company.location}`);
+  }
+
   await prisma.company.update({
     where: { id: company.id },
     data: {
       name: company.name,
       salary: company.salary,
       overview: company.overview,
-      location: company.location as Locations, // ✅ explicitly cast here
+      location: validLocation,
       jobs: company.jobs,
       contacts: company.contacts,
       idealSkill: company.idealSkill,
@@ -78,9 +103,19 @@ export async function deleteCompany(id: number) {
 export async function createUser(credentials: { email: string; password: string; name: string; location: string }) {
   const password = await hash(credentials.password, 10);
 
+  // Validate location against validLocations array
   const validLocation = credentials.location as Locations;
 
-  const validLocations: Locations[] = ['Honolulu', 'NewYork', 'SanFrancisco', 'London', 'Tokyo', 'Remote'];
+  const validLocations: Locations[] = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+    'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+    'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri',
+    'Montana', 'Nebraska', 'Nevada', 'NewHampshire', 'NewJersey', 'NewMexico', 'NewYork', 'NorthCarolina',
+    'NorthDakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'RhodeIsland', 'SouthCarolina', 'SouthDakota',
+    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'WestVirginia', 'Wisconsin', 'Wyoming',
+    'Remote'
+  ];
+
   if (!validLocations.includes(validLocation)) {
     throw new Error('Invalid location');
   }
@@ -108,6 +143,7 @@ export async function changePassword(credentials: { email: string; password: str
     },
   });
 }
+
 /**
  * Edits an existing student in the database.
  */
