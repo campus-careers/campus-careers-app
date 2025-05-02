@@ -7,7 +7,7 @@ NEXT_PUBLIC_SUPABASE_URL="https://cybolwljscbefxllonrp.supabase.co"
 
 # PostgreSQL raw credentials (optional)
 POSTGRES_USER="postgres"
-POSTGRES_PASSWORD="A90ToySupra"
+POSTGRES_PASSWORD="A90ToySupra2025!"
 POSTGRES_HOST="aws-0-us-east-1.pooler.supabase.com"
 POSTGRES_PORT="6543"
 POSTGRES_DATABASE="postgres"

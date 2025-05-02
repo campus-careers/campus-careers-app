@@ -1,6 +1,3 @@
-// This is your Prisma schema file
-// Learn more at https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,63 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// === ENUMS ===
-
-enum Role {
-  USER
-  ADMIN
-}
-
-enum Condition {
-  excellent
-  good
-  fair
-  poor
-}
-
-enum Skill {
-  JavaScript
-  Python
-  Java
-  CSharp
-  Ruby
-  CPlusPlus
-  Design
-}
-
-enum Locations {
-  Honolulu
-  NewYork
-  SanFrancisco
-  London
-  Tokyo
-  Remote
-}
-
-// === MODELS ===
-
 model Interview {
   id        Int      @id @default(autoincrement())
   date      DateTime
   company   String
   notes     String?
-  student   User     @relation(fields: [studentId], references: [id])
   studentId Int
+  student   User     @relation(fields: [studentId], references: [id])
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  email      String     @unique
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
   password   String
-  role       Role       @default(USER)
+  role       Role        @default(USER)
   name       String
   location   Locations
   skills     Skill[]
-  companies  Company[]
   interests  String[]
-  image      String     @default("default-image.jpg")
+  image      String      @default("default-image.jpg")
   major      String?
   portfolio  String?
+  companies  Company[]
   interviews Interview[]
 }
 
@@ -97,8 +59,6 @@ model Filter {
   locations Locations @default(Honolulu)
 }
 
-// === Lookup Tables for Freeform Inputs ===
-
 model SkillEntry {
   id   Int    @id @default(autoincrement())
   name String @unique
@@ -108,8 +68,6 @@ model Location {
   id   Int    @id @default(autoincrement())
   name String @unique
 }
-
-// === Student Profile Form Model ===
 
 model Student {
   id         Int      @id @default(autoincrement())
@@ -121,11 +79,9 @@ model Student {
   companies  String[]
   interviews String[]
   interests  String[]
-  major      String?
+  major      String?  // Make sure this field is here
   portfolio  String?
 }
-
-// === Admin List Model ===
 
 model adminList {
   id         Int       @id @default(autoincrement())
@@ -137,4 +93,35 @@ model adminList {
   image      String
   interviews String[]
   companies  String[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Condition {
+  excellent
+  good
+  fair
+  poor
+}
+
+enum Skill {
+  JavaScript
+  Python
+  Java
+  CSharp
+  Ruby
+  CPlusPlus
+  Design
+}
+
+enum Locations {
+  Honolulu
+  NewYork
+  SanFrancisco
+  London
+  Tokyo
+  Remote
 }
