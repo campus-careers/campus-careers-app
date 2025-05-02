@@ -4,7 +4,6 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { Button, Card, Col, Container, Form, Row, Alert } from 'react-bootstrap';
 
-/** The sign in page. */
 const SignIn = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -20,15 +19,15 @@ const SignIn = () => {
     const result = await signIn('credentials', {
       email,
       password,
-      redirect: false, // ✅ critical to handle manually
-      callbackUrl: '/list', // Redirect destination after login success
+      redirect: false,
+      callbackUrl: '/list',
     });
 
     if (result?.error) {
       console.error('Sign in failed:', result.error);
       setErrorMessage('Invalid email or password. Please try again.');
     } else if (result?.url) {
-      window.location.href = result.url; // ✅ Manual redirect if login succeeds
+      window.location.href = result.url;
     }
   };
 
@@ -60,9 +59,7 @@ const SignIn = () => {
                 </Form>
               </Card.Body>
               <Card.Footer className="text-center">
-                Don&apos;t have an account?
-                {' '}
-                <a href="/auth/signup">Sign up</a>
+                Don&apos;t have an account? <a href="/auth/signup">Sign up</a>
               </Card.Footer>
             </Card>
           </Col>

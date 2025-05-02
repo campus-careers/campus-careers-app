@@ -1,90 +1,63 @@
-import { PrismaClient, Locations, Skill } from '@prisma/client';
+import { PrismaClient, Skill, Locations, Role } from '@prisma/client';
 import { hash } from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding Companies and Users...');
+  console.log('Seeding the database');
 
-  // Define users to be added (with hashed passwords)
+  const password = await hash('changeme', 10); // Hashing the password
+
   const users = [
     {
-      id: 1,
       email: 'admin@foo.com',
-      password: await hash('changeme', 10), // Hash the password properly
       name: 'Admin User',
       location: Locations.Remote,
       skills: [Skill.JavaScript, Skill.Python],
-      interests: ['Web Development', 'Leadership'],
+      interests: ['Leadership', 'Technology'],
       image: 'default-image.jpg',
-      major: 'Computer Engineering',
-      portfolio: 'https://admin.dev',
+      role: Role.ADMIN,
     },
     {
-      id: 2,
       email: 'john@foo.com',
-      password: await hash('changeme', 10), // Hash the password properly
-      name: 'John Foo',
+      name: 'John Doe',
       location: Locations.NewYork,
-      skills: [Skill.Python, Skill.Ruby],
-      interests: ['Data Science', 'Machine Learning'],
+      skills: [Skill.Python, Skill.Java],
+      interests: ['Data Science', 'AI'],
       image: 'default-image.jpg',
-      major: 'Data Science',
-      portfolio: 'https://johnsportfolio.dev',
+      role: Role.USER,
     },
   ];
 
-  // Insert users into the database
-  for (const user of users) {
-    await prisma.user.upsert({
-      where: { email: user.email },
-      update: user,
-      create: user,
-    });
-  }
+  // Upsert users
+  await Promise.all(
+    users.map(async (user) => {
+      const { email, name, location, skills, interests, image, role } = user;
 
-  // Define companies to be added
-  const companies = [
-    {
-      id: 1,
-      name: 'TechCorp',
-      location: Locations.Remote,
-      salary: 100000,
-      overview: 'A leading tech company specializing in web development.',
-      jobs: 'Frontend Developer, Backend Developer',
-      contacts: 'contact@techcorp.com',
-      idealSkill: [Skill.JavaScript, Skill.Python, Skill.Ruby],
-      userId: 1,
-    },
-    {
-      id: 2,
-      name: 'WebSolutions',
-      location: Locations.Remote,
-      salary: 120000,
-      overview: 'Experts in creating responsive and modern web applications.',
-      jobs: 'Full Stack Developer, UI/UX Designer',
-      contacts: 'jobs@websolutions.com',
-      idealSkill: [Skill.JavaScript, Skill.CSharp, Skill.Java],
-      userId: 2,
-    },
-  ];
+      await prisma.user.upsert({
+        where: { email }, // Check by email
+        update: {}, // Nothing to update (no need to change any field)
+        create: {
+          email,
+          name,
+          location: location as Locations, // Ensure correct enum value for location
+          skills: skills as Skill[], // Ensure correct enum values for skills
+          interests,
+          image,
+          password,
+          role,
+        },
+      });
+    }),
+  );
 
-  // Insert companies into the database
-  for (const company of companies) {
-    await prisma.company.upsert({
-      where: { id: company.id },
-      update: company,
-      create: company,
-    });
-  }
-
-  console.log('✅ Companies and Users seeded');
+  console.log('✅ Seeding complete!');
 }
 
 main()
   .then(() => prisma.$disconnect())
-  .catch(async (err) => {
-    console.error(err);
+  .catch(async (e) => {
+    console.error('❌ Seeding failed:', e);
     await prisma.$disconnect();
     process.exit(1);
   });

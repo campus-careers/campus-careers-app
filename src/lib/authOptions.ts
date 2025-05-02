@@ -1,5 +1,5 @@
 import { compare } from 'bcrypt';
-import { NextAuthOptions } from 'next-auth';
+import { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/prisma';
 
@@ -69,15 +69,6 @@ const authOptions: NextAuthOptions = {
         randomKey: token.randomKey,
       },
     }),
-    redirect: async ({ url, baseUrl }) => {
-      if (url.includes('/auth/callback')) {
-        if (typeof window !== 'undefined') {
-          return baseUrl;
-        }
-        return baseUrl;
-      }
-      return url.startsWith(baseUrl) ? url : baseUrl;
-    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
