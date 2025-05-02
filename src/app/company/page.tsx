@@ -34,8 +34,6 @@ const CompaniesPage = async () => {
   // Fetch the companies using Prisma
   const companies = await prisma.company.findMany();
 
-  console.log('Fetched companies:', companies);  // Add this log to check the result
-
   return (
     <main>
       <Container id="list" fluid className="py-3">

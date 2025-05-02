@@ -25,8 +25,6 @@ export async function GET() {
     },
   });
 
-  console.log('Fetched user profile:', user);  // Add this log to check the result
-
   const hasProfile = Boolean(
     user?.name
     && user?.major
