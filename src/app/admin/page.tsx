@@ -9,7 +9,6 @@ import { adminProtectedPage } from '@/lib/page-protection';
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
 
-  // ✅ Safely extract only necessary fields
   const safeSession = session
     ? {
       user: {
@@ -22,9 +21,11 @@ const AdminPage = async () => {
 
   adminProtectedPage(safeSession);
 
-  const adminEmails = (await prisma.adminList.findMany({
-    select: { email: true },
-  })).map((admin) => admin.email);
+  const adminEmails = (
+    await prisma.adminList.findMany({
+      select: { email: true },
+    })
+  ).map((admin) => admin.email);
 
   const adminListItem: Student[] = await prisma.student.findMany({
     where: {
@@ -40,6 +41,8 @@ const AdminPage = async () => {
       companies: true,
       interests: true,
       interviews: true,
+      major: true, // ✅ added
+      portfolio: true, // ✅ added
     },
   });
 
@@ -54,10 +57,11 @@ const AdminPage = async () => {
             <Row xs={1} md={2} lg={3} className="g-4">
               {adminListItem.map((item) => (
                 <Col key={item.id}>
-                  <AdminDashboard {...{
-                    ...item,
-                    id: item.id.toString(),
-                  }}
+                  <AdminDashboard
+                    {...{
+                      ...item,
+                      id: item.id.toString(), // convert Int to string if needed by component
+                    }}
                   />
                 </Col>
               ))}
