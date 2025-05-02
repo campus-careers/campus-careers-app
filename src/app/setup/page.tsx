@@ -5,6 +5,7 @@
 
 import { useState, CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
+import Select from 'react-select';
 import swal from 'sweetalert';
 
 const US_STATES = [
@@ -89,6 +90,11 @@ const styles = {
   },
 };
 
+const skillOptions = PROGRAMMING_SKILLS.map((skill) => ({
+  value: skill,
+  label: skill,
+}));
+
 export default function SetupPage() {
   const [form, setForm] = useState({
     name: '',
@@ -107,9 +113,9 @@ export default function SetupPage() {
     setForm({ ...form, [name]: value });
   };
 
-  const handleMultiSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-    setForm({ ...form, skills: selected });
+  const handleSkillSelectChange = (selected: any) => {
+    const selectedSkills = selected.map((option: any) => option.value);
+    setForm({ ...form, skills: selectedSkills });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -158,12 +164,16 @@ export default function SetupPage() {
 
           <div style={styles.inputGroup}>
             <label htmlFor="skills" style={styles.label}>Skills</label>
-            <select id="skills" name="skills" multiple value={form.skills} onChange={handleMultiSelectChange} style={styles.input}>
-              {PROGRAMMING_SKILLS.map((skill) => (
-                <option key={skill} value={skill}>{skill}</option>
-              ))}
-            </select>
-            <p style={styles.description}>Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+            <Select
+              isMulti
+              name="skills"
+              options={skillOptions}
+              value={skillOptions.filter(opt => form.skills.includes(opt.value))}
+              onChange={handleSkillSelectChange}
+              classNamePrefix="select"
+              styles={{ control: (base) => ({ ...base, fontSize: '1rem' }) }}
+            />
+            <p style={styles.description}>Click to add or remove skills. No keyboard shortcut needed.</p>
           </div>
 
           <div style={styles.inputGroup}>

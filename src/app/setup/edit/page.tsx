@@ -5,6 +5,7 @@
 
 import { useEffect, useState, CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
+import Select from 'react-select';
 import swal from 'sweetalert';
 
 const US_STATES = [
@@ -23,6 +24,11 @@ const PROGRAMMING_SKILLS = [
   'Shell', 'Assembly', 'Objective-C',
 ];
 
+const skillOptions = PROGRAMMING_SKILLS.map((skill) => ({
+  value: skill,
+  label: skill,
+}));
+
 const styles = {
   page: { backgroundColor: '#f9fafb', padding: '2rem', display: 'block' } as CSSProperties,
   card: {
@@ -31,12 +37,11 @@ const styles = {
     borderRadius: '1rem',
     boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
     marginBottom: '2rem',
-  } as CSSProperties,
+  },
   title: { fontSize: '2rem', fontWeight: 700, textAlign: 'center' as const, marginBottom: '1rem' },
-  section: { marginBottom: '2rem' } as CSSProperties,
-  label: { fontWeight: 'bold', marginBottom: '0.5rem' } as CSSProperties,
-  form: { display: 'flex', flexDirection: 'column' as const, gap: '1.2rem' } as CSSProperties,
-  input: { padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid #ccc', fontSize: '1rem' } as CSSProperties,
+  label: { fontWeight: 'bold', marginBottom: '0.5rem' },
+  form: { display: 'flex', flexDirection: 'column' as const, gap: '1.2rem' },
+  input: { padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid #ccc', fontSize: '1rem' },
   button: {
     backgroundColor: '#2F855A',
     color: 'white',
@@ -46,7 +51,7 @@ const styles = {
     fontSize: '1rem',
     fontWeight: 600,
     cursor: 'pointer',
-  } as CSSProperties,
+  },
 };
 
 export default function EditProfilePage() {
@@ -83,12 +88,13 @@ export default function EditProfilePage() {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
-  const handleSkillsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-    setForm({ ...form, skills: selected });
+  const handleSkillSelectChange = (selected: any) => {
+    const selectedSkills = selected.map((option: any) => option.value);
+    setForm({ ...form, skills: selectedSkills });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -144,36 +150,15 @@ export default function EditProfilePage() {
 
           <div>
             <label style={styles.label} htmlFor="skills">Skills</label>
-            <select id="skills" name="skills" multiple value={form.skills} onChange={handleSkillsChange} style={styles.input}>
-              {PROGRAMMING_SKILLS.map((skill) => (
-                <option key={skill} value={skill}>
-                  {skill}
-                </option>
-              ))}
-            </select>
-            <p style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
-
-            {form.skills.length > 0 && (
-              <div style={{ marginTop: '0.5rem' }}>
-                <strong>Selected Skills:</strong>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.25rem' }}>
-                  {form.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      style={{
-                        backgroundColor: '#38A169',
-                        color: 'white',
-                        padding: '0.3rem 0.7rem',
-                        borderRadius: '0.5rem',
-                        fontSize: '0.85rem',
-                      }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+            <Select
+              isMulti
+              name="skills"
+              options={skillOptions}
+              value={skillOptions.filter((opt) => form.skills.includes(opt.value))}
+              onChange={handleSkillSelectChange}
+              classNamePrefix="select"
+              styles={{ control: (base) => ({ ...base, fontSize: '1rem' }) }}
+            />
           </div>
 
           <div>
