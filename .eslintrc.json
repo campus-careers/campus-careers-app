@@ -18,13 +18,10 @@
     "prefer-arrow-callback": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/*.spec.ts"] }],
     "import/extensions": ["error", "ignorePackages", { "js": "never", "jsx": "never", "ts": "never", "tsx": "never" }],
+    "import/prefer-default-export": "off",
     "react/function-component-definition": "off",
     "react/jsx-props-no-spreading": "off",
-    "react/jsx-one-expression-per-line": "off",
     "react/one-expression-per-line": "off",
-    "react/jsx-uses-react": "off", // Disable the check for JSX that uses React
-    "react/jsx-uses-vars": "error", // Enforce JSX variable usage
-    "react/react-in-jsx-scope": "off"  // Disable this rule
+    "react/react-in-jsx-scope": "off"
   }
 }
-

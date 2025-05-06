@@ -1,4 +1,5 @@
 // Add the "use client" directive to this file to mark it as a Client Component
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -9,7 +10,7 @@ const StudentHomePage = () => {
   const [student, setStudent] = useState<any>(null);
 
   const fetchStudentData = async () => {
-    const response = await fetch('/api/user/get-user');  // Updated the API path to match the route
+    const response = await fetch('/api/user/get-user'); // Updated the API path to match the route
     const data = await response.json();
     if (data.success) {
       setStudent(data.user); // Update the student state
@@ -39,7 +40,9 @@ const StudentHomePage = () => {
         <h2 className="text-center mb-4">Student Home Page</h2>
         <Row className="justify-content-center">
           <Col md={5}>
-            <EditableProfile student={student} onSave={fetchStudentData} /> {/* Pass the fetchStudentData function as a prop */}
+            <EditableProfile student={student} onSave={fetchStudentData} />
+            {' '}
+            {/* Pass the fetchStudentData function as a prop */}
           </Col>
 
           <Col md={4} className="d-flex flex-column gap-3">

@@ -1,18 +1,2 @@
-module.exports = {
-  extends: ['next/core-web-vitals', 'airbnb', 'airbnb-typescript'],
-  rules: {
-    // Global rules here
-    'react/react-in-jsx-scope': 'off',
-  },
-  overrides: [
-    {
-      files: ['*.js', 'next.config.mjs'],
-      rules: {
-        // Disable all ESLint rules for these files
-        'react/react-in-jsx-scope': 'off',
-        'no-console': 'off',
-        'no-unused-vars': 'off',
-      },
-    },
-  ],
-};
+*.js
+next.config.mjs
