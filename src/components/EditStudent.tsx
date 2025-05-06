@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Col, Container, Row, Form, InputGroup } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 
-const EditStudent = ({ student, onSave }: { student: any, onSave: () => void }) => {
+const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: any) => void }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit } = useForm({
     defaultValues: {
       name: student?.name,
       email: student?.email,
@@ -29,15 +29,14 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: () => void }) 
   const onSubmit = async (data: any) => {
     // Handle the image upload logic here if needed, e.g., uploading to server
     const imageUrl = selectedImage ? `/images/${selectedImage.name}` : data.image;
-    
     // Update the student data (send it to the backend or context)
     const updatedData = {
       ...data,
       image: imageUrl,
     };
 
-    // Perform save action, e.g., make API call to save updated data
-    await onSave();
+    // Use the updated data when calling onSave
+    await onSave(updatedData);
 
     // Reset form state or provide feedback
   };
