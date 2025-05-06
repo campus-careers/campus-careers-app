@@ -36,12 +36,24 @@ const authOptions: NextAuthOptions = {
           return null;
         }
 
-        return {
-          id: `${user.id}`,
-          name: user.name,
-          email: user.email,
-          randomKey: user.role, // saving role here
-        };
+        // Redirect based on role
+        if (user.role === 'ADMIN') {
+          return {
+            id: `${user.id}`,
+            name: user.name,
+            email: user.email,
+            randomKey: user.role, // saving role here
+            redirectTo: '/admin', // If admin, redirect to admin page
+          };
+        } else {
+          return {
+            id: `${user.id}`,
+            name: user.name,
+            email: user.email,
+            randomKey: user.role, // saving role here
+            redirectTo: '/student', // If student, redirect to student home page
+          };
+        }
       },
     }),
   ],

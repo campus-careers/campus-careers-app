@@ -3,9 +3,11 @@
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { Button, Card, Col, Container, Form, Row, Alert } from 'react-bootstrap';
+import { useRouter } from 'next/navigation';
 
 const SignIn = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,18 +18,24 @@ const SignIn = () => {
     const email = target.email.value;
     const password = target.password.value;
 
+    // Attempt to sign in with credentials
     const result = await signIn('credentials', {
       email,
       password,
-      redirect: false,
-      callbackUrl: '/list',
-    });
+      redirect: false, // Disable default redirect handling
+    }) as { url?: string; error?: string; user?: { randomKey: string } };
 
+    // Handle errors or successful login
     if (result?.error) {
       console.error('Sign in failed:', result.error);
       setErrorMessage('Invalid email or password. Please try again.');
     } else if (result?.url) {
-      window.location.href = result.url;
+      // Redirect based on user role (admin or student)
+      if (result.user?.randomKey === 'ADMIN') {
+        router.push('/admin'); // Admin portal
+      } else {
+        router.push('/student'); // Student home page
+      }
     }
   };
 
@@ -35,8 +43,8 @@ const SignIn = () => {
     <main>
       <Container>
         <Row className="justify-content-center">
-          <Col xs={5}>
-            <h1 className="text-center">Sign In</h1>
+          <Col xs={12} sm={8} md={6} lg={5}>
+            <h1 className="text-center my-4">Sign In</h1>
             <Card>
               <Card.Body>
                 {errorMessage && (
@@ -59,9 +67,7 @@ const SignIn = () => {
                 </Form>
               </Card.Body>
               <Card.Footer className="text-center">
-                Don&apos;t have an account?
-                {' '}
-                <a href="/auth/signup">Sign up</a>
+                Don't have an account? <a href="/auth/signup">Sign up</a>
               </Card.Footer>
             </Card>
           </Col>
