@@ -1,4 +1,5 @@
-'use client'; // Mark this as a Client Component
+// src/app/student/page.tsx
+'use client';
 
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
@@ -9,7 +10,7 @@ const StudentHomePage = () => {
 
   useEffect(() => {
     async function fetchStudentData() {
-      const response = await fetch('/api/get-user');
+      const response = await fetch('/api/get-user');  // Ensure correct API call
       const data = await response.json();
       
       if (data.success) {
@@ -20,7 +21,7 @@ const StudentHomePage = () => {
     }
 
     fetchStudentData();
-  }, []);
+  }, []); // This ensures the data is fetched when the page loads
 
   if (!student) {
     return (
@@ -39,7 +40,7 @@ const StudentHomePage = () => {
         <h2 className="text-center mb-4">Student Home Page</h2>
         <Row className="justify-content-center">
           <Col md={5}>
-            <EditableProfile />
+            <EditableProfile student={student} />  {/* Pass the student data as prop */}
           </Col>
 
           <Col md={4} className="d-flex flex-column gap-3">

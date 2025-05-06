@@ -1,14 +1,22 @@
+// components/EditStudent.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Col, Form, Row, Image, Button } from 'react-bootstrap';
 
-const EditStudent = () => {
+type Student = {
+  name: string;
+  location: string;
+  skills: string[];
+  image: string;
+};
+
+const EditableProfile = ({ student }: { student: Student }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [fullName, setFullName] = useState('Full Name');
-  const [location, setLocation] = useState('Preferred Location');
-  const [skills, setSkills] = useState('Skill 1, Skill 2, Skill 3');
-  const [imageURL, setImageURL] = useState('');
+  const [fullName, setFullName] = useState(student.name || 'Full Name');
+  const [location, setLocation] = useState(student.location || 'Preferred Location');
+  const [skills, setSkills] = useState(student.skills?.join(', ') || 'Skill 1, Skill 2, Skill 3');
+  const [imageURL, setImageURL] = useState(student.image || '');
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -118,4 +126,4 @@ const EditStudent = () => {
   );
 };
 
-export default EditStudent;
+export default EditableProfile;
