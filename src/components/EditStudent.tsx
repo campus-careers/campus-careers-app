@@ -10,6 +10,7 @@ type Student = {
   image: string;
 };
 
+// Accept 'onSave' as a prop to call when the profile is saved
 const EditableProfile = ({ student, onSave }: { student: Student; onSave: () => void }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [fullName, setFullName] = useState(student.name || 'Full Name');
@@ -35,7 +36,7 @@ const EditableProfile = ({ student, onSave }: { student: Student; onSave: () => 
   };
 
   const saveProfile = () => {
-    // Call the `onSave` function passed down from the parent component to refresh the student data.
+    // When saving, trigger the onSave function passed from the parent
     onSave();
     setIsEditing(false);
   };
