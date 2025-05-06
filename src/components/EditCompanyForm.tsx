@@ -8,7 +8,7 @@ import { Company, Locations } from '@prisma/client';
 import { EditCompanySchema } from '@/lib/validationSchemas';
 import { editCompany } from '@/lib/dbActions';
 
-const US_STATES = [
+const US_STATES: string[] = [
   'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
   'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana',
   'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
@@ -18,7 +18,7 @@ const US_STATES = [
   'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
 ];
 
-const PROGRAMMING_SKILLS = [
+const PROGRAMMING_SKILLS: string[] = [
   'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
   'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
   'Shell', 'Assembly', 'Objective-C',
@@ -74,88 +74,80 @@ const EditCompanyForm = ({
   };
 
   return (
-    <Container className="mt-4">
-      <Row className="justify-content-center">
-        <Col md={6}>
-          <Card className="shadow p-4 rounded-4">
-            <h3 className="text-center fw-bold mb-3">Edit Company Profile</h3>
-            <Form onSubmit={handleSubmit(onSubmit)}>
-              <input type="hidden" {...register('id')} />
-              <input type="hidden" {...register('userId')} />
+    <Container className="d-flex justify-content-center my-5">
+      <Card style={{ maxWidth: '600px', width: '100%' }} className="shadow-sm p-4 rounded-4">
+        <h3 className="text-center fw-bold mb-4">Edit Company</h3>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <input type="hidden" {...register('id')} />
+          <input type="hidden" {...register('userId')} />
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Company Name</Form.Label>
-                <Form.Control {...register('name')} />
-                {errors.name && <small className="text-danger">{errors.name.message}</small>}
-              </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-bold">Name</Form.Label>
+            <Form.Control {...register('name')} />
+            {errors.name && <small className="text-danger">{errors.name.message}</small>}
+          </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Salary</Form.Label>
-                <Form.Control type="number" {...register('salary')} />
-                {errors.salary && <small className="text-danger">{errors.salary.message}</small>}
-              </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-bold">Salary</Form.Label>
+            <Form.Control type="number" {...register('salary')} />
+            {errors.salary && <small className="text-danger">{errors.salary.message}</small>}
+          </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Location</Form.Label>
-                <Form.Select {...register('location')}>
-                  <option value="">Select a state</option>
-                  {US_STATES.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </Form.Select>
-                {errors.location && <small className="text-danger">{errors.location.message}</small>}
-              </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-bold">Location</Form.Label>
+            <Form.Select {...register('location')}>
+              <option value="">Select a state</option>
+              {US_STATES.map((state) => (
+                <option key={state} value={state}>{state}</option>
+              ))}
+            </Form.Select>
+            {errors.location && <small className="text-danger">{errors.location.message}</small>}
+          </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Overview</Form.Label>
-                <Form.Control as="textarea" rows={2} {...register('overview')} />
-                {errors.overview && <small className="text-danger">{errors.overview.message}</small>}
-              </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-bold">Overview</Form.Label>
+            <Form.Control as="textarea" rows={2} {...register('overview')} />
+            {errors.overview && <small className="text-danger">{errors.overview.message}</small>}
+          </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Jobs</Form.Label>
-                <Form.Control {...register('jobs')} />
-                {errors.jobs && <small className="text-danger">{errors.jobs.message}</small>}
-              </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-bold">Jobs</Form.Label>
+            <Form.Control {...register('jobs')} />
+            {errors.jobs && <small className="text-danger">{errors.jobs.message}</small>}
+          </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Contacts</Form.Label>
-                <Form.Control {...register('contacts')} />
-                {errors.contacts && <small className="text-danger">{errors.contacts.message}</small>}
-              </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-bold">Contacts</Form.Label>
+            <Form.Control {...register('contacts')} />
+            {errors.contacts && <small className="text-danger">{errors.contacts.message}</small>}
+          </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Recommended Skills</Form.Label>
-                <Form.Control as="select" multiple {...register('idealSkill')}>
-                  {PROGRAMMING_SKILLS.map((skill) => (
-                    <option key={skill} value={skill}>
-                      {skill}
-                    </option>
-                  ))}
-                </Form.Control>
-                <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
-                {errors.idealSkill && <div className="text-danger">{errors.idealSkill.message}</div>}
-              </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-bold">Recommended Skills</Form.Label>
+            <Form.Control as="select" multiple {...register('idealSkill')}>
+              {PROGRAMMING_SKILLS.map((skill) => (
+                <option key={skill} value={skill}>{skill}</option>
+              ))}
+            </Form.Control>
+            <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+            {errors.idealSkill && <div className="text-danger">{errors.idealSkill.message}</div>}
+          </Form.Group>
 
-              <div className="d-flex justify-content-between">
-                <Button type="submit" variant="primary">Save</Button>
-                <Button
-                  type="button"
-                  variant="outline-secondary"
-                  onClick={() => {
-                    reset(defaultValues);
-                    if (onFinish) onFinish();
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+          <div className="d-flex justify-content-between mt-4">
+            <Button type="submit" variant="primary">Save</Button>
+            <Button
+              type="button"
+              variant="outline-secondary"
+              onClick={() => {
+                reset(defaultValues);
+                if (onFinish) onFinish();
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </Form>
+      </Card>
     </Container>
   );
 };
