@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable react/require-default-props */
+
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import swal from 'sweetalert';
@@ -76,14 +78,16 @@ const EditCompanyForm = ({
   return (
     <Container className="my-4 d-flex justify-content-center">
       <Card style={{ padding: '2rem', width: '100%', maxWidth: '700px' }}>
-        <h2 className="text-center mb-4">Edit Company Profile</h2>
+        <h3 className="text-center mb-4 fw-bold">🛠️ Edit Company Profile</h3>
         <Form onSubmit={handleSubmit(onSubmit)}>
+
+          {/* Hidden IDs */}
           <input type="hidden" {...register('id')} />
           <input type="hidden" {...register('userId')} />
 
           <Row className="mb-3">
             <Col>
-              <Form.Label>Name</Form.Label>
+              <Form.Label className="fw-bold">Company Name</Form.Label>
               <Form.Control
                 {...register('name')}
                 className={errors.name ? 'is-invalid' : ''}
@@ -91,7 +95,7 @@ const EditCompanyForm = ({
               <div className="invalid-feedback">{errors.name?.message}</div>
             </Col>
             <Col>
-              <Form.Label>Salary</Form.Label>
+              <Form.Label className="fw-bold">Salary</Form.Label>
               <Form.Control
                 type="number"
                 {...register('salary')}
@@ -103,22 +107,20 @@ const EditCompanyForm = ({
 
           <Row className="mb-3">
             <Col>
-              <Form.Label>Location</Form.Label>
+              <Form.Label className="fw-bold">Location</Form.Label>
               <Form.Select
                 {...register('location')}
                 className={errors.location ? 'is-invalid' : ''}
               >
                 <option value="">Select a state</option>
                 {US_STATES.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
+                  <option key={state} value={state}>{state}</option>
                 ))}
               </Form.Select>
               <div className="invalid-feedback">{errors.location?.message}</div>
             </Col>
             <Col>
-              <Form.Label>Overview</Form.Label>
+              <Form.Label className="fw-bold">Overview</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={2}
@@ -131,7 +133,7 @@ const EditCompanyForm = ({
 
           <Row className="mb-3">
             <Col>
-              <Form.Label>Jobs</Form.Label>
+              <Form.Label className="fw-bold">Jobs</Form.Label>
               <Form.Control
                 {...register('jobs')}
                 className={errors.jobs ? 'is-invalid' : ''}
@@ -139,7 +141,7 @@ const EditCompanyForm = ({
               <div className="invalid-feedback">{errors.jobs?.message}</div>
             </Col>
             <Col>
-              <Form.Label>Contacts</Form.Label>
+              <Form.Label className="fw-bold">Contacts</Form.Label>
               <Form.Control
                 {...register('contacts')}
                 className={errors.contacts ? 'is-invalid' : ''}
@@ -148,55 +150,47 @@ const EditCompanyForm = ({
             </Col>
           </Row>
 
-          <Row className="mb-4">
-            <Col>
-              <Form.Label>Recommended Skills</Form.Label>
-              <Form.Control
-                {...register('idealSkill')}
-                as="select"
-                multiple
-                className={errors.idealSkill ? 'is-invalid' : ''}
-              >
-                {PROGRAMMING_SKILLS.map((skill) => (
-                  <option key={skill} value={skill}>
-                    {skill}
-                  </option>
-                ))}
-              </Form.Control>
-              <small className="text-muted">
-                Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
-              </small>
-              <div className="invalid-feedback">{errors.idealSkill?.message}</div>
-            </Col>
-          </Row>
+          <Form.Group className="mb-4">
+            <Form.Label className="fw-bold">Recommended Skills</Form.Label>
+            <Form.Control
+              {...register('idealSkill')}
+              as="select"
+              multiple
+              className={errors.idealSkill ? 'is-invalid' : ''}
+            >
+              {PROGRAMMING_SKILLS.map((skill) => (
+                <option key={skill} value={skill}>{skill}</option>
+              ))}
+            </Form.Control>
+            <Form.Text className="text-muted">
+              Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+            </Form.Text>
+            <div className="invalid-feedback">{errors.idealSkill?.message}</div>
+          </Form.Group>
 
-          <Row className="justify-content-end">
-            <Col xs="auto">
-              <Button type="submit" variant="primary">
-                Save Changes
-              </Button>
-            </Col>
-            <Col xs="auto">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  reset(defaultValues);
-                  if (onFinish) onFinish();
-                }}
-              >
-                Cancel
-              </Button>
-            </Col>
-          </Row>
+          <div className="d-flex justify-content-end gap-2">
+            <Button type="submit" variant="success">
+              Save Changes
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                reset(defaultValues);
+                if (onFinish) onFinish();
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
         </Form>
       </Card>
     </Container>
   );
 };
 
-export default EditCompanyForm;
-
 EditCompanyForm.defaultProps = {
   onFinish: undefined,
 };
+
+export default EditCompanyForm;
