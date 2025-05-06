@@ -43,32 +43,38 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
   };
 
   const onSubmit = async (data: any) => {
-    const imageUrl = selectedImage ? `/images/${selectedImage.name}` : data.image;
+    // Ensure skills and location are captured correctly
     const updatedData = {
       ...data,
-      image: imageUrl,
+      skills: data.skills || [], // Ensure skills are set correctly
+      location: data.location || '', // Ensure location is set correctly
+      image: selectedImage ? `/images/${selectedImage.name}` : data.image, // Update image URL if uploaded
     };
+
+    // Call the onSave function from the parent to update the profile
     await onSave(updatedData);
-    setSelectedImage(null); // Reset the selected image
+
+    // Reset the image selection
+    setSelectedImage(null);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Container>
-        <Row className='mb-3'>
+        <Row className="mb-3">
           <Col md={12}>
             <h3>Edit Student Profile</h3>
           </Col>
         </Row>
 
-        <Row className='mb-3'>
+        <Row className="mb-3">
           <Col md={6}>
             <Form.Group>
               <Form.Label>Name</Form.Label>
               <Form.Control
                 {...register('name')}
-                type='text'
-                placeholder='Enter your name'
+                type="text"
+                placeholder="Enter your name"
               />
             </Form.Group>
           </Col>
@@ -78,23 +84,23 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               <Form.Label>Email</Form.Label>
               <Form.Control
                 {...register('email')}
-                type='email'
-                placeholder='Enter your email'
+                type="email"
+                placeholder="Enter your email"
                 disabled
               />
             </Form.Group>
           </Col>
         </Row>
 
-        <Row className='mb-3'>
+        <Row className="mb-3">
           <Col md={6}>
             <Form.Group>
               <Form.Label>Skills</Form.Label>
               <Form.Control
                 {...register('skills')}
-                as='select'
+                as="select"
                 multiple
-                placeholder='Select your skills'
+                placeholder="Select your skills"
               >
                 {skills.map((skill) => (
                   <option key={skill} value={skill}>
@@ -102,8 +108,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
                   </option>
                 ))}
               </Form.Control>
-              {/* Caption below the skills section */}
-              <small style={{ color: 'black' }}>
+              <small className="text-muted">
                 Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
               </small>
             </Form.Group>
@@ -114,8 +119,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               <Form.Label>Location</Form.Label>
               <Form.Control
                 {...register('location')}
-                as='select'
-                placeholder='Select your location'
+                as="select"
+                placeholder="Select your location"
               >
                 {locations.map((location) => (
                   <option key={location} value={location}>
@@ -127,28 +132,28 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className='mb-3'>
+        <Row className="mb-3">
           <Col md={12}>
             <Form.Group>
               <Form.Label>Profile Image</Form.Label>
               <InputGroup>
                 <Form.Control
                   {...register('image')}
-                  type='text'
-                  placeholder='Image URL'
+                  type="text"
+                  placeholder="Image URL"
                   disabled
                 />
                 <Button
-                  variant='outline-secondary'
+                  variant="outline-secondary"
                   onClick={() => document.getElementById('fileInput')?.click()}
                 >
                   Upload
                 </Button>
                 <input
-                  type='file'
-                  id='fileInput'
+                  type="file"
+                  id="fileInput"
                   style={{ display: 'none' }}
-                  accept='image/*'
+                  accept="image/*"
                   onChange={handleImageChange}
                 />
               </InputGroup>
@@ -157,23 +162,23 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
         </Row>
 
         {selectedImage && (
-          <Row className='mb-3'>
+          <Row className="mb-3">
             <Col md={12}>
               <h5>Selected Image Preview</h5>
               <Image
                 src={URL.createObjectURL(selectedImage)}
-                alt='Selected Profile'
+                alt="Selected Profile"
                 width={150}
                 height={150}
-                objectFit='cover'
+                objectFit="cover"
               />
             </Col>
           </Row>
         )}
 
-        <Row className='mb-3'>
+        <Row className="mb-3">
           <Col md={12}>
-            <Button variant='primary' type='submit'>
+            <Button variant="primary" type="submit">
               Save Changes
             </Button>
           </Col>

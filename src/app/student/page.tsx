@@ -19,7 +19,7 @@ type Student = {
 };
 
 type Match = {
-  id: string; // Assuming a unique identifier exists for each match
+  id: string; 
   name: string;
   location: string;
   idealSkill: string[];
@@ -31,7 +31,6 @@ const StudentHomePage = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [matches, setMatches] = useState<Match[]>([]);
 
-  // Function to fetch student data
   const fetchStudentData = async () => {
     const response = await fetch('/api/user/get-user');
     const data = await response.json();
@@ -42,7 +41,6 @@ const StudentHomePage = () => {
     }
   };
 
-  // Memoize fetchMatches to avoid unnecessary re-creations
   const fetchMatches = useCallback(async () => {
     if (student) {
       const response = await fetch(`/api/user/get-matches?studentId=${student.id}`);
@@ -55,27 +53,40 @@ const StudentHomePage = () => {
     }
   }, [student]);
 
-  // Toggle edit mode
   const toggleEdit = () => {
     setIsEditing((prev) => !prev);
   };
 
-  // Handle save changes
-  const saveChanges = async () => {
-    // Save the updated data here, make API call if necessary
-    await fetchStudentData();  // Re-fetch data to ensure it's updated
-    setIsEditing(false);  // Set isEditing to false to exit edit mode
-  };
-
+  // UseEffect to fetch student data on page load
   useEffect(() => {
     fetchStudentData();
   }, []);
 
+  // UseEffect to fetch matches when student data is loaded/updated
   useEffect(() => {
     if (student) {
       fetchMatches();
     }
   }, [student, fetchMatches]);
+
+  const saveProfileChanges = async (updatedData: any) => {
+    const response = await fetch('/api/user/save-profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedData),
+    });
+    
+    const result = await response.json();
+    if (result.success) {
+      // Refresh student data after saving
+      fetchStudentData();
+      setIsEditing(false);  // Toggle back to non-edit mode
+    } else {
+      console.log('Error saving profile:', result.error);
+    }
+  };
 
   if (!student) {
     return (
@@ -132,7 +143,7 @@ const StudentHomePage = () => {
                 </Card.Footer>
               </Card>
             ) : (
-              <EditableProfile student={student} onSave={saveChanges} />
+              <EditableProfile student={student} onSave={saveProfileChanges} />
             )}
           </Col>
         </Row>

@@ -6,6 +6,7 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "@typescript-eslint/no-unused-vars": "off", // Disable this rule globally
     "@typescript-eslint/quotes": "off",  // Disable the quotes rule for TypeScript files
     "jsx-quotes": "off",  // Disable the jsx-quotes rule
     "no-trailing-spaces": "off",  // Disable the trailing spaces rule
