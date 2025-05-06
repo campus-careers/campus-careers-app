@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
 import BrowseDataSet from '@/components/BrowseDataSet';
 
 const StudentHomePage = () => {
-  const [student, setStudent] = useState<any>(null); // Initialize student state
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [error, setError] = useState<string | null>(null); // Add error handling state
+  const [student, setStudent] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchStudentData() {
@@ -26,7 +26,7 @@ const StudentHomePage = () => {
         const data = await response.json();
 
         if (data.success) {
-          setStudent(data.user); // Set student data
+          setStudent(data.user);
         } else {
           setError('Error fetching student data');
         }
@@ -38,52 +38,16 @@ const StudentHomePage = () => {
     }
 
     fetchStudentData();
-  }, []); // Run only on initial render
+  }, []);
 
-  // Handle loading and error states
   if (loading) {
-    return (
-      <main>
-        <div className="text-center mt-5">
-          <h1>Loading...</h1>
-        </div>
-      </main>
-    );
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return (
-      <main>
-        <div className="text-center mt-5">
-          <h1>{error}</h1>
-        </div>
-      </main>
-    );
+    return <div>{error}</div>;
   }
 
-  // Fetch job listings from Prisma
-  const [jobListings, setJobListings] = useState<any[]>([]);
-
-  useEffect(() => {
-    async function fetchJobListings() {
-      try {
-        const response = await fetch('/api/jobListings');
-        const jobData = await response.json();
-
-        if (jobData.success) {
-          setJobListings(jobData.jobListings);
-        } else {
-          console.error('Failed to fetch job listings');
-        }
-      } catch (error) {
-        console.error('Error fetching job listings:', error);
-      }
-    }
-
-    fetchJobListings();
-  }, []);
-
-  // Ensure that the student data exists before rendering
   if (!student) {
     return (
       <main>
@@ -106,7 +70,6 @@ const StudentHomePage = () => {
         interviews: student.interviews,
         image: student.image,
       }}
-      jobListings={jobListings}
     />
   );
 };

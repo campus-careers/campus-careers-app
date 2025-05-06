@@ -1,101 +1,66 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { getServerSession } from 'next-auth';
-import { useState, useEffect } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import { prisma } from '@/lib/prisma'; // Import prisma for database queries
+import { prisma } from '@/lib/prisma';
 import authOptions from '@/lib/authOptions';
 import CompanyCard from '@/components/CompanyCard';
-import { Locations } from '@prisma/client'; // Import Locations enum
-
-/** Type definition for the company data */
-type Company = {
-  id: number;
-  name: string;
-  location: Locations; // Ensure location is typed as Locations
-  salary: number;
-  overview: string;
-  jobs: string;
-  contacts: string;
-  idealSkill: string[];
-  userId: number;
-};
 
 const CompaniesPage = () => {
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [loading, setLoading] = useState(true); // To handle loading state
-  const [error, setError] = useState<string | null>(null); // To handle errors
+  const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchCompanies() {
       try {
         const session = await getServerSession(authOptions);
-        if (!session?.user?.email) {
-          setError('You need to be logged in to view this page');
+        const email = session?.user?.email;
+
+        if (!email) {
+          setError('Please log in to view the companies');
           setLoading(false);
           return;
         }
 
-        // Fetch the companies using Prisma
-        const companiesData = await prisma.company.findMany();
-        if (companiesData) {
-          setCompanies(companiesData);
+        const response = await fetch('/api/get-companies');
+        const data = await response.json();
+
+        if (data.success) {
+          setCompanies(data.companies);
         } else {
-          setError('No companies found');
+          setError('Error fetching companies');
         }
-      } catch (error) {
-        console.error('Error fetching companies:', error);
-        setError('Failed to load companies');
+      } catch (err) {
+        setError('Failed to fetch companies');
       } finally {
         setLoading(false);
       }
     }
 
     fetchCompanies();
-  }, []);  // Empty dependency array means this will run once on component mount
+  }, []);
 
   if (loading) {
-    return (
-      <main>
-        <Container className="text-center mt-5">
-          <h1>Loading companies...</h1>
-        </Container>
-      </main>
-    );
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return (
-      <main>
-        <Container className="text-center mt-5">
-          <h1>{error}</h1>
-        </Container>
-      </main>
-    );
+    return <div>{error}</div>;
   }
 
   return (
     <main>
-      <Container id="list" fluid className="py-3">
-        <Container>
-          <Row>
-            <Col>
-              <h1 className="text-center">Company Profiles</h1>
-              {companies.length === 0 ? (
-                <p>No companies found. Please check back later.</p>
-              ) : (
-                <Row xs={1} md={2} lg={3} className="g-4">
-                  {companies.map((company) => (
-                    <Col key={company.id}>
-                      <CompanyCard company={company} />
-                    </Col>
-                  ))}
-                </Row>
-              )}
-            </Col>
-          </Row>
-        </Container>
-      </Container>
+      <h1>Company Profiles</h1>
+      {companies.length === 0 ? (
+        <p>No companies found. Please check back later.</p>
+      ) : (
+        <div>
+          {companies.map((company) => (
+            <CompanyCard key={company.id} company={company} />
+          ))}
+        </div>
+      )}
     </main>
   );
 };
