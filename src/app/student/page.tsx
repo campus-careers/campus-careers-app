@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Col, Container, Row, Button, Card } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap'; 
 import EditableProfile from '@/components/EditStudent';
 
 type Student = {
@@ -20,9 +20,8 @@ type Student = {
 
 const StudentHomePage = () => {
   const [student, setStudent] = useState<Student | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  // Function to fetch student data
+  // Fetch student data
   const fetchStudentData = async () => {
     const response = await fetch('/api/user/get-user');
     const data = await response.json();
@@ -33,14 +32,14 @@ const StudentHomePage = () => {
     }
   };
 
-  // Toggle edit mode
-  const toggleEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
-
+  // UseEffect to fetch data on initial load
   useEffect(() => {
     fetchStudentData();
   }, []);
+
+  const handleSave = (updatedData: any) => {
+    setStudent(updatedData); // Update student data with the new info after saving
+  };
 
   if (!student) {
     return (
@@ -57,41 +56,20 @@ const StudentHomePage = () => {
     <main>
       <Container className="mt-4">
         <h2 className="text-center mb-4">Student Home Page</h2>
-        
-        {/* Display Profile Info or Edit Profile Section */}
         <Row className="justify-content-center">
           <Col md={5}>
-            {!isEditing ? (
-              <Card>
-                <Card.Body>
-                  <Card.Title>{student.name}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">{student.email}</Card.Subtitle>
-                  <Card.Text>
-                    <strong>Skills:</strong> {student.skills.join(', ')}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Location:</strong> {student.location}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Interests:</strong> {student.interests.join(', ')}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Major:</strong> {student.major || 'N/A'}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Portfolio:</strong> {student.portfolio || 'N/A'}
-                  </Card.Text>
-                  {student.image && (
-                    <Card.Img variant="top" src={student.image} alt="Profile Image" />
-                  )}
-                </Card.Body>
-                <Card.Footer>
-                  <Button variant="primary" onClick={toggleEdit}>Edit Profile</Button>
-                </Card.Footer>
-              </Card>
-            ) : (
-              <EditableProfile student={student} onSave={fetchStudentData} />
-            )}
+            {/* Pass student data and handleSave function */}
+            <EditableProfile student={student} onSave={handleSave} />
+          </Col>
+        </Row>
+
+        <Row className="mt-5">
+          <Col md={8} className="mx-auto">
+            <h5 className="fw-bold">Recent Matches</h5>
+            <ul className="list-unstyled">
+              <li>Company A</li>
+              <li>Company B</li>
+            </ul>
           </Col>
         </Row>
       </Container>
