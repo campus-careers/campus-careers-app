@@ -31,6 +31,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       skills: student?.skills || [],
       image: student?.image || 'public/default-image.jpg',
       location: student?.location,
+      portfolio: student?.portfolio || '',
     },
   });
 
@@ -43,19 +44,17 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
   };
 
   const onSubmit = async (data: any) => {
-    // Ensure skills and location are captured correctly
     const updatedData = {
       ...data,
-      skills: data.skills || [], // Ensure skills are set correctly
-      location: data.location || '', // Ensure location is set correctly
-      image: selectedImage ? `/images/${selectedImage.name}` : data.image, // Update image URL if uploaded
+      skills: data.skills || [],
+      location: data.location || '',
+      image: selectedImage ? `/images/${selectedImage.name}` : data.image,
     };
 
     // Call the onSave function from the parent to update the profile
     await onSave(updatedData);
 
-    // Reset the image selection
-    setSelectedImage(null);
+    setSelectedImage(null);  // Reset the image selection
   };
 
   return (
@@ -128,6 +127,19 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
                   </option>
                 ))}
               </Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={12}>
+            <Form.Group>
+              <Form.Label>Portfolio</Form.Label>
+              <Form.Control
+                {...register('portfolio')}
+                type="text"
+                placeholder="Enter your portfolio URL"
+              />
             </Form.Group>
           </Col>
         </Row>

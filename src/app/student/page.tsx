@@ -57,18 +57,6 @@ const StudentHomePage = () => {
     setIsEditing((prev) => !prev);
   };
 
-  // UseEffect to fetch student data on page load
-  useEffect(() => {
-    fetchStudentData();
-  }, []);
-
-  // UseEffect to fetch matches when student data is loaded/updated
-  useEffect(() => {
-    if (student) {
-      fetchMatches();
-    }
-  }, [student, fetchMatches]);
-
   const saveProfileChanges = async (updatedData: any) => {
     const response = await fetch('/api/user/save-profile', {
       method: 'POST',
@@ -87,6 +75,16 @@ const StudentHomePage = () => {
       console.log('Error saving profile:', result.error);
     }
   };
+
+  useEffect(() => {
+    fetchStudentData();
+  }, []);
+
+  useEffect(() => {
+    if (student) {
+      fetchMatches();
+    }
+  }, [student, fetchMatches]);
 
   if (!student) {
     return (
