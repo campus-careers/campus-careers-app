@@ -1,134 +1,72 @@
-'use client';
+import { FC } from 'react';
+import { Button, Form } from 'react-bootstrap';
 
-import { useState } from 'react';
-import { Card, Col, Form, Row, Image, Button } from 'react-bootstrap';
-
+// Define the Student type here
 type Student = {
+  id: number;
   name: string;
-  location: string;
+  email: string;
   skills: string[];
-  image: string;
+  image: string;  // Ensure 'image' is part of the 'Student' type
+  location: string;
+  companies: string[];
+  interviews: string[];
+  interests: string[];
+  major?: string;
+  portfolio?: string;
 };
 
-// Accept 'onSave' as a prop to call when the profile is saved
-const EditableProfile = ({ student, onSave }: { student: Student; onSave: () => void }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [fullName, setFullName] = useState(student.name || 'Full Name');
-  const [location, setLocation] = useState(student.location || 'Preferred Location');
-  const [skills, setSkills] = useState(student.skills?.join(', ') || 'Skill 1, Skill 2, Skill 3');
-  const [imageURL, setImageURL] = useState(student.image || '');
+type EditableProfileProps = {
+  student: Student;  // Use the Student type here
+  onSave: () => void;
+};
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+const EditableProfile: FC<EditableProfileProps> = ({ student, onSave }) => {
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          setImageURL(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      // Handle image upload logic here
+      console.log("Image file selected:", file);
+      // You can add logic to upload the image to the server here
     }
   };
 
-  const toggleEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
-
-  const saveProfile = () => {
-    // When saving, trigger the onSave function passed from the parent
-    onSave();
-    setIsEditing(false);
-  };
-
   return (
-    <Card className="p-3">
-      <Row>
-        <Col xs={4} className="d-flex flex-column align-items-center">
-          {imageURL ? (
-            <Image
-              src={imageURL}
+    <div>
+      <h4>Profile Information</h4>
+      <Form>
+        <Form.Group className="mb-3">
+          <Form.Label>Name</Form.Label>
+          <Form.Control type="text" value={student.name} readOnly />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Email</Form.Label>
+          <Form.Control type="email" value={student.email} readOnly />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Location</Form.Label>
+          <Form.Control type="text" value={student.location} readOnly />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Image</Form.Label>
+          <div>
+            <img
+              src={student.image || 'default-image.jpg'} // Fallback to default image if no profile image exists
               alt="Profile"
-              style={{
-                width: '100%',
-                borderRadius: '4px',
-                objectFit: 'cover',
-                aspectRatio: '1 / 1',
-              }}
+              style={{ width: '100px', height: '100px', objectFit: 'cover' }}
             />
-          ) : (
-            <div
-              style={{
-                width: '100%',
-                paddingBottom: '100%',
-                backgroundColor: '#eee',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-              }}
-            />
-          )}
-          {isEditing && (
-            <Form.Group className="mt-2 w-100">
-              <Form.Label className="w-100">
-                <div className="btn btn-outline-secondary w-100 text-center">
-                  Upload Picture
-                </div>
-                <Form.Control
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  style={{ display: 'none' }}
-                />
-              </Form.Label>
-            </Form.Group>
-          )}
-        </Col>
-        <Col xs={8}>
-          <Form.Group>
-            <Form.Label className="fw-bold">Full Name</Form.Label>
-            {isEditing ? (
-              <Form.Control
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
-            ) : (
-              <p>{fullName}</p>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mt-2">
-            <Form.Label>Location</Form.Label>
-            {isEditing ? (
-              <Form.Control
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-            ) : (
-              <p>{location}</p>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mt-2">
-            <Form.Label>Skills</Form.Label>
-            {isEditing ? (
-              <Form.Control
-                type="text"
-                value={skills}
-                onChange={(e) => setSkills(e.target.value)}
-              />
-            ) : (
-              <p>{skills}</p>
-            )}
-          </Form.Group>
-
-          <Button className="mt-3" onClick={isEditing ? saveProfile : toggleEdit}>
-            {isEditing ? 'Save' : 'Edit'}
-          </Button>
-        </Col>
-      </Row>
-    </Card>
+          </div>
+          <Form.Control
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </Form.Group>
+        <Button variant="primary" onClick={onSave}>
+          Save
+        </Button>
+      </Form>
+    </div>
   );
 };
 

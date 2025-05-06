@@ -1,19 +1,31 @@
-// Add the "use client" directive to this file to mark it as a Client Component
-
 'use client';
 
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import EditableProfile from '@/components/EditStudent';
 
+type Student = {
+  id: number;
+  name: string;
+  email: string;
+  skills: string[];
+  image: string;  // Ensure 'image' is part of the Student type
+  location: string;
+  companies: string[];
+  interviews: string[];
+  interests: string[];
+  major?: string;
+  portfolio?: string;
+};
+
 const StudentHomePage = () => {
-  const [student, setStudent] = useState<any>(null);
+  const [student, setStudent] = useState<Student | null>(null);
 
   const fetchStudentData = async () => {
-    const response = await fetch('/api/user/get-user'); // Updated the API path to match the route
+    const response = await fetch('/api/user/get-user'); // Adjust this to match the actual route
     const data = await response.json();
     if (data.success) {
-      setStudent(data.user); // Update the student state
+      setStudent(data.user); // Ensure the user data has an 'image' property
     } else {
       console.log('Error fetching student data:', data.error);
     }
