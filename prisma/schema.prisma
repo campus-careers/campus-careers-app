@@ -25,7 +25,7 @@ model User {
   location   Locations
   skills     Skill[]
   interests  String[]
-  image      String      @default("default.png")
+  image      String      @default("default-image.jpg")
   major      String?
   portfolio  String?
   companies  Company[]

@@ -1,126 +1,159 @@
 'use client';
 
-import { useState } from 'react';
-import { Button, Form, Col, Row } from 'react-bootstrap';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Button, Col, Container, Row, Form, InputGroup } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 
-interface EditStudentProps {
-  student: any; // Use the correct type for 'student'
-  onSave: () => void;
-}
+const EditStudent = ({ student, onSave }: { student: any, onSave: () => void }) => {
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-const EditStudent = ({ student, onSave }: EditStudentProps) => {
-  const [name, setName] = useState(student.name);
-  const [location, setLocation] = useState(student.location);
-  const [skills, setSkills] = useState(student.skills.join(', '));
-  const [imageUrl, setImageUrl] = useState(student.image || ''); // Removed `setImage` state
-  const [file, setFile] = useState<File | null>(null); // Keep the file state for the image
-  const router = useRouter();
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues: {
+      name: student?.name,
+      email: student?.email,
+      skills: student?.skills,
+      image: student?.image || 'public/default-image.jpg', // Default image path
+      location: student?.location, // Add the location here
+    },
+  });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]; // Changed 'file' to 'selectedFile'
-    if (selectedFile) {
-      setFile(selectedFile); // Only set the file state
-      setImageUrl(URL.createObjectURL(selectedFile)); // Set image URL for preview
+  // Handle image upload
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedImage(e.target.files[0]);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Handle form submission
+  const onSubmit = async (data: any) => {
+    // Handle the image upload logic here if needed, e.g., uploading to server
+    const imageUrl = selectedImage ? `/images/${selectedImage.name}` : data.image;
+    
+    // Update the student data (send it to the backend or context)
+    const updatedData = {
+      ...data,
+      image: imageUrl,
+    };
 
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('location', location);
-    formData.append('skills', skills);
-    if (file) {
-      formData.append('image', file); // Append image file if selected
-    }
+    // Perform save action, e.g., make API call to save updated data
+    await onSave();
 
-    // Call your save API
-    const response = await fetch('/api/user/save-profile', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const data = await response.json();
-    if (data.success) {
-      onSave(); // Update parent component with the new data
-      router.push('/student'); // Redirect to the student page
-    } else {
-      console.log('Error saving profile:', data.error);
-    }
+    // Reset form state or provide feedback
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Row className="mb-3">
-        <Form.Group as={Col} controlId="formName">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </Form.Group>
-      </Row>
-
-      <Row className="mb-3">
-        <Form.Group as={Col} controlId="formLocation">
-          <Form.Label>Location</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter your location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </Form.Group>
-      </Row>
-
-      <Row className="mb-3">
-        <Form.Group as={Col} controlId="formSkills">
-          <Form.Label>Skills</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter your skills (comma separated)"
-            value={skills}
-            onChange={(e) => setSkills(e.target.value)}
-          />
-        </Form.Group>
-      </Row>
-
-      <Row className="mb-3">
-        <Form.Group as={Col} controlId="formImage">
-          <Form.Label>Profile Image</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={handleFileChange}
-            accept="image/*"
-          />
-        </Form.Group>
-      </Row>
-
-      {imageUrl && (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Container>
         <Row className="mb-3">
-          <Form.Group as={Col}>
-            <Form.Label>Image Preview</Form.Label>
-            <div style={{ width: '200px', height: '200px', position: 'relative' }}>
+          <Col md={12}>
+            <h3>Edit Student Profile</h3>
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                {...register('name')}
+                type="text"
+                placeholder="Enter your name"
+              />
+            </Form.Group>
+          </Col>
+
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                {...register('email')}
+                type="email"
+                placeholder="Enter your email"
+                disabled
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Skills</Form.Label>
+              <Form.Control
+                {...register('skills')}
+                as="textarea"
+                rows={3}
+                placeholder="Enter your skills"
+              />
+            </Form.Group>
+          </Col>
+
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                {...register('location')}  // This should match the defaultValues structure
+                type="text"
+                placeholder="Enter your location"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col md={12}>
+            <Form.Group>
+              <Form.Label>Profile Image</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  {...register('image')}
+                  type="text"
+                  placeholder="Image URL"
+                  disabled
+                />
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => document.getElementById('fileInput')?.click()}
+                >
+                  Upload
+                </Button>
+                <input
+                  type="file"
+                  id="fileInput"
+                  style={{ display: 'none' }}
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </InputGroup>
+            </Form.Group>
+          </Col>
+        </Row>
+
+        {selectedImage && (
+          <Row className="mb-3">
+            <Col md={12}>
+              <h5>Selected Image Preview</h5>
               <Image
-                src={imageUrl}
-                alt="Image preview"
-                layout="fill"
+                src={URL.createObjectURL(selectedImage)} // Display the uploaded image
+                alt="Selected Profile"
+                width={150}
+                height={150}
                 objectFit="cover"
               />
-            </div>
-          </Form.Group>
-        </Row>
-      )}
+            </Col>
+          </Row>
+        )}
 
-      <Button variant="primary" type="submit">
-        Save Changes
-      </Button>
-    </Form>
+        <Row className="mb-3">
+          <Col md={12}>
+            <Button variant="primary" type="submit">
+              Save Changes
+            </Button>
+          </Col>
+        </Row>
+      </Container>
+    </form>
   );
 };
 
