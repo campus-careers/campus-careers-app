@@ -61,7 +61,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Container className="mt-4">
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col md={12}>
             <h3 className="text-center" style={{ fontWeight: '700' }}>Edit Student Profile</h3>
           </Col>
@@ -80,8 +80,11 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               />
             </Form.Group>
           </Col>
+        </Row>
 
-          <Col md={6}>
+        {/* Email Section */}
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
+          <Col md={12}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Email</Form.Label>
               <Form.Control
@@ -145,9 +148,9 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        {/* Skills and Portfolio URL Section */}
+        {/* Skills Section */}
         <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
-          <Col md={6}>
+          <Col md={12}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Skills</Form.Label>
               <Form.Control
@@ -167,8 +170,11 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               </small>
             </Form.Group>
           </Col>
+        </Row>
 
-          <Col md={6}>
+        {/* Portfolio URL Section */}
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
+          <Col md={12}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Portfolio URL</Form.Label>
               <Form.Control
