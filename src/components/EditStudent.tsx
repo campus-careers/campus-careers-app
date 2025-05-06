@@ -31,7 +31,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       skills: student?.skills || [],
       image: student?.image || 'public/default-image.jpg',
       location: student?.location,
-      portfolio: student?.portfolio || '',
+      major: student?.major || '',  // Adding the major as a default value
+      interests: student?.interests || [],  // Adding the interests as a default value
     },
   });
 
@@ -44,17 +45,19 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
   };
 
   const onSubmit = async (data: any) => {
+    // Ensure skills and location are captured correctly
     const updatedData = {
       ...data,
-      skills: data.skills || [],
-      location: data.location || '',
-      image: selectedImage ? `/images/${selectedImage.name}` : data.image,
+      skills: data.skills || [], // Ensure skills are set correctly
+      location: data.location || '', // Ensure location is set correctly
+      image: selectedImage ? `/images/${selectedImage.name}` : data.image, // Update image URL if uploaded
     };
 
     // Call the onSave function from the parent to update the profile
     await onSave(updatedData);
 
-    setSelectedImage(null);  // Reset the image selection
+    // Reset the image selection
+    setSelectedImage(null);
   };
 
   return (
@@ -91,6 +94,46 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
+        {/* Major Field */}
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Major</Form.Label>
+              <Form.Control
+                {...register('major')}
+                type="text"
+                placeholder="Enter your major"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
+        {/* Interests Field */}
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Interests</Form.Label>
+              <Form.Control
+                {...register('interests')}
+                as="select"
+                multiple
+                placeholder="Select your interests"
+              >
+                {/* Assuming interests is an array, similar to skills */}
+                {['Software Development', 'Data Science', 'AI', 'Networking'].map((interest) => (
+                  <option key={interest} value={interest}>
+                    {interest}
+                  </option>
+                ))}
+              </Form.Control>
+              <small className="text-muted">
+                Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+              </small>
+            </Form.Group>
+          </Col>
+        </Row>
+
+        {/* Skills Field */}
         <Row className="mb-3">
           <Col md={6}>
             <Form.Group>
@@ -131,19 +174,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-3">
-          <Col md={12}>
-            <Form.Group>
-              <Form.Label>Portfolio</Form.Label>
-              <Form.Control
-                {...register('portfolio')}
-                type="text"
-                placeholder="Enter your portfolio URL"
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
+        {/* Profile Image Field */}
         <Row className="mb-3">
           <Col md={12}>
             <Form.Group>
