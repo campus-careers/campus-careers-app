@@ -32,7 +32,6 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       name: student?.name,
       email: student?.email,
       skills: student?.skills || [],
-      image: student?.image || '',
       location: student?.location,
       interests: student?.interests.join(', '),
       portfolio: student?.portfolio || '',
@@ -44,7 +43,6 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImage(file);
-      setValue('image', file.name);
     }
   };
 
@@ -54,7 +52,9 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     let imageUrl = student?.image || '';
 
     if (selectedImage) {
-      const filePath = `student/${Date.now()}_${selectedImage.name}`;
+      const safeName = selectedImage.name.replace(/\s+/g, '-').toLowerCase();
+      const filePath = `student/${Date.now()}_${safeName}`;
+
       const { data: uploadData, error } = await supabase.storage
         .from('profile-images')
         .upload(filePath, selectedImage, {
@@ -79,7 +79,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       ...data,
       skills: data.skills || [],
       location: data.location || '',
-      interests: data.interests.split(',').map((interest: string) => interest.trim()),
+      interests: data.interests.split(',').map((i: string) => i.trim()),
       image: imageUrl,
     };
 
@@ -91,42 +91,24 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
   return (
     <>
       {uploadError && (
-        <Container className="mt-2">
-          <Row>
-            <Col>
-              <Alert variant="danger" dismissible onClose={() => setUploadError(null)}>
-                {uploadError}
-              </Alert>
-            </Col>
-          </Row>
-        </Container>
+        <Alert variant="danger" dismissible onClose={() => setUploadError(null)}>{uploadError}</Alert>
       )}
 
       {successMessage && (
-        <Container className="mt-2">
-          <Row>
-            <Col>
-              <Alert variant="success" dismissible onClose={() => setSuccessMessage(null)}>
-                {successMessage}
-              </Alert>
-            </Col>
-          </Row>
-        </Container>
+        <Alert variant="success" dismissible onClose={() => setSuccessMessage(null)}>{successMessage}</Alert>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Container className="mt-4">
           <Row className="mb-3">
-            <Col md={12}>
-              <h3 className="text-center fw-bold">Edit Student Profile</h3>
-            </Col>
+            <Col><h3 className="text-center fw-bold">Edit Student Profile</h3></Col>
           </Row>
 
           <Row className="mb-4">
             <Col md={6}>
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Full Name</Form.Label>
-                <Form.Control {...register('name')} type="text" placeholder="Enter your name" />
+                <Form.Control {...register('name')} type="text" />
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -148,16 +130,14 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Location</Form.Label>
                 <Form.Control {...register('location')} as="select">
-                  {locations.map((loc) => (
-                    <option key={loc} value={loc}>{loc}</option>
-                  ))}
+                  {locations.map((loc) => <option key={loc} value={loc}>{loc}</option>)}
                 </Form.Control>
               </Form.Group>
             </Col>
           </Row>
 
           <Row className="mb-4">
-            <Col md={12}>
+            <Col>
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Interests</Form.Label>
                 <Form.Control {...register('interests')} type="text" placeholder="e.g. Programming, AI, Music" />
@@ -171,11 +151,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Skills</Form.Label>
                 <Form.Control {...register('skills')} as="select" multiple>
-                  {skills.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
+                  {skills.map((s) => <option key={s} value={s}>{s}</option>)}
                 </Form.Control>
-                <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
               </Form.Group>
             </Col>
             <Col md={6}>
@@ -187,11 +164,10 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Row>
 
           <Row className="mb-4">
-            <Col md={12}>
+            <Col>
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Profile Image</Form.Label>
                 <InputGroup>
-                  <Form.Control {...register('image')} type="text" placeholder="Image URL" disabled />
                   <Button onClick={() => document.getElementById('fileInput')?.click()} variant="outline-secondary">
                     Upload
                   </Button>
@@ -209,7 +185,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
           {(selectedImage || student?.image) && (
             <Row className="mb-4">
-              <Col md={12}>
+              <Col>
                 <h5 className="fw-semibold">Image Preview</h5>
                 <Image
                   src={selectedImage ? URL.createObjectURL(selectedImage) : student.image}
@@ -223,7 +199,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           )}
 
           <Row className="mb-4">
-            <Col md={12}>
+            <Col>
               <Button type="submit" variant="primary" className="fw-semibold">Save Changes</Button>
             </Col>
           </Row>
