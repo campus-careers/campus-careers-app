@@ -1,7 +1,7 @@
-import { compare } from 'bcrypt';
-import { type NextAuthOptions } from 'next-auth';
+import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/prisma';
+import { compare } from 'bcryptjs'; // Add this import
 
 const authOptions: NextAuthOptions = {
   session: {
@@ -29,19 +29,18 @@ const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const isPasswordValid = await compare(credentials.password, user.password);
+        const isPasswordValid = await compare(credentials.password, user.password); // Use bcrypt's compare function
 
         if (!isPasswordValid) {
           console.log('❌ Invalid password for:', credentials.email);
           return null;
         }
 
-        // Return user data along with id and randomKey
         return {
           id: `${user.id}`,
           name: user.name,
           email: user.email,
-          randomKey: user.role, // saving role here as randomKey
+          randomKey: user.role, // saving role here
         };
       },
     }),
@@ -56,17 +55,20 @@ const authOptions: NextAuthOptions = {
         const u = user as { id: string; randomKey: string };
         return {
           ...token,
-          id: u.id, // Add user id to JWT
-          randomKey: u.randomKey, // Add randomKey to JWT
+          id: u.id,
+          randomKey: u.randomKey,
         };
       }
       return token;
     },
-    session: async ({ session, token }) => {
-      session.user.id = token.id; // Add id to session user
-      session.user.randomKey = token.randomKey; // Add randomKey to session user
-      return session;
-    },
+    session: async ({ session, token }) => ({
+      ...session,
+      user: {
+        ...session.user,
+        id: token.id,
+        randomKey: token.randomKey,
+      },
+    }),
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
