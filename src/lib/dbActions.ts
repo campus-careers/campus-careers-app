@@ -166,3 +166,9 @@ export async function editStudent(studentData: {
     },
   });
 }
+/**
+ * Retrieves all companies from the database.
+ */
+export async function getAllCompanies() {
+  return await prisma.company.findMany();
+}

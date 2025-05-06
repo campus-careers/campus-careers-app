@@ -1,56 +1,98 @@
 'use client';
 
-import { Company } from '@prisma/client';
-import { Card } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
+import { deleteCompany } from '@/lib/dbActions';
+import { useSession } from 'next-auth/react';
 
-/* Renders a single row in the List Stuff table. See list/page.tsx. */
-const CompanyAdmin = ({ company }: { company: Company }) => (
-  <Card className="h-100 w-75">
-    <Card.Header>
-      <Card.Title>
-        {company.name}
-      </Card.Title>
-      <Card.Subtitle>
-        <p>{company.location}</p>
-        <p>
-          <b>Recommended Skills: </b>
-          {company.idealSkill.map((skill, index) => (
-            <span key={`${company.id}-${skill.trim()}`}>
-              {skill.trim()}
-              {index < company.idealSkill.length - 1 ? ', ' : ''}
-            </span>
-          ))}
-        </p>
-      </Card.Subtitle>
-    </Card.Header>
-    <Card.Body>
-      <Card.Text>
-        <p>{company.overview}</p>
-        <p>
-          <b>Salary Range: </b>
-          $
-          {company.salary / 1000}
-          k
-          -
-          $
-          {(company.salary / 1000) + 20}
-          k
-        </p>
-        <p>
-          <b>Searching for: </b>
-          {company.jobs}
-        </p>
-        <p>
-          <b>If interested, contact: </b>
-          {company.contacts}
-        </p>
-      </Card.Text>
-    </Card.Body>
-    <Card.Footer>
-      <Card.Link href={`/edit/${company.id}`}>Edit</Card.Link>
-      <Card.Link href={`/delete/${company.id}`}>Delete</Card.Link>
-    </Card.Footer>
-  </Card>
-);
+interface Company {
+  id: number;
+  name: string;
+  location: string;
+  salary: number;
+  overview: string;
+  jobs: string;
+  contacts: string;
+  idealSkill: string;
+  userId: number;
+}
+
+const CompanyAdmin: React.FC = () => {
+  const { data: session } = useSession();
+  const [companies, setCompanies] = useState<Company[]>([]);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      const res = await fetch('/api/companies');
+      const data = await res.json();
+
+      setCompanies(
+        data.map((company: any) => ({
+          ...company,
+          idealSkill: Array.isArray(company.idealSkill)
+            ? company.idealSkill.join(', ')
+            : company.idealSkill,
+        }))
+      );
+    };
+
+    fetchCompanies();
+  }, []);
+
+  const handleDelete = async (id: number) => {
+    await deleteCompany(id);
+    setCompanies(companies.filter((company) => company.id !== id));
+  };
+
+  return (
+    <Container className="py-4">
+      <Row>
+        <Col>
+          <h2 className="text-center mb-4">Manage Companies</h2>
+          <Card>
+            <Card.Body>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Salary</th>
+                    <th>Overview</th>
+                    <th>Jobs</th>
+                    <th>Contacts</th>
+                    <th>Ideal Skills</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {companies.map((company) => (
+                    <tr key={company.id}>
+                      <td>{company.name}</td>
+                      <td>{company.location}</td>
+                      <td>${company.salary.toLocaleString()}</td>
+                      <td>{company.overview}</td>
+                      <td>{company.jobs}</td>
+                      <td>{company.contacts}</td>
+                      <td>{company.idealSkill}</td>
+                      <td>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => handleDelete(company.id)}
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
 export default CompanyAdmin;

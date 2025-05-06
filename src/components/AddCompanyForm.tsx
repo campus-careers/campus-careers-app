@@ -39,6 +39,10 @@ const AddCompanyForm: React.FC = () => {
   if (status === 'unauthenticated') {
     redirect('/auth/signin');
   }
+  
+  if (session?.user?.randomKey !== 'ADMIN') {
+    redirect('/unauthorized');
+  }
 
   const onSubmit = async (data: FormValues) => {
     if (!session?.user?.id) {
