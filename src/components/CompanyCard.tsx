@@ -1,15 +1,16 @@
 'use client';
 
-import React from 'react'; // Add React import to fix JSX scope issue
+/* eslint-disable react/prop-types */
+
 import { Card } from 'react-bootstrap';
-import { Company } from '@prisma/client'; // Import Company type
+import { Company } from '@prisma/client';
 
 const CompanyCard: React.FC<{ company: Company }> = ({ company }) => (
   <Card className="mb-4" style={{ maxWidth: '350px' }}>
     <Card.Body>
       <Card.Title>{company.name}</Card.Title>
       <Card.Subtitle className="mb-2 text-muted">
-        {company.location}  {/* location should be of type Locations */}
+        {company.location}
       </Card.Subtitle>
 
       <Card.Text className="mb-3">

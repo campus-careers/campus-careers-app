@@ -1,66 +1,44 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/prisma';
+import { Col, Container, Row } from 'react-bootstrap';
+import { Company } from '@prisma/client';
+import { loggedInProtectedPage } from '@/lib/page-protection';
 import authOptions from '@/lib/authOptions';
 import CompanyCard from '@/components/CompanyCard';
+import { prisma } from '@/lib/prisma';
 
-const CompaniesPage = () => {
-  const [companies, setCompanies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+/** Render a list of stuff for the logged in user. */
+const CompaniesPage = async () => {
+  // Protect the page, only logged in users can access it.
+  const session = await getServerSession(authOptions);
+  loggedInProtectedPage(
+    session as {
+      user: { email: string; id: string; randomKey: string };
+    } | null,
+  );
 
-  useEffect(() => {
-    async function fetchCompanies() {
-      try {
-        const session = await getServerSession(authOptions);
-        const email = session?.user?.email;
+  const companies: Company[] = await prisma.company.findMany({
 
-        if (!email) {
-          setError('Please log in to view the companies');
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch('/api/get-companies');
-        const data = await response.json();
-
-        if (data.success) {
-          setCompanies(data.companies);
-        } else {
-          setError('Error fetching companies');
-        }
-      } catch (err) {
-        setError('Failed to fetch companies');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchCompanies();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  });
+  // console.log(companies);
 
   return (
     <main>
-      <h1>Company Profiles</h1>
-      {companies.length === 0 ? (
-        <p>No companies found. Please check back later.</p>
-      ) : (
-        <div>
-          {companies.map((company) => (
-            <CompanyCard key={company.id} company={company} />
-          ))}
-        </div>
-      )}
+      <Container id="list" fluid className="py-3">
+        <Container>
+          <Row>
+            <Col>
+              <h1 className="text-center">Company Profiles</h1>
+              <Row xs={1} md={2} lg={3} className="g-4">
+                {companies.map((company) => (
+                  <Col key={company.name}>
+                    <CompanyCard company={company} />
+                  </Col>
+                ))}
+              </Row>
+            </Col>
+          </Row>
+        </Container>
+      </Container>
     </main>
   );
 };
