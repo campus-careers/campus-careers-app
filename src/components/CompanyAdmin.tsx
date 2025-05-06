@@ -1,16 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
-import { Card, Button, Container, Row, Col } from 'react-bootstrap';
-import { deleteCompany } from '@/lib/dbActions';
 import { Locations } from '@prisma/client';
+import { deleteCompany } from '@/lib/dbActions';
 import EditCompanyForm from './EditCompanyForm';
 
 interface Company {
   id: number;
   name: string;
-  location: string;
+  location: Locations | string;
   salary: number;
   overview: string;
   jobs: string;
@@ -31,12 +31,16 @@ const CompanyAdmin: React.FC = () => {
       const data = await res.json();
 
       setCompanies(
-        data.map((company: Company) => ({
-          ...company,
-          idealSkill: Array.isArray(company.idealSkill)
+        data.map((company: any) => {
+          const idealSkillArray = Array.isArray(company.idealSkill)
             ? company.idealSkill
-            : company.idealSkill.split(',').map((s: string) => s.trim()),
-        }))
+            : company.idealSkill.split(',').map((s: string) => s.trim());
+
+          return {
+            ...company,
+            idealSkill: idealSkillArray,
+          };
+        })
       );
     };
 
@@ -45,65 +49,83 @@ const CompanyAdmin: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     await deleteCompany(id);
-    setCompanies(companies.filter((c) => c.id !== id));
+    setCompanies((prev) => prev.filter((c) => c.id !== id));
   };
-
-  const handleFinishEdit = () => setEditId(null);
 
   return (
     <Container className="py-4">
       <Row>
         <Col>
-          <h2 className="text-center mb-4">Company Profiles</h2>
-          <Row xs={1} md={2} lg={2} className="g-4">
-            {companies.map((company) => (
-              <Col key={company.id}>
-                {editId === company.id ? (
-                  <EditCompanyForm
-                    company={{
-                      ...company,
-                      location: company.location as Locations,
-                      idealSkill: Array.isArray(company.idealSkill)
-                        ? company.idealSkill
-                        : company.idealSkill.split(',').map((s) => s.trim()),
-                    }}
-                    onFinish={handleFinishEdit}
-                  />
+          <h2 className="text-center mb-4">Manage Companies</h2>
+          <Card>
+            <Card.Body>
+              {companies.map((company) => {
+                const parsedIdealSkill = Array.isArray(company.idealSkill)
+                  ? company.idealSkill
+                  : company.idealSkill.split(',').map((s: string) => s.trim());
+
+                return editId === company.id && isAdmin ? (
+                  <div key={company.id} className="mb-4">
+                    <EditCompanyForm
+                      company={{
+                        ...company,
+                        location: company.location as Locations,
+                        idealSkill: parsedIdealSkill,
+                      }}
+                      onFinish={() => setEditId(null)}
+                    />
+                    <div className="text-end mt-2">
+                      <Button variant="secondary" size="sm" onClick={() => setEditId(null)}>
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
                 ) : (
-                  <Card className="p-3 shadow-sm h-100">
+                  <Card className="mb-3" key={company.id}>
                     <Card.Body>
-                      <Card.Title className="fw-bold">{company.name}</Card.Title>
-                      <Card.Subtitle className="mb-2 text-muted">
-                        {company.location}
-                      </Card.Subtitle>
-                      <Card.Text>
-                        <strong>Salary:</strong> ${company.salary.toLocaleString()}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Overview:</strong> {company.overview}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Jobs:</strong> {company.jobs}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Contacts:</strong> {company.contacts}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Recommended Skills:</strong>{' '}
-                        {Array.isArray(company.idealSkill)
-                          ? company.idealSkill.join(', ')
-                          : company.idealSkill}
-                      </Card.Text>
+                      <Row className="mb-2">
+                        <Col md={6}>
+                          <strong>Name:</strong> {company.name}
+                        </Col>
+                        <Col md={6}>
+                          <strong>Location:</strong> {company.location}
+                        </Col>
+                      </Row>
+                      <Row className="mb-2">
+                        <Col md={6}>
+                          <strong>Salary:</strong> ${company.salary.toLocaleString()}
+                        </Col>
+                        <Col md={6}>
+                          <strong>Contacts:</strong> {company.contacts}
+                        </Col>
+                      </Row>
+                      <Row className="mb-2">
+                        <Col>
+                          <strong>Overview:</strong> {company.overview}
+                        </Col>
+                      </Row>
+                      <Row className="mb-2">
+                        <Col>
+                          <strong>Jobs:</strong> {company.jobs}
+                        </Col>
+                      </Row>
+                      <Row className="mb-2">
+                        <Col>
+                          <strong>Ideal Skills:</strong> {parsedIdealSkill.join(', ')}
+                        </Col>
+                      </Row>
                       {isAdmin && (
-                        <div className="d-flex flex-column gap-2 mt-3">
+                        <div className="d-flex gap-2 mt-3">
                           <Button
                             variant="outline-primary"
+                            size="sm"
                             onClick={() => setEditId(company.id)}
                           >
                             Edit Profile
                           </Button>
                           <Button
                             variant="danger"
+                            size="sm"
                             onClick={() => handleDelete(company.id)}
                           >
                             Delete
@@ -112,10 +134,10 @@ const CompanyAdmin: React.FC = () => {
                       )}
                     </Card.Body>
                   </Card>
-                )}
-              </Col>
-            ))}
-          </Row>
+                );
+              })}
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>
