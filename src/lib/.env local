@@ -1,0 +1,17 @@
+# === Prisma Database ===
+DATABASE_URL="postgresql://postgres.cybolwljscbefxllonrp:A90Supra2025!@aws-0-us-east-1.pooler.supabase.com:5432/postgres"
+
+# === Supabase ===
+NEXT_PUBLIC_SUPABASE_URL="https://cybolwljscbefxllonrp.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5Ym9sd2xqc2NiZWZ4bGxvbnJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2MTg3NzAsImV4cCI6MjA2MDE5NDc3MH0.r28O2oAbG1fFBs7ZL8dS6tHFPp0IooEFvXt09MdrJU0"
+
+# === PostgreSQL (Optional Raw Access) ===
+POSTGRES_USER="postgres"
+POSTGRES_PASSWORD="A90ToySupra2025!"
+POSTGRES_HOST="aws-0-us-east-1.pooler.supabase.com"
+POSTGRES_PORT="5432"
+POSTGRES_DATABASE="postgres"
+
+# === NextAuth ===
+NEXTAUTH_SECRET="u0dP5OapZ/Nry99hT0f8dLU8A0ocEulOti+9nNpKH0k="
+NEXTAUTH_URL=http://localhost:3000

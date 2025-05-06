@@ -8,17 +8,16 @@ import { Company, Locations } from '@prisma/client';
 import { EditCompanySchema } from '@/lib/validationSchemas';
 import { editCompany } from '@/lib/dbActions';
 
-const US_STATES: string[] = [
-  'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-  'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana',
-  'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
-  'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma',
-  'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
-  'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+const US_STATES = [
+  'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida',
+  'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
+  'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
+  'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
 ];
 
-const PROGRAMMING_SKILLS: string[] = [
+const PROGRAMMING_SKILLS = [
   'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
   'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
   'Shell', 'Assembly', 'Objective-C',
@@ -36,13 +35,7 @@ type FormValues = {
   userId: number;
 };
 
-const EditCompanyForm = ({
-  company,
-  onFinish,
-}: {
-  company: Company;
-  onFinish?: () => void;
-}) => {
+const EditCompanyForm = ({ company, onFinish }: { company: Company; onFinish?: () => void }) => {
   const defaultValues: FormValues = {
     id: company.id,
     name: company.name,
@@ -85,12 +78,12 @@ const EditCompanyForm = ({
             <Col md={6}>
               <Form.Label className="fw-bold">Name</Form.Label>
               <Form.Control {...register('name')} />
-              {errors.name && <small className="text-danger">{errors.name.message}</small>}
+              {errors.name && <small className="text-black">{errors.name.message}</small>}
             </Col>
             <Col md={6}>
               <Form.Label className="fw-bold">Salary</Form.Label>
-              <Form.Control type="number" step="10000" {...register('salary')} />
-              {errors.salary && <small className="text-danger">{errors.salary.message}</small>}
+              <Form.Control type="number" step={10000} min={0} {...register('salary')} />
+              {errors.salary && <small className="text-black">{errors.salary.message}</small>}
             </Col>
           </Row>
 
@@ -103,26 +96,26 @@ const EditCompanyForm = ({
                   <option key={state} value={state}>{state}</option>
                 ))}
               </Form.Select>
-              {errors.location && <small className="text-danger">{errors.location.message}</small>}
+              {errors.location && <small className="text-black">{errors.location.message}</small>}
             </Col>
           </Row>
 
           <Form.Group className="mb-3">
             <Form.Label className="fw-bold">Overview</Form.Label>
             <Form.Control as="textarea" rows={2} {...register('overview')} />
-            {errors.overview && <small className="text-danger">{errors.overview.message}</small>}
+            {errors.overview && <small className="text-black">{errors.overview.message}</small>}
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label className="fw-bold">Jobs</Form.Label>
             <Form.Control {...register('jobs')} />
-            {errors.jobs && <small className="text-danger">{errors.jobs.message}</small>}
+            {errors.jobs && <small className="text-black">{errors.jobs.message}</small>}
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label className="fw-bold">Contacts</Form.Label>
             <Form.Control {...register('contacts')} />
-            {errors.contacts && <small className="text-danger">{errors.contacts.message}</small>}
+            {errors.contacts && <small className="text-black">{errors.contacts.message}</small>}
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -132,8 +125,8 @@ const EditCompanyForm = ({
                 <option key={skill} value={skill}>{skill}</option>
               ))}
             </Form.Control>
-            <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
-            {errors.idealSkill && <div className="text-danger">{errors.idealSkill.message}</div>}
+            <small className="text-black">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+            {errors.idealSkill && <div className="text-black">{errors.idealSkill.message}</div>}
           </Form.Group>
 
           <div className="d-flex justify-content-between mt-4">

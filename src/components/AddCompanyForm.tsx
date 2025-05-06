@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { Button, Col, Container, Row, Form } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import swal from 'sweetalert';
@@ -11,13 +11,12 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddCompanySchema } from '@/lib/validationSchemas';
 
 const US_STATES = [
-  'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-  'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana',
-  'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
-  'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma',
-  'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
-  'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+  'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida',
+  'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
+  'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
+  'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
 ];
 
 const PROGRAMMING_SKILLS = [
@@ -56,7 +55,7 @@ const AddCompanyForm: React.FC = () => {
     try {
       const companyData = {
         ...data,
-        idealSkill: data.idealSkill.split(',').map((s) => s.trim()), // Convert string → array
+        idealSkill: data.idealSkill.split(',').map((s) => s.trim()),
         userId: Number(session?.user?.id),
       };
 
@@ -81,7 +80,7 @@ const AddCompanyForm: React.FC = () => {
             <Form.Group className="border p-3 rounded">
               <Form.Label className="fw-bold">Company Name</Form.Label>
               <Form.Control {...register('name')} type="text" placeholder="e.g. Tech Corp" />
-              {errors.name && <small className="text-danger">{errors.name.message}</small>}
+              {errors.name && <small className="text-black">{errors.name.message}</small>}
             </Form.Group>
           </Col>
 
@@ -94,7 +93,7 @@ const AddCompanyForm: React.FC = () => {
                   <option key={state} value={state}>{state}</option>
                 ))}
               </Form.Select>
-              {errors.location && <small className="text-danger">{errors.location.message}</small>}
+              {errors.location && <small className="text-black">{errors.location.message}</small>}
             </Form.Group>
           </Col>
         </Row>
@@ -103,8 +102,8 @@ const AddCompanyForm: React.FC = () => {
           <Col md={6}>
             <Form.Group className="border p-3 rounded">
               <Form.Label className="fw-bold">Salary</Form.Label>
-              <Form.Control {...register('salary')} type="number" placeholder="e.g. 80000" />
-              {errors.salary && <small className="text-danger">{errors.salary.message}</small>}
+              <Form.Control {...register('salary')} type="number" step={10000} min={0} placeholder="e.g. 80000" />
+              {errors.salary && <small className="text-black">{errors.salary.message}</small>}
             </Form.Group>
           </Col>
 
@@ -116,8 +115,8 @@ const AddCompanyForm: React.FC = () => {
                   <option key={skill} value={skill}>{skill}</option>
                 ))}
               </Form.Control>
-              <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
-              {errors.idealSkill && <small className="text-danger">{errors.idealSkill.message}</small>}
+              <small className="text-black">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+              {errors.idealSkill && <small className="text-black">{errors.idealSkill.message}</small>}
             </Form.Group>
           </Col>
         </Row>
@@ -127,7 +126,7 @@ const AddCompanyForm: React.FC = () => {
             <Form.Group className="border p-3 rounded">
               <Form.Label className="fw-bold">Overview</Form.Label>
               <Form.Control {...register('overview')} as="textarea" rows={3} />
-              {errors.overview && <small className="text-danger">{errors.overview.message}</small>}
+              {errors.overview && <small className="text-black">{errors.overview.message}</small>}
             </Form.Group>
           </Col>
         </Row>
@@ -137,7 +136,7 @@ const AddCompanyForm: React.FC = () => {
             <Form.Group className="border p-3 rounded">
               <Form.Label className="fw-bold">Jobs</Form.Label>
               <Form.Control {...register('jobs')} type="text" placeholder="e.g. Frontend Developer, Data Analyst" />
-              {errors.jobs && <small className="text-danger">{errors.jobs.message}</small>}
+              {errors.jobs && <small className="text-black">{errors.jobs.message}</small>}
             </Form.Group>
           </Col>
         </Row>
@@ -147,7 +146,7 @@ const AddCompanyForm: React.FC = () => {
             <Form.Group className="border p-3 rounded">
               <Form.Label className="fw-bold">Contacts</Form.Label>
               <Form.Control {...register('contacts')} type="text" placeholder="e.g. hr@company.com, (123) 456-7890" />
-              {errors.contacts && <small className="text-danger">{errors.contacts.message}</small>}
+              {errors.contacts && <small className="text-black">{errors.contacts.message}</small>}
             </Form.Group>
           </Col>
         </Row>
