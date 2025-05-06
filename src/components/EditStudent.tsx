@@ -5,19 +5,17 @@ import { Button, Col, Container, Row, Form, InputGroup } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 
-// Define the available locations as an array of strings
-const locations: string[] = [
+const locations = [
   'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
   'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
   'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
   'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
   'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
   'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'Remote',
+  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
 ];
 
-// Define the available skills as an array of strings
-const skills: string[] = [
+const skills = [
   'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
   'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
   'Shell', 'Assembly', 'Objective-C',
@@ -31,7 +29,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       name: student?.name,
       email: student?.email,
       skills: student?.skills || [],
-      image: student?.image || 'public/default-image.jpg',
+      image: student?.image || 'public/default-image.jpg', // Default image
       location: student?.location,
       interests: student?.interests.join(', '), // Convert interests to string for editing
       portfolio: student?.portfolio || '', // Portfolio URL
@@ -43,82 +41,81 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImage(file);
-      setValue('image', file.name); // Set the selected file name or path
+      setValue('image', file.name); // Update the form with the new image name
     }
   };
 
   const onSubmit = async (data: any) => {
-    // Ensure skills and location are captured correctly
     const updatedData = {
       ...data,
-      skills: data.skills || [], // Ensure skills are set correctly
-      location: data.location || '', // Ensure location is set correctly
+      skills: data.skills || [],
+      location: data.location || '',
       interests: data.interests.split(',').map((interest: string) => interest.trim()), // Convert string back to array
       image: selectedImage ? `/images/${selectedImage.name}` : data.image, // Update image URL if uploaded
     };
 
-    // Call the onSave function from the parent to update the profile
     await onSave(updatedData);
-
-    // Reset the image selection
-    setSelectedImage(null);
+    setSelectedImage(null); // Reset the image selection after submitting
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Container>
+      <Container className="mt-4">
         <Row className="mb-3">
           <Col md={12}>
-            <h3>Edit Student Profile</h3>
+            <h3 className="text-center" style={{ fontWeight: '700' }}>Edit Student Profile</h3>
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Name</Form.Label>
+              <Form.Label style={{ fontWeight: 'bold' }}>Full Name</Form.Label>
               <Form.Control
                 {...register('name')}
                 type="text"
                 placeholder="Enter your name"
+                style={{ fontSize: '1rem' }}
               />
             </Form.Group>
           </Col>
 
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Email</Form.Label>
+              <Form.Label style={{ fontWeight: 'bold' }}>Email</Form.Label>
               <Form.Control
                 {...register('email')}
                 type="email"
                 placeholder="Enter your email"
                 disabled
+                style={{ fontSize: '1rem' }}
               />
             </Form.Group>
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Major</Form.Label>
+              <Form.Label style={{ fontWeight: 'bold' }}>Major</Form.Label>
               <Form.Control
                 {...register('major')}
                 type="text"
                 placeholder="Enter your major"
+                style={{ fontSize: '1rem' }}
               />
             </Form.Group>
           </Col>
 
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Location</Form.Label>
+              <Form.Label style={{ fontWeight: 'bold' }}>Location</Form.Label>
               <Form.Control
                 {...register('location')}
                 as="select"
-                placeholder="Select your location"
+                style={{ fontSize: '1rem' }}
               >
-                {locations.map((location: string) => (
+                {locations.map((location) => (
                   <option key={location} value={location}>
                     {location}
                   </option>
@@ -128,39 +125,40 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col md={12}>
             <Form.Group>
-              <Form.Label>Interests</Form.Label>
+              <Form.Label style={{ fontWeight: 'bold' }}>Interests</Form.Label>
               <Form.Control
                 {...register('interests')}
                 type="text"
                 placeholder="Enter your interests (comma-separated)"
+                style={{ fontSize: '1rem' }}
               />
-              <small className="text-muted">
+              <small style={{ color: 'black' }}>
                 Separate each interest with a comma (e.g., &apos;Programming, AI, Music&apos;)
               </small>
             </Form.Group>
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Skills</Form.Label>
+              <Form.Label style={{ fontWeight: 'bold' }}>Skills</Form.Label>
               <Form.Control
                 {...register('skills')}
                 as="select"
                 multiple
-                placeholder="Select your skills"
+                style={{ fontSize: '1rem' }}
               >
-                {skills.map((skill: string) => (
+                {skills.map((skill) => (
                   <option key={skill} value={skill}>
                     {skill}
                   </option>
                 ))}
               </Form.Control>
-              <small className="text-muted">
+              <small style={{ color: 'black' }}>
                 Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
               </small>
             </Form.Group>
@@ -168,30 +166,33 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Portfolio URL</Form.Label>
+              <Form.Label style={{ fontWeight: 'bold' }}>Portfolio URL</Form.Label>
               <Form.Control
                 {...register('portfolio')}
-                type="url"
+                type="text"
                 placeholder="Enter your portfolio URL"
+                style={{ fontSize: '1rem' }}
               />
             </Form.Group>
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col md={12}>
             <Form.Group>
-              <Form.Label>Profile Image (Optional)</Form.Label>
+              <Form.Label style={{ fontWeight: 'bold' }}>Profile Image</Form.Label>
               <InputGroup>
                 <Form.Control
                   {...register('image')}
                   type="text"
                   placeholder="Image URL"
                   disabled
+                  style={{ fontSize: '1rem' }}
                 />
                 <Button
                   variant="outline-secondary"
                   onClick={() => document.getElementById('fileInput')?.click()}
+                  style={{ fontSize: '1rem', fontWeight: '600' }}
                 >
                   Upload
                 </Button>
@@ -208,9 +209,9 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
         </Row>
 
         {selectedImage && (
-          <Row className="mb-3">
+          <Row className="mb-4">
             <Col md={12}>
-              <h5>Selected Image Preview</h5>
+              <h5 style={{ fontWeight: '600' }}>Selected Image Preview</h5>
               <Image
                 src={URL.createObjectURL(selectedImage)}
                 alt="Selected Profile"
@@ -222,9 +223,9 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Row>
         )}
 
-        <Row className="mb-3">
+        <Row className="mb-4">
           <Col md={12}>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" style={{ fontSize: '1rem', fontWeight: '600' }}>
               Save Changes
             </Button>
           </Col>
