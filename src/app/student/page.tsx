@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Col, Container, Row, Button, Card } from 'react-bootstrap'; 
+import { Col, Container, Row, Button, Card } from 'react-bootstrap';
 import EditableProfile from '@/components/EditStudent';
 
 type Student = {
@@ -42,7 +42,7 @@ const StudentHomePage = () => {
   };
 
   const fetchMatches = useCallback(async () => {
-    if (student) {
+    if (student && student.id) {  // Ensure student ID exists
       const response = await fetch(`/api/user/get-matches?studentId=${student.id}`);
       const data = await response.json();
       if (data.success) {
@@ -64,7 +64,7 @@ const StudentHomePage = () => {
 
   // UseEffect to fetch matches when student data is loaded/updated
   useEffect(() => {
-    if (student) {
+    if (student && student.id) {
       fetchMatches();
     }
   }, [student, fetchMatches]);
@@ -80,7 +80,6 @@ const StudentHomePage = () => {
     
     const result = await response.json();
     if (result.success) {
-      // Refresh student data after saving
       fetchStudentData();
       setIsEditing(false);  // Toggle back to non-edit mode
     } else {
