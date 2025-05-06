@@ -41,7 +41,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImage(file);
-      setValue('image', file.name);
+      setValue('image', file.name); 
     }
   };
 
@@ -67,7 +67,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
+        {/* Full Name Section */}
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
           <Col md={6}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Full Name</Form.Label>
@@ -94,7 +95,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
+        {/* Major and Location Section */}
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
           <Col md={6}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Major</Form.Label>
@@ -125,7 +127,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
+        {/* Interests Section */}
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
           <Col md={12}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Interests</Form.Label>
@@ -142,7 +145,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
+        {/* Skills and Portfolio URL Section */}
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
           <Col md={6}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Skills</Form.Label>
@@ -177,7 +181,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
+        {/* Profile Image Section */}
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
           <Col md={12}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Profile Image</Form.Label>
