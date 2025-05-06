@@ -31,8 +31,9 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       skills: student?.skills || [],
       image: student?.image || 'public/default-image.jpg',
       location: student?.location,
-      major: student?.major || '',  // Adding the major as a default value
-      interests: student?.interests || [],  // Adding the interests as a default value
+      interests: student?.interests.join(', '), // Convert interests to string for editing
+      portfolio: student?.portfolio || '', // Portfolio URL
+      major: student?.major || '', // Add major as part of the form
     },
   });
 
@@ -50,6 +51,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       ...data,
       skills: data.skills || [], // Ensure skills are set correctly
       location: data.location || '', // Ensure location is set correctly
+      interests: data.interests.split(',').map((interest: string) => interest.trim()), // Convert string back to array
       image: selectedImage ? `/images/${selectedImage.name}` : data.image, // Update image URL if uploaded
     };
 
@@ -94,46 +96,53 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        {/* Major Field */}
         <Row className="mb-3">
           <Col md={6}>
             <Form.Group>
               <Form.Label>Major</Form.Label>
               <Form.Control
-                {...register('major')}
+                {...register('major')} // Ensure 'major' is correctly registered
                 type="text"
                 placeholder="Enter your major"
               />
             </Form.Group>
           </Col>
+
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                {...register('location')}
+                as="select"
+                placeholder="Select your location"
+              >
+                {locations.map((location) => (
+                  <option key={location} value={location}>
+                    {location}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Col>
         </Row>
 
-        {/* Interests Field */}
+        {/* Interests field as a string input */}
         <Row className="mb-3">
-          <Col md={6}>
+          <Col md={12}>
             <Form.Group>
               <Form.Label>Interests</Form.Label>
               <Form.Control
                 {...register('interests')}
-                as="select"
-                multiple
-                placeholder="Select your interests"
-              >
-                {/* Assuming interests is an array, similar to skills */}
-                {['Software Development', 'Data Science', 'AI', 'Networking'].map((interest) => (
-                  <option key={interest} value={interest}>
-                    {interest}
-                  </option>
-                ))}
-              </Form.Control>
+                type="text"
+                placeholder="Enter your interests (comma-separated)"
+              />
               <small className="text-muted">
-                Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+                Separate each interest with a comma (e.g., Software Development, AI, Data Science)
               </small>
             </Form.Group>
           </Col>
         </Row>
 
-        {/* Skills Field */}
         <Row className="mb-3">
           <Col md={6}>
             <Form.Group>
@@ -158,23 +167,16 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Location</Form.Label>
+              <Form.Label>Portfolio URL</Form.Label>
               <Form.Control
-                {...register('location')}
-                as="select"
-                placeholder="Select your location"
-              >
-                {locations.map((location) => (
-                  <option key={location} value={location}>
-                    {location}
-                  </option>
-                ))}
-              </Form.Control>
+                {...register('portfolio')}
+                type="url"
+                placeholder="Enter your portfolio URL"
+              />
             </Form.Group>
           </Col>
         </Row>
 
-        {/* Profile Image Field */}
         <Row className="mb-3">
           <Col md={12}>
             <Form.Group>
