@@ -5,7 +5,7 @@ declare module 'next-auth' {
     user: {
       id: string;
       randomKey: string;
-    } & DefaultSession['user'];
+    } & DefaultSession['user']; // Extend user properties from the DefaultSession
   }
 
   interface User {

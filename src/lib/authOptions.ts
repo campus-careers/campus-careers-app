@@ -36,24 +36,13 @@ const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Redirect based on role
-        if (user.role === 'ADMIN') {
-          return {
-            id: `${user.id}`,
-            name: user.name,
-            email: user.email,
-            randomKey: user.role, // saving role here
-            redirectTo: '/admin', // If admin, redirect to admin page
-          };
-        } else {
-          return {
-            id: `${user.id}`,
-            name: user.name,
-            email: user.email,
-            randomKey: user.role, // saving role here
-            redirectTo: '/student', // If student, redirect to student home page
-          };
-        }
+        // Return user data along with id and randomKey
+        return {
+          id: `${user.id}`,
+          name: user.name,
+          email: user.email,
+          randomKey: user.role, // saving role here as randomKey
+        };
       },
     }),
   ],
@@ -67,20 +56,17 @@ const authOptions: NextAuthOptions = {
         const u = user as { id: string; randomKey: string };
         return {
           ...token,
-          id: u.id,
-          randomKey: u.randomKey,
+          id: u.id, // Add user id to JWT
+          randomKey: u.randomKey, // Add randomKey to JWT
         };
       }
       return token;
     },
-    session: async ({ session, token }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: token.id,
-        randomKey: token.randomKey,
-      },
-    }),
+    session: async ({ session, token }) => {
+      session.user.id = token.id; // Add id to session user
+      session.user.randomKey = token.randomKey; // Add randomKey to session user
+      return session;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
