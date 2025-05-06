@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable max-len */
 
 'use client';
 
@@ -154,12 +153,28 @@ export default function SetupPage() {
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.inputGroup}>
             <label htmlFor="name" style={styles.label}>Full Name</label>
-            <input type="text" id="name" name="name" value={form.name} onChange={handleChange} style={styles.input} required />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            />
           </div>
 
           <div style={styles.inputGroup}>
             <label htmlFor="major" style={styles.label}>Major</label>
-            <input type="text" id="major" name="major" value={form.major} onChange={handleChange} style={styles.input} required />
+            <input
+              type="text"
+              id="major"
+              name="major"
+              value={form.major}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            />
           </div>
 
           <div style={styles.inputGroup}>
@@ -173,19 +188,35 @@ export default function SetupPage() {
               classNamePrefix="select"
               styles={{ control: (base) => ({ ...base, fontSize: '1rem' }) }}
             />
-            <p style={styles.description}>Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+            <p style={styles.description}>
+              Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
             </p>
           </div>
 
           <div style={styles.inputGroup}>
             <label htmlFor="interests" style={styles.label}>Interests</label>
-            <input type="text" id="interests" name="interests" value={form.interests} onChange={handleChange} style={styles.input} required />
+            <input
+              type="text"
+              id="interests"
+              name="interests"
+              value={form.interests}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            />
             <p style={styles.description}>Separate interests with commas (e.g. Web, AI)</p>
           </div>
 
           <div style={styles.inputGroup}>
             <label htmlFor="location" style={styles.label}>Location</label>
-            <select id="location" name="location" value={form.location} onChange={handleChange} style={styles.input} required>
+            <select
+              id="location"
+              name="location"
+              value={form.location}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            >
               <option value="">Select a state</option>
               {US_STATES.map((state) => (
                 <option key={state} value={state}>{state}</option>

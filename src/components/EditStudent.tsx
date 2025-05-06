@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Col, Container, Row, Form, InputGroup, Card } from 'react-bootstrap';
+import { Button, Col, Container, Row, Form, InputGroup } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 
-const locations = [
+// Define the available locations as an array of strings
+const locations: string[] = [
   'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
   'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
   'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
@@ -15,7 +16,8 @@ const locations = [
   'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'Remote',
 ];
 
-const skills = [
+// Define the available skills as an array of strings
+const skills: string[] = [
   'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
   'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
   'Shell', 'Assembly', 'Objective-C',
@@ -41,7 +43,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImage(file);
-      setValue('image', file.name);
+      setValue('image', file.name); // Set the selected file name or path
     }
   };
 
@@ -65,174 +67,166 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Container>
-        <Row className="mb-4">
+        <Row className="mb-3">
           <Col md={12}>
-            <h3 className="text-center mb-3">Edit Student Profile</h3>
-            <Card className="shadow-lg rounded-lg p-3">
-              <Row className="mb-3">
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      {...register('name')}
-                      type="text"
-                      placeholder="Enter your name"
-                      className="input-field"
-                    />
-                  </Form.Group>
-                </Col>
+            <h3>Edit Student Profile</h3>
+          </Col>
+        </Row>
 
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      {...register('email')}
-                      type="email"
-                      placeholder="Enter your email"
-                      disabled
-                      className="input-field"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                {...register('name')}
+                type="text"
+                placeholder="Enter your name"
+              />
+            </Form.Group>
+          </Col>
 
-              <Row className="mb-3">
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>Major</Form.Label>
-                    <Form.Control
-                      {...register('major')} // Ensure 'major' is correctly registered
-                      type="text"
-                      placeholder="Enter your major"
-                      className="input-field"
-                    />
-                  </Form.Group>
-                </Col>
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                {...register('email')}
+                type="email"
+                placeholder="Enter your email"
+                disabled
+              />
+            </Form.Group>
+          </Col>
+        </Row>
 
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>Location</Form.Label>
-                    <Form.Control
-                      {...register('location')}
-                      as="select"
-                      placeholder="Select your location"
-                      className="input-field"
-                    >
-                      {locations.map((location) => (
-                        <option key={location} value={location}>
-                          {location}
-                        </option>
-                      ))}
-                    </Form.Control>
-                  </Form.Group>
-                </Col>
-              </Row>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Major</Form.Label>
+              <Form.Control
+                {...register('major')}
+                type="text"
+                placeholder="Enter your major"
+              />
+            </Form.Group>
+          </Col>
 
-              <Row className="mb-3">
-                <Col md={12}>
-                  <Form.Group>
-                    <Form.Label>Interests</Form.Label>
-                    <Form.Control
-                      {...register('interests')}
-                      type="text"
-                      placeholder="Enter your interests (comma-separated)"
-                      className="input-field"
-                    />
-                    <small className="text-muted">
-                      Separate each interest with a comma (e.g., &apos;Programming, AI, Music&apos;)
-                    </small>
-                  </Form.Group>
-                </Col>
-              </Row>
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                {...register('location')}
+                as="select"
+                placeholder="Select your location"
+              >
+                {locations.map((location: string) => (
+                  <option key={location} value={location}>
+                    {location}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Col>
+        </Row>
 
-              <Row className="mb-3">
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>Skills</Form.Label>
-                    <Form.Control
-                      {...register('skills')}
-                      as="select"
-                      multiple
-                      className="input-field"
-                    >
-                      {skills.map((skill) => (
-                        <option key={skill} value={skill}>
-                          {skill}
-                        </option>
-                      ))}
-                    </Form.Control>
-                    <small className="text-muted">
-                      Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
-                    </small>
-                  </Form.Group>
-                </Col>
+        <Row className="mb-3">
+          <Col md={12}>
+            <Form.Group>
+              <Form.Label>Interests</Form.Label>
+              <Form.Control
+                {...register('interests')}
+                type="text"
+                placeholder="Enter your interests (comma-separated)"
+              />
+              <small className="text-muted">
+                Separate each interest with a comma (e.g., &apos;Programming, AI, Music&apos;)
+              </small>
+            </Form.Group>
+          </Col>
+        </Row>
 
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>Portfolio URL</Form.Label>
-                    <Form.Control
-                      {...register('portfolio')}
-                      type="text"  // Change this from type="url" to type="text"
-                      placeholder="Enter your portfolio URL"
-                      className="input-field"
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Skills</Form.Label>
+              <Form.Control
+                {...register('skills')}
+                as="select"
+                multiple
+                placeholder="Select your skills"
+              >
+                {skills.map((skill: string) => (
+                  <option key={skill} value={skill}>
+                    {skill}
+                  </option>
+                ))}
+              </Form.Control>
+              <small className="text-muted">
+                Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+              </small>
+            </Form.Group>
+          </Col>
 
-              <Row className="mb-3">
-                <Col md={12}>
-                  <Form.Group>
-                    <Form.Label>Profile Image</Form.Label>
-                    <InputGroup>
-                      <Form.Control
-                        {...register('image')}
-                        type="text"
-                        placeholder="Image URL"
-                        disabled
-                        className="input-field"
-                      />
-                      <Button
-                        variant="outline-secondary"
-                        onClick={() => document.getElementById('fileInput')?.click()}
-                      >
-                        Upload
-                      </Button>
-                      <input
-                        type="file"
-                        id="fileInput"
-                        style={{ display: 'none' }}
-                        accept="image/*"
-                        onChange={handleImageChange}
-                      />
-                    </InputGroup>
-                  </Form.Group>
-                </Col>
-              </Row>
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Portfolio URL</Form.Label>
+              <Form.Control
+                {...register('portfolio')}
+                type="url"
+                placeholder="Enter your portfolio URL"
+              />
+            </Form.Group>
+          </Col>
+        </Row>
 
-              {selectedImage && (
-                <Row className="mb-3">
-                  <Col md={12}>
-                    <h5>Selected Image Preview</h5>
-                    <Image
-                      src={URL.createObjectURL(selectedImage)}
-                      alt="Selected Profile"
-                      width={150}
-                      height={150}
-                      objectFit="cover"
-                    />
-                  </Col>
-                </Row>
-              )}
+        <Row className="mb-3">
+          <Col md={12}>
+            <Form.Group>
+              <Form.Label>Profile Image (Optional)</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  {...register('image')}
+                  type="text"
+                  placeholder="Image URL"
+                  disabled
+                />
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => document.getElementById('fileInput')?.click()}
+                >
+                  Upload
+                </Button>
+                <input
+                  type="file"
+                  id="fileInput"
+                  style={{ display: 'none' }}
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </InputGroup>
+            </Form.Group>
+          </Col>
+        </Row>
 
-              <Row className="mb-3">
-                <Col md={12}>
-                  <Button variant="primary" type="submit" className="w-100">
-                    Save Changes
-                  </Button>
-                </Col>
-              </Row>
-            </Card>
+        {selectedImage && (
+          <Row className="mb-3">
+            <Col md={12}>
+              <h5>Selected Image Preview</h5>
+              <Image
+                src={URL.createObjectURL(selectedImage)}
+                alt="Selected Profile"
+                width={150}
+                height={150}
+                objectFit="cover"
+              />
+            </Col>
+          </Row>
+        )}
+
+        <Row className="mb-3">
+          <Col md={12}>
+            <Button variant="primary" type="submit">
+              Save Changes
+            </Button>
           </Col>
         </Row>
       </Container>
