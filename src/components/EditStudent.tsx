@@ -139,7 +139,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
                       className="input-field"
                     />
                     <small className="text-muted">
-                      Separate each interest with a comma (e.g., 'Programming, AI, Music')
+                      Separate each interest with a comma (e.g., &apos;Programming, AI, Music&apos;)
                     </small>
                   </Form.Group>
                 </Col>
