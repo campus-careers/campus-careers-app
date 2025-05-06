@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
 import { deleteCompany } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
-import { Locations } from '@prisma/client';
 import EditCompanyForm from './EditCompanyForm';
+import { Locations } from '@prisma/client';
 
 interface Company {
   id: number;
@@ -20,10 +20,15 @@ interface Company {
 }
 
 const CompanyAdmin: React.FC = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [editId, setEditId] = useState<number | null>(null);
+
   const isAdmin = session?.user?.email === 'admin@foo.com';
+
+  useEffect(() => {
+    console.log('Logged in as:', session?.user?.email); // ✅ DEBUG LOG
+  }, [session]);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -39,6 +44,9 @@ const CompanyAdmin: React.FC = () => {
     await deleteCompany(id);
     setCompanies(companies.filter((company) => company.id !== id));
   };
+
+  if (status === 'loading') return <div>Loading session...</div>;
+  if (!session) return <div>You must be signed in.</div>;
 
   return (
     <Container className="py-4">
@@ -80,7 +88,10 @@ const CompanyAdmin: React.FC = () => {
                       <tr key={company.id}>
                         {editId === company.id && isAdmin ? (
                           <td colSpan={8}>
-                            <EditCompanyForm company={processedCompany} />
+                            <EditCompanyForm
+                              company={processedCompany}
+                              onFinish={() => setEditId(null)}
+                            />
                             <Button
                               variant="secondary"
                               size="sm"

@@ -32,11 +32,17 @@ type FormValues = {
   jobs: string;
   contacts: string;
   location: Locations;
-  idealSkill: string[]; // correct structure per EditCompanySchema
+  idealSkill: string[];
   userId: number;
 };
 
-const EditCompanyForm = ({ company }: { company: Company }) => {
+const EditCompanyForm = ({
+  company,
+  onFinish,
+}: {
+  company: Company;
+  onFinish?: () => void;
+}) => {
   const defaultValues: FormValues = {
     id: company.id,
     name: company.name,
@@ -64,6 +70,7 @@ const EditCompanyForm = ({ company }: { company: Company }) => {
   const onSubmit = async (data: FormValues) => {
     await editCompany(data);
     swal('Success', 'Company updated successfully', 'success', { timer: 2000 });
+    if (onFinish) onFinish();
   };
 
   return (
