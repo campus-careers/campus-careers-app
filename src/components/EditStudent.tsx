@@ -51,8 +51,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       skills: data.skills || [],
       location: data.location || '',
       interests: data.interests.split(',').map((interest: string) => interest.trim()), // Convert string back to array
-      // Use the new image URL if an image is uploaded, otherwise keep the current image
-      image: selectedImage ? `/images/${selectedImage.name}` : data.image || 'public/default-image.jpg',
+      image: selectedImage ? `/images/${selectedImage.name}` : data.image, // Update image URL if uploaded
     };
 
     await onSave(updatedData);
@@ -70,7 +69,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
         <Row className="mb-4">
           <Col md={6}>
-            <Form.Group>
+            <Form.Group className="border p-3" style={{ borderRadius: '0.5rem' }}>
               <Form.Label style={{ fontWeight: 'bold' }}>Full Name</Form.Label>
               <Form.Control
                 {...register('name')}
@@ -82,7 +81,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
 
           <Col md={6}>
-            <Form.Group>
+            <Form.Group className="border p-3" style={{ borderRadius: '0.5rem' }}>
               <Form.Label style={{ fontWeight: 'bold' }}>Email</Form.Label>
               <Form.Control
                 {...register('email')}
@@ -97,7 +96,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
         <Row className="mb-4">
           <Col md={6}>
-            <Form.Group>
+            <Form.Group className="border p-3" style={{ borderRadius: '0.5rem' }}>
               <Form.Label style={{ fontWeight: 'bold' }}>Major</Form.Label>
               <Form.Control
                 {...register('major')}
@@ -109,7 +108,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
 
           <Col md={6}>
-            <Form.Group>
+            <Form.Group className="border p-3" style={{ borderRadius: '0.5rem' }}>
               <Form.Label style={{ fontWeight: 'bold' }}>Location</Form.Label>
               <Form.Control
                 {...register('location')}
@@ -128,7 +127,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
         <Row className="mb-4">
           <Col md={12}>
-            <Form.Group>
+            <Form.Group className="border p-3" style={{ borderRadius: '0.5rem' }}>
               <Form.Label style={{ fontWeight: 'bold' }}>Interests</Form.Label>
               <Form.Control
                 {...register('interests')}
@@ -145,7 +144,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
         <Row className="mb-4">
           <Col md={6}>
-            <Form.Group>
+            <Form.Group className="border p-3" style={{ borderRadius: '0.5rem' }}>
               <Form.Label style={{ fontWeight: 'bold' }}>Skills</Form.Label>
               <Form.Control
                 {...register('skills')}
@@ -166,7 +165,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
 
           <Col md={6}>
-            <Form.Group>
+            <Form.Group className="border p-3" style={{ borderRadius: '0.5rem' }}>
               <Form.Label style={{ fontWeight: 'bold' }}>Portfolio URL</Form.Label>
               <Form.Control
                 {...register('portfolio')}
@@ -180,7 +179,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
         <Row className="mb-4">
           <Col md={12}>
-            <Form.Group>
+            <Form.Group className="border p-3" style={{ borderRadius: '0.5rem' }}>
               <Form.Label style={{ fontWeight: 'bold' }}>Profile Image</Form.Label>
               <InputGroup>
                 <Form.Control

@@ -23,7 +23,7 @@ model User {
   role       Role        @default(USER)
   name       String
   location   Locations
-  skills     Skill[]
+  skills     SkillEntry[] // Many-to-many relationship with skills
   interests  String[]
   image      String      @default("default-image.jpg")
   major      String?
@@ -32,32 +32,18 @@ model User {
   interviews Interview[]
 }
 
-model Stuff {
-  id        Int       @id @default(autoincrement())
-  name      String
-  quantity  Int
-  condition Condition @default(good)
-  owner     String
-}
-
 model Company {
   id         Int       @id @default(autoincrement())
-  name       String    @unique  // Make name unique
+  name       String    @unique
   location   Locations
   salary     Int
   overview   String
   jobs       String
   contacts   String
-  idealSkill String[]
+  idealSkill SkillEntry[] // Many-to-many relationship with skills
   userId     Int
   user       User      @relation(fields: [userId], references: [id])
 }
-
-model Filter {
-  id        Int       @id @default(autoincrement())
-  skills    Skill[]
-  locations Locations 
-  }
 
 model SkillEntry {
   id   Int    @id @default(autoincrement())
@@ -83,16 +69,22 @@ model Student {
   portfolio  String?
 }
 
-model adminList {
+model AdminList {
   id         Int       @id @default(autoincrement())
   email      String    @unique
   name       String
-  skills     Skill[]
+  skills     SkillEntry[] // Many-to-many relationship with skills
   location   Locations
   interests  String[]
   image      String
   interviews String[]
   companies  String[]
+}
+
+model Filter {
+  id        Int       @id @default(autoincrement())
+  skills    SkillEntry[] // Many-to-many relationship with skills
+  locations Locations
 }
 
 enum Role {
@@ -115,9 +107,9 @@ enum Skill {
   Ruby
   CPlusPlus
   Design
-  HTML // Add HTML
-  CSS // Add CSS
-  SQL // Add SQL
+  HTML
+  CSS
+  SQL
   R
   PHP
   Perl
