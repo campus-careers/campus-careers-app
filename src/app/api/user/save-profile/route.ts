@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     portfolio: data.portfolio || '',
     companies: [],
     interviews: [],
-    image: typeof session.user.image === 'string' ? session.user.image : 'default.png',
+    image: data.image || 'default.png', // ✅ Use image from request, not session
   };
 
   try {
