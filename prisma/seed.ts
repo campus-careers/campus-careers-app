@@ -6,8 +6,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding the database');
 
-  const password = await hash('changeme', 10); // Hashing the password
-
   const users = [
     {
       email: 'admin@foo.com',
@@ -17,6 +15,7 @@ async function main() {
       interests: ['Leadership', 'Technology'],
       image: 'default-image.jpg',
       role: Role.ADMIN,
+      password: 'adminpass',
     },
     {
       email: 'john@foo.com',
@@ -26,25 +25,27 @@ async function main() {
       interests: ['Data Science', 'AI'],
       image: 'default-image.jpg',
       role: Role.USER,
+      password: 'changeme', // this is the login password you should test
     },
   ];
 
-  // Upsert users
   await Promise.all(
     users.map(async (user) => {
-      const { email, name, location, skills, interests, image, role } = user;
+      const { email, name, location, skills, interests, image, role, password: plainPassword } = user;
+
+      const hashedPassword = await hash(plainPassword, 10);
 
       await prisma.user.upsert({
-        where: { email }, // Check by email
-        update: {}, // Nothing to update (no need to change any field)
+        where: { email },
+        update: {},
         create: {
           email,
           name,
-          location: location as Locations, // Ensure correct enum value for location
-          skills: skills as Skill[], // Ensure correct enum values for skills
+          location,
+          skills,
           interests,
           image,
-          password,
+          password: hashedPassword,
           role,
         },
       });
