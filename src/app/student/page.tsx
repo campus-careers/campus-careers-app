@@ -22,7 +22,7 @@ const StudentHomePage = () => {
   const [student, setStudent] = useState<Student | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  // Function to fetch student data
+  // Fetch the student data
   const fetchStudentData = async () => {
     const response = await fetch('/api/user/get-user');
     const data = await response.json();
@@ -33,15 +33,28 @@ const StudentHomePage = () => {
     }
   };
 
-  // Toggle edit mode
+  // Handle switching between view and edit mode
   const toggleEdit = () => {
     setIsEditing((prev) => !prev);
   };
 
+  // Handle saving the changes and updating the student data
+  const handleSaveChanges = async (updatedData: any) => {
+    // Update the local student state with the new data
+    setStudent((prevStudent) => ({
+      ...prevStudent,
+      ...updatedData,
+    }));
+    setIsEditing(false); // Switch to view mode after saving
+    await fetchStudentData(); // Optionally re-fetch the student data from the backend
+  };
+
+  // Fetch student data on page load
   useEffect(() => {
     fetchStudentData();
   }, []);
 
+  // If no student data exists, show a placeholder message
   if (!student) {
     return (
       <main>
@@ -67,13 +80,13 @@ const StudentHomePage = () => {
                   <Card.Title>{student.name}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">{student.email}</Card.Subtitle>
                   <Card.Text>
-                    <strong>Skills:</strong> {student.skills?.join(', ') || 'No skills added'}
+                    <strong>Skills:</strong> {student.skills.join(', ')}
                   </Card.Text>
                   <Card.Text>
-                    <strong>Location:</strong> {student.location || 'No location specified'}
+                    <strong>Location:</strong> {student.location}
                   </Card.Text>
                   <Card.Text>
-                    <strong>Interests:</strong> {student.interests?.join(', ') || 'No interests added'}
+                    <strong>Interests:</strong> {student.interests.join(', ')}
                   </Card.Text>
                   <Card.Text>
                     <strong>Major:</strong> {student.major || 'N/A'}
@@ -90,8 +103,19 @@ const StudentHomePage = () => {
                 </Card.Footer>
               </Card>
             ) : (
-              <EditableProfile student={student} onSave={fetchStudentData} />
+              <EditableProfile student={student} onSave={handleSaveChanges} />
             )}
+          </Col>
+        </Row>
+
+        {/* You can display additional sections, e.g., recent matches */}
+        <Row className="mt-5">
+          <Col md={8} className="mx-auto">
+            <h5 className="fw-bold">Recent Matches</h5>
+            <ul className="list-unstyled">
+              <li>Company A</li>
+              <li>Company B</li>
+            </ul>
           </Col>
         </Row>
       </Container>
