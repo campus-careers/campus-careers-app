@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
 import { deleteCompany } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
+import { Locations } from '@prisma/client';
+import EditCompanyForm from './EditCompanyForm';
 
 interface Company {
   id: number;
@@ -13,27 +15,21 @@ interface Company {
   overview: string;
   jobs: string;
   contacts: string;
-  idealSkill: string;
+  idealSkill: string[] | string;
   userId: number;
 }
 
 const CompanyAdmin: React.FC = () => {
   const { data: session } = useSession();
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [editId, setEditId] = useState<number | null>(null);
+  const isAdmin = session?.user?.email === 'admin@foo.com';
 
   useEffect(() => {
     const fetchCompanies = async () => {
       const res = await fetch('/api/companies');
       const data = await res.json();
-
-      setCompanies(
-        data.map((company: any) => ({
-          ...company,
-          idealSkill: Array.isArray(company.idealSkill)
-            ? company.idealSkill.join(', ')
-            : company.idealSkill,
-        }))
-      );
+      setCompanies(data);
     };
 
     fetchCompanies();
@@ -65,26 +61,73 @@ const CompanyAdmin: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {companies.map((company) => (
-                    <tr key={company.id}>
-                      <td>{company.name}</td>
-                      <td>{company.location}</td>
-                      <td>${company.salary.toLocaleString()}</td>
-                      <td>{company.overview}</td>
-                      <td>{company.jobs}</td>
-                      <td>{company.contacts}</td>
-                      <td>{company.idealSkill}</td>
-                      <td>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleDelete(company.id)}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
+                  {companies.map((company) => {
+                    const processedCompany = {
+                      id: company.id,
+                      name: company.name,
+                      salary: company.salary,
+                      overview: company.overview,
+                      jobs: company.jobs,
+                      contacts: company.contacts,
+                      location: company.location as Locations,
+                      idealSkill: Array.isArray(company.idealSkill)
+                        ? company.idealSkill
+                        : company.idealSkill.split(',').map((s) => s.trim()),
+                      userId: company.userId,
+                    };
+
+                    return (
+                      <tr key={company.id}>
+                        {editId === company.id && isAdmin ? (
+                          <td colSpan={8}>
+                            <EditCompanyForm company={processedCompany} />
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="mt-2"
+                              onClick={() => setEditId(null)}
+                            >
+                              Cancel Edit
+                            </Button>
+                          </td>
+                        ) : (
+                          <>
+                            <td>{company.name}</td>
+                            <td>{company.location}</td>
+                            <td>${company.salary.toLocaleString()}</td>
+                            <td>{company.overview}</td>
+                            <td>{company.jobs}</td>
+                            <td>{company.contacts}</td>
+                            <td>
+                              {Array.isArray(company.idealSkill)
+                                ? company.idealSkill.join(', ')
+                                : company.idealSkill}
+                            </td>
+                            <td className="d-flex flex-column gap-2">
+                              {isAdmin && (
+                                <>
+                                  <Button
+                                    variant="outline-primary"
+                                    size="sm"
+                                    onClick={() => setEditId(company.id)}
+                                  >
+                                    Edit
+                                  </Button>
+                                  <Button
+                                    variant="danger"
+                                    size="sm"
+                                    onClick={() => handleDelete(company.id)}
+                                  >
+                                    Delete
+                                  </Button>
+                                </>
+                              )}
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </Table>
             </Card.Body>
