@@ -1,12 +1,10 @@
 'use client';
 
-/* eslint-disable react/require-default-props */
-
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import swal from 'sweetalert';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Company, Locations } from '@prisma/client';
+import { Locations } from '@prisma/client';
+import swal from 'sweetalert';
 import { EditCompanySchema } from '@/lib/validationSchemas';
 import { editCompany } from '@/lib/dbActions';
 
@@ -42,21 +40,14 @@ const EditCompanyForm = ({
   company,
   onFinish,
 }: {
-  company: Company;
+  company: FormValues;
   onFinish?: () => void;
 }) => {
   const defaultValues: FormValues = {
-    id: company.id,
-    name: company.name,
-    salary: company.salary,
-    overview: company.overview,
-    jobs: company.jobs,
-    contacts: company.contacts,
-    location: company.location as Locations,
+    ...company,
     idealSkill: Array.isArray(company.idealSkill)
       ? company.idealSkill
-      : (company.idealSkill as unknown as string).split(',').map((skill) => skill.trim()),
-    userId: company.userId,
+      : (company.idealSkill as string).split(',').map((s) => s.trim()),
   };
 
   const {
@@ -76,121 +67,131 @@ const EditCompanyForm = ({
   };
 
   return (
-    <Container className="my-4 d-flex justify-content-center">
-      <Card style={{ padding: '2rem', width: '100%', maxWidth: '700px' }}>
-        <h3 className="text-center mb-4 fw-bold">🛠️ Edit Company Profile</h3>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+    <Container className="py-3">
+      <Row className="justify-content-center">
+        <Col md={8}>
+          <h3 className="text-center mb-3">🛠️ Edit Company Profile</h3>
+          <Card className="p-4 shadow-sm">
+            <Form onSubmit={handleSubmit(onSubmit)}>
+              <input type="hidden" {...register('id')} />
+              <input type="hidden" {...register('userId')} />
 
-          {/* Hidden IDs */}
-          <input type="hidden" {...register('id')} />
-          <input type="hidden" {...register('userId')} />
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Company Name</Form.Label>
+                  <Form.Control
+                    {...register('name')}
+                    className={errors.name ? 'is-invalid' : ''}
+                  />
+                  <div className="invalid-feedback">{errors.name?.message}</div>
+                </Col>
+                <Col>
+                  <Form.Label>Salary</Form.Label>
+                  <Form.Control
+                    type="number"
+                    {...register('salary')}
+                    className={errors.salary ? 'is-invalid' : ''}
+                  />
+                  <div className="invalid-feedback">{errors.salary?.message}</div>
+                </Col>
+              </Row>
 
-          <Row className="mb-3">
-            <Col>
-              <Form.Label className="fw-bold">Company Name</Form.Label>
-              <Form.Control
-                {...register('name')}
-                className={errors.name ? 'is-invalid' : ''}
-              />
-              <div className="invalid-feedback">{errors.name?.message}</div>
-            </Col>
-            <Col>
-              <Form.Label className="fw-bold">Salary</Form.Label>
-              <Form.Control
-                type="number"
-                {...register('salary')}
-                className={errors.salary ? 'is-invalid' : ''}
-              />
-              <div className="invalid-feedback">{errors.salary?.message}</div>
-            </Col>
-          </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Location</Form.Label>
+                  <Form.Select
+                    {...register('location')}
+                    className={errors.location ? 'is-invalid' : ''}
+                  >
+                    <option value="">Select a state</option>
+                    {US_STATES.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  <div className="invalid-feedback">{errors.location?.message}</div>
+                </Col>
+                <Col>
+                  <Form.Label>Overview</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={1}
+                    {...register('overview')}
+                    className={errors.overview ? 'is-invalid' : ''}
+                  />
+                  <div className="invalid-feedback">{errors.overview?.message}</div>
+                </Col>
+              </Row>
 
-          <Row className="mb-3">
-            <Col>
-              <Form.Label className="fw-bold">Location</Form.Label>
-              <Form.Select
-                {...register('location')}
-                className={errors.location ? 'is-invalid' : ''}
-              >
-                <option value="">Select a state</option>
-                {US_STATES.map((state) => (
-                  <option key={state} value={state}>{state}</option>
-                ))}
-              </Form.Select>
-              <div className="invalid-feedback">{errors.location?.message}</div>
-            </Col>
-            <Col>
-              <Form.Label className="fw-bold">Overview</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={2}
-                {...register('overview')}
-                className={errors.overview ? 'is-invalid' : ''}
-              />
-              <div className="invalid-feedback">{errors.overview?.message}</div>
-            </Col>
-          </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Label>Jobs</Form.Label>
+                  <Form.Control
+                    {...register('jobs')}
+                    className={errors.jobs ? 'is-invalid' : ''}
+                  />
+                  <div className="invalid-feedback">{errors.jobs?.message}</div>
+                </Col>
+                <Col>
+                  <Form.Label>Contacts</Form.Label>
+                  <Form.Control
+                    {...register('contacts')}
+                    className={errors.contacts ? 'is-invalid' : ''}
+                  />
+                  <div className="invalid-feedback">{errors.contacts?.message}</div>
+                </Col>
+              </Row>
 
-          <Row className="mb-3">
-            <Col>
-              <Form.Label className="fw-bold">Jobs</Form.Label>
-              <Form.Control
-                {...register('jobs')}
-                className={errors.jobs ? 'is-invalid' : ''}
-              />
-              <div className="invalid-feedback">{errors.jobs?.message}</div>
-            </Col>
-            <Col>
-              <Form.Label className="fw-bold">Contacts</Form.Label>
-              <Form.Control
-                {...register('contacts')}
-                className={errors.contacts ? 'is-invalid' : ''}
-              />
-              <div className="invalid-feedback">{errors.contacts?.message}</div>
-            </Col>
-          </Row>
+              <Form.Group className="mb-3">
+                <Form.Label>Recommended Skills</Form.Label>
+                <Form.Control
+                  as="select"
+                  multiple
+                  {...register('idealSkill')}
+                  className={errors.idealSkill ? 'is-invalid' : ''}
+                >
+                  {PROGRAMMING_SKILLS.map((skill) => (
+                    <option key={skill} value={skill}>
+                      {skill}
+                    </option>
+                  ))}
+                </Form.Control>
+                <small className="text-muted">
+                  Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+                </small>
+                <div className="invalid-feedback">{errors.idealSkill?.message}</div>
+              </Form.Group>
 
-          <Form.Group className="mb-4">
-            <Form.Label className="fw-bold">Recommended Skills</Form.Label>
-            <Form.Control
-              {...register('idealSkill')}
-              as="select"
-              multiple
-              className={errors.idealSkill ? 'is-invalid' : ''}
-            >
-              {PROGRAMMING_SKILLS.map((skill) => (
-                <option key={skill} value={skill}>{skill}</option>
-              ))}
-            </Form.Control>
-            <Form.Text className="text-muted">
-              Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
-            </Form.Text>
-            <div className="invalid-feedback">{errors.idealSkill?.message}</div>
-          </Form.Group>
-
-          <div className="d-flex justify-content-end gap-2">
-            <Button type="submit" variant="success">
-              Save Changes
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                reset(defaultValues);
-                if (onFinish) onFinish();
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </Form>
-      </Card>
+              <div className="d-flex justify-content-between">
+                <Button
+                  type="submit"
+                  variant="success"
+                >
+                  Save Changes
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => {
+                    reset(defaultValues);
+                    if (onFinish) onFinish();
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };
 
+// ✅ Fix ESLint: define default for optional prop
 EditCompanyForm.defaultProps = {
-  onFinish: undefined,
+  onFinish: () => {},
 };
 
 export default EditCompanyForm;

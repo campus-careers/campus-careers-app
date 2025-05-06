@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
-import { deleteCompany } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
+import { Card, Button, Container, Row, Col } from 'react-bootstrap';
+import { deleteCompany } from '@/lib/dbActions';
 import { Locations } from '@prisma/client';
 import EditCompanyForm from './EditCompanyForm';
 
@@ -31,7 +31,7 @@ const CompanyAdmin: React.FC = () => {
       const data = await res.json();
 
       setCompanies(
-        data.map((company: any) => ({
+        data.map((company: Company) => ({
           ...company,
           idealSkill: Array.isArray(company.idealSkill)
             ? company.idealSkill
@@ -45,88 +45,77 @@ const CompanyAdmin: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     await deleteCompany(id);
-    setCompanies(companies.filter((company) => company.id !== id));
+    setCompanies(companies.filter((c) => c.id !== id));
   };
+
+  const handleFinishEdit = () => setEditId(null);
 
   return (
     <Container className="py-4">
       <Row>
         <Col>
           <h2 className="text-center mb-4">Company Profiles</h2>
-          <Card>
-            <Card.Body>
-              <Table striped bordered hover responsive>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Location</th>
-                    <th>Salary</th>
-                    <th>Overview</th>
-                    <th>Jobs</th>
-                    <th>Contacts</th>
-                    <th>Ideal Skills</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {companies.map((company) => (
-                    <tr key={company.id}>
-                      {editId === company.id && isAdmin ? (
-                        <td colSpan={8}>
-                          <div className="d-flex justify-content-center py-3">
-                            <EditCompanyForm
-                              company={{
-                                ...company,
-                                location: company.location as Locations,
-                                idealSkill: Array.isArray(company.idealSkill)
-                                  ? company.idealSkill
-                                  : company.idealSkill.split(',').map((s) => s.trim()),
-                              }}
-                              onFinish={() => setEditId(null)}
-                            />
-                          </div>
-                        </td>
-                      ) : (
-                        <>
-                          <td>{company.name}</td>
-                          <td>{company.location}</td>
-                          <td>${company.salary.toLocaleString()}</td>
-                          <td>{company.overview}</td>
-                          <td>{company.jobs}</td>
-                          <td>{company.contacts}</td>
-                          <td>
-                            {Array.isArray(company.idealSkill)
-                              ? company.idealSkill.join(', ')
-                              : company.idealSkill}
-                          </td>
-                          <td className="d-flex flex-column gap-2">
-                            {isAdmin && (
-                              <>
-                                <Button
-                                  variant="outline-primary"
-                                  size="sm"
-                                  onClick={() => setEditId(company.id)}
-                                >
-                                  Edit Profile
-                                </Button>
-                                <Button
-                                  variant="danger"
-                                  size="sm"
-                                  onClick={() => handleDelete(company.id)}
-                                >
-                                  Delete
-                                </Button>
-                              </>
-                            )}
-                          </td>
-                        </>
+          <Row xs={1} md={2} lg={2} className="g-4">
+            {companies.map((company) => (
+              <Col key={company.id}>
+                {editId === company.id ? (
+                  <EditCompanyForm
+                    company={{
+                      ...company,
+                      location: company.location as Locations,
+                      idealSkill: Array.isArray(company.idealSkill)
+                        ? company.idealSkill
+                        : company.idealSkill.split(',').map((s) => s.trim()),
+                    }}
+                    onFinish={handleFinishEdit}
+                  />
+                ) : (
+                  <Card className="p-3 shadow-sm h-100">
+                    <Card.Body>
+                      <Card.Title className="fw-bold">{company.name}</Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        {company.location}
+                      </Card.Subtitle>
+                      <Card.Text>
+                        <strong>Salary:</strong> ${company.salary.toLocaleString()}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Overview:</strong> {company.overview}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Jobs:</strong> {company.jobs}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Contacts:</strong> {company.contacts}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Recommended Skills:</strong>{' '}
+                        {Array.isArray(company.idealSkill)
+                          ? company.idealSkill.join(', ')
+                          : company.idealSkill}
+                      </Card.Text>
+                      {isAdmin && (
+                        <div className="d-flex flex-column gap-2 mt-3">
+                          <Button
+                            variant="outline-primary"
+                            onClick={() => setEditId(company.id)}
+                          >
+                            Edit Profile
+                          </Button>
+                          <Button
+                            variant="danger"
+                            onClick={() => handleDelete(company.id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
                       )}
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
+                    </Card.Body>
+                  </Card>
+                )}
+              </Col>
+            ))}
+          </Row>
         </Col>
       </Row>
     </Container>
