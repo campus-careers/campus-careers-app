@@ -38,16 +38,6 @@ const StudentHomePage = () => {
     setIsEditing((prev) => !prev);
   };
 
-  // Handle saving the changes
-  const handleSave = async (updatedData: any) => {
-    // Update the student data with the new data (could also make an API call to save it)
-    setStudent(updatedData);
-
-    // After saving, exit the edit mode and fetch the updated student data
-    setIsEditing(false);
-    await fetchStudentData(); // Optionally fetch updated data from the backend
-  };
-
   useEffect(() => {
     fetchStudentData();
   }, []);
@@ -77,13 +67,13 @@ const StudentHomePage = () => {
                   <Card.Title>{student.name}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">{student.email}</Card.Subtitle>
                   <Card.Text>
-                    <strong>Skills:</strong> {student.skills.join(', ')}
+                    <strong>Skills:</strong> {student.skills?.join(', ') || 'No skills added'}
                   </Card.Text>
                   <Card.Text>
-                    <strong>Location:</strong> {student.location}
+                    <strong>Location:</strong> {student.location || 'No location specified'}
                   </Card.Text>
                   <Card.Text>
-                    <strong>Interests:</strong> {student.interests.join(', ')}
+                    <strong>Interests:</strong> {student.interests?.join(', ') || 'No interests added'}
                   </Card.Text>
                   <Card.Text>
                     <strong>Major:</strong> {student.major || 'N/A'}
@@ -100,7 +90,7 @@ const StudentHomePage = () => {
                 </Card.Footer>
               </Card>
             ) : (
-              <EditableProfile student={student} onSave={handleSave} />
+              <EditableProfile student={student} onSave={fetchStudentData} />
             )}
           </Col>
         </Row>
