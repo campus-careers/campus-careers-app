@@ -5,6 +5,21 @@ import { Button, Col, Container, Row, Form, InputGroup } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 
+const locations = [
+  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 
+  'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 
+  'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 
+  'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 
+  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 
+  'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 
+  'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+];
+
+const skills = [
+  'JavaScript', 'Python', 'Java', 'CSharp', 'Ruby', 'HTML', 'CSS', 'SQL', 'PHP', 'Perl', 
+  'Scala', 'MATLAB', 'R', 'Objective-C', 'Dart', 'Elixir', 'Assembly', 'Shell', 'Go', 'Swift'
+];
+
 const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: any) => void }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
@@ -12,8 +27,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     defaultValues: {
       name: student?.name,
       email: student?.email,
-      skills: student?.skills,
-      image: student?.image || 'public/default-image.jpg', // Default image path
+      skills: student?.skills || [],
+      image: student?.image || 'public/default-image.jpg',
       location: student?.location,
     },
   });
@@ -22,38 +37,37 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImage(file);
-      setValue('image', file.name); // Update image value in form
+      setValue('image', file.name);
     }
   };
 
   const onSubmit = async (data: any) => {
-    // Handle the image upload logic here if needed, e.g., uploading to server
     const imageUrl = selectedImage ? `/images/${selectedImage.name}` : data.image;
     const updatedData = {
       ...data,
-      image: imageUrl, // Assign the image URL or uploaded image to data
+      image: imageUrl,
     };
-    await onSave(updatedData); // Call the onSave function to save the updated data
-    setSelectedImage(null); // Reset the selected image after the form is submitted
+    await onSave(updatedData);
+    setSelectedImage(null); // Reset the selected image
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Container>
-        <Row className="mb-3">
+        <Row className='mb-3'>
           <Col md={12}>
             <h3>Edit Student Profile</h3>
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className='mb-3'>
           <Col md={6}>
             <Form.Group>
               <Form.Label>Name</Form.Label>
               <Form.Control
                 {...register('name')}
-                type="text"
-                placeholder="Enter your name"
+                type='text'
+                placeholder='Enter your name'
               />
             </Form.Group>
           </Col>
@@ -63,24 +77,30 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               <Form.Label>Email</Form.Label>
               <Form.Control
                 {...register('email')}
-                type="email"
-                placeholder="Enter your email"
+                type='email'
+                placeholder='Enter your email'
                 disabled
               />
             </Form.Group>
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className='mb-3'>
           <Col md={6}>
             <Form.Group>
               <Form.Label>Skills</Form.Label>
               <Form.Control
                 {...register('skills')}
-                as="textarea"
-                rows={3}
-                placeholder="Enter your skills"
-              />
+                as='select'
+                multiple
+                placeholder='Select your skills'
+              >
+                {skills.map((skill) => (
+                  <option key={skill} value={skill}>
+                    {skill}
+                  </option>
+                ))}
+              </Form.Control>
             </Form.Group>
           </Col>
 
@@ -89,35 +109,41 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               <Form.Label>Location</Form.Label>
               <Form.Control
                 {...register('location')}
-                type="text"
-                placeholder="Enter your location"
-              />
+                as='select'
+                placeholder='Select your location'
+              >
+                {locations.map((location) => (
+                  <option key={location} value={location}>
+                    {location}
+                  </option>
+                ))}
+              </Form.Control>
             </Form.Group>
           </Col>
         </Row>
 
-        <Row className="mb-3">
+        <Row className='mb-3'>
           <Col md={12}>
             <Form.Group>
               <Form.Label>Profile Image</Form.Label>
               <InputGroup>
                 <Form.Control
                   {...register('image')}
-                  type="text"
-                  placeholder="Image URL"
+                  type='text'
+                  placeholder='Image URL'
                   disabled
                 />
                 <Button
-                  variant="outline-secondary"
+                  variant='outline-secondary'
                   onClick={() => document.getElementById('fileInput')?.click()}
                 >
                   Upload
                 </Button>
                 <input
-                  type="file"
-                  id="fileInput"
+                  type='file'
+                  id='fileInput'
                   style={{ display: 'none' }}
-                  accept="image/*"
+                  accept='image/*'
                   onChange={handleImageChange}
                 />
               </InputGroup>
@@ -126,23 +152,23 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
         </Row>
 
         {selectedImage && (
-          <Row className="mb-3">
+          <Row className='mb-3'>
             <Col md={12}>
               <h5>Selected Image Preview</h5>
               <Image
-                src={URL.createObjectURL(selectedImage)} // Display the uploaded image
-                alt="Selected Profile"
+                src={URL.createObjectURL(selectedImage)}
+                alt='Selected Profile'
                 width={150}
                 height={150}
-                objectFit="cover"
+                objectFit='cover'
               />
             </Col>
           </Row>
         )}
 
-        <Row className="mb-3">
+        <Row className='mb-3'>
           <Col md={12}>
-            <Button variant="primary" type="submit">
+            <Button variant='primary' type='submit'>
               Save Changes
             </Button>
           </Col>
