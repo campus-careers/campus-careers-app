@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap'; // Removed Button import
+import { Col, Container, Row } from 'react-bootstrap';
 import EditableProfile from '@/components/EditStudent';
 
 type Student = {
@@ -30,7 +30,6 @@ const StudentHomePage = () => {
       console.log('Error fetching student data:', data.error);
     }
   };
-
   useEffect(() => {
     fetchStudentData();
   }, []);
@@ -45,7 +44,6 @@ const StudentHomePage = () => {
       </main>
     );
   }
-
   return (
     <main>
       <Container className="mt-4">
@@ -55,7 +53,6 @@ const StudentHomePage = () => {
             <EditableProfile student={student} onSave={fetchStudentData} />
           </Col>
         </Row>
-
         <Row className="mt-5">
           <Col md={8} className="mx-auto">
             <h5 className="fw-bold">Recent Matches</h5>
