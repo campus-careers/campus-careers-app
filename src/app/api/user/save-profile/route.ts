@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/lib/authOptions';
@@ -16,19 +15,13 @@ export async function POST(req: Request) {
   const studentData = {
     email: session.user.email,
     name: data.name || '',
-    major: data.major || '',
     location: data.location || '',
     skills: data.skills || [],
     interests: data.interests || [],
-    portfolio: data.portfolio || '',
-    companies: [],
-    interviews: [],
-    image: typeof session.user.image === 'string' ? session.user.image : 'default-image.jpg',
+    image: data.image || 'default-image.jpg',
   };
 
   try {
-    console.log('Saving student data:', studentData); // Logging the data before saving
-
     const existing = await prisma.student.findUnique({
       where: { email: session.user.email },
     });
