@@ -1,7 +1,6 @@
-// components/EditStudent.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, Col, Form, Row, Image, Button } from 'react-bootstrap';
 
 type Student = {

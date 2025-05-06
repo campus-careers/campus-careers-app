@@ -1,6 +1,3 @@
-// src/app/student/page.tsx
-'use client';
-
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import EditableProfile from '@/components/EditStudent';
@@ -14,7 +11,7 @@ const StudentHomePage = () => {
       const data = await response.json();
       
       if (data.success) {
-        setStudent(data.user);
+        setStudent(data.user); // Sets the student data
       } else {
         console.log('Error fetching student data:', data.error);
       }
