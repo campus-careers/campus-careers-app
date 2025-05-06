@@ -77,15 +77,20 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
 
     const updatedData = {
       ...data,
-      skills: data.skills || [],
+      skills: Array.isArray(data.skills) ? data.skills : [data.skills],
       location: data.location || '',
       interests: data.interests.split(',').map((i: string) => i.trim()),
       image: imageUrl,
     };
 
-    await onSave(updatedData);
-    setSelectedImage(null);
-    setSuccessMessage('Profile updated successfully!');
+    try {
+      await onSave(updatedData);
+      setSelectedImage(null);
+      setSuccessMessage('Profile updated successfully!');
+    } catch (err) {
+      console.error(err);
+      setUploadError('Failed to save profile. Please try again.');
+    }
   };
 
   return (
@@ -188,7 +193,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
               <Col>
                 <h5 className="fw-semibold">Image Preview</h5>
                 <Image
-                  src={selectedImage ? URL.createObjectURL(selectedImage) : student.image}
+                  src={selectedImage ? URL.createObjectURL(selectedImage) : student?.image ?? ''}
                   alt="Preview"
                   width={150}
                   height={150}

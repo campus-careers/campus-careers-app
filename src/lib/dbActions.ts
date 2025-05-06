@@ -16,11 +16,9 @@ export async function addCompany(company: {
   jobs: string;
   contacts: string;
   idealSkill: string[];
-  userId: number; // ✅ ADD userId to input
+  userId: number;
 }) {
   const validLocation = company.location as Locations;
-
-  // Updated valid locations with all U.S. states and Remote
   const validLocations: Locations[] = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
     'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
@@ -44,7 +42,7 @@ export async function addCompany(company: {
       jobs: company.jobs,
       contacts: company.contacts,
       idealSkill: company.idealSkill,
-      user: { connect: { id: company.userId } }, // ✅ Correct: connect Company to User
+      user: { connect: { id: company.userId } },
     },
   });
 
@@ -52,9 +50,10 @@ export async function addCompany(company: {
 }
 
 /**
- * Edits an existing company in the database.
+ * Edits an existing company.
  */
 export async function editCompany(company: Company) {
+  const validLocation = company.location as Locations;
   const validLocations: Locations[] = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
     'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
@@ -65,7 +64,6 @@ export async function editCompany(company: Company) {
     'Remote',
   ];
 
-  const validLocation = company.location as Locations;
   if (!validLocations.includes(validLocation)) {
     throw new Error(`Invalid location provided: ${company.location}`);
   }
@@ -87,7 +85,7 @@ export async function editCompany(company: Company) {
 }
 
 /**
- * Deletes an existing company from the database.
+ * Deletes a company.
  */
 export async function deleteCompany(id: number) {
   await prisma.company.delete({
@@ -98,14 +96,11 @@ export async function deleteCompany(id: number) {
 }
 
 /**
- * Creates a new user in the database.
+ * Creates a new user.
  */
 export async function createUser(credentials: { email: string; password: string; name: string; location: string }) {
   const password = await hash(credentials.password, 10);
-
-  // Validate location against validLocations array
   const validLocation = credentials.location as Locations;
-
   const validLocations: Locations[] = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
     'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
@@ -132,23 +127,21 @@ export async function createUser(credentials: { email: string; password: string;
 }
 
 /**
- * Changes the password of an existing user in the database.
+ * Changes a user's password.
  */
 export async function changePassword(credentials: { email: string; password: string }) {
   const password = await hash(credentials.password, 10);
   await prisma.user.update({
     where: { email: credentials.email },
-    data: {
-      password,
-    },
+    data: { password },
   });
 }
 
 /**
- * Edits an existing student in the database.
+ * Edits a student profile.
  */
 export async function editStudent(studentData: {
-  id: number;
+  id: string;
   email: string;
   fullName: string;
   location: string;
@@ -156,19 +149,13 @@ export async function editStudent(studentData: {
   image: string;
 }) {
   await prisma.student.update({
-    where: { id: studentData.id },
+    where: { id: Number(studentData.id) },
     data: {
       email: studentData.email,
       name: studentData.fullName,
       location: studentData.location,
-      skills: studentData.skills.split(',').map((skill) => skill.trim()),
+      skills: studentData.skills.split(',').map((skill: string) => skill.trim()),
       image: studentData.image,
     },
   });
-}
-/**
- * Retrieves all companies from the database.
- */
-export async function getAllCompanies() {
-  return await prisma.company.findMany();
 }
