@@ -102,8 +102,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
                   </option>
                 ))}
               </Form.Control>
-              {/* Add the caption here */}
-              <small className="form-text text-muted">
+              {/* Caption below the skills section */}
+              <small style={{ color: 'black' }}>
                 Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
               </small>
             </Form.Group>

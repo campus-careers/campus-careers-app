@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Col, Container, Row, Button, Card } from 'react-bootstrap';
+import { useEffect, useState, useCallback } from 'react';
+import { Col, Container, Row, Button, Card, Spinner } from 'react-bootstrap'; 
 import EditableProfile from '@/components/EditStudent';
 
 type Student = {
@@ -18,12 +18,23 @@ type Student = {
   portfolio?: string;
 };
 
+type Match = {
+  id: string;
+  name: string;
+  location: string;
+  idealSkill: string[];
+  contact: string;
+};
+
 const StudentHomePage = () => {
   const [student, setStudent] = useState<Student | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // Fetch the student data
+  // Function to fetch student data
   const fetchStudentData = async () => {
+    setLoading(true);
     const response = await fetch('/api/user/get-user');
     const data = await response.json();
     if (data.success) {
@@ -31,30 +42,47 @@ const StudentHomePage = () => {
     } else {
       console.log('Error fetching student data:', data.error);
     }
+    setLoading(false);
   };
 
-  // Handle switching between view and edit mode
+  // Memoize fetchMatches to avoid unnecessary re-creations
+  const fetchMatches = useCallback(async () => {
+    if (student) {
+      const response = await fetch(`/api/user/get-matches?studentId=${student.id}`);
+      const data = await response.json();
+      if (data.success) {
+        setMatches(data.matches);
+      } else {
+        console.log('Error fetching matches:', data.error);
+      }
+    }
+  }, [student]); 
+
+  // Toggle edit mode
   const toggleEdit = () => {
     setIsEditing((prev) => !prev);
   };
 
-  // Handle saving the changes and updating the student data
-  const handleSaveChanges = async (updatedData: any) => {
-    // Update the local student state with the new data
-    setStudent((prevStudent) => ({
-      ...prevStudent,
-      ...updatedData,
-    }));
-    setIsEditing(false); // Switch to view mode after saving
-    await fetchStudentData(); // Optionally re-fetch the student data from the backend
-  };
-
-  // Fetch student data on page load
   useEffect(() => {
     fetchStudentData();
-  }, []);
+  }, []);  // Only fetch the student data on mount
 
-  // If no student data exists, show a placeholder message
+  useEffect(() => {
+    if (student) {
+      fetchMatches();
+    }
+  }, [student, fetchMatches]); 
+
+  if (loading) {
+    return (
+      <main>
+        <div className="text-center mt-5">
+          <Spinner animation="border" role="status" />
+        </div>
+      </main>
+    );
+  }
+
   if (!student) {
     return (
       <main>
@@ -70,15 +98,25 @@ const StudentHomePage = () => {
     <main>
       <Container className="mt-4">
         <h2 className="text-center mb-4">Student Home Page</h2>
-        
-        {/* Display Profile Info or Edit Profile Section */}
+
         <Row className="justify-content-center">
           <Col md={5}>
             {!isEditing ? (
-              <Card>
+              <Card className="shadow-lg rounded-lg">
                 <Card.Body>
-                  <Card.Title>{student.name}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">{student.email}</Card.Subtitle>
+                  <Card.Title className="text-center text-primary">{student.name}</Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted text-center">{student.email}</Card.Subtitle>
+                  <div className="text-center">
+                    {student.image && (
+                      <Card.Img
+                        variant="top"
+                        src={student.image}
+                        alt="Profile Image"
+                        className="rounded-circle mb-3"
+                        style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                      />
+                    )}
+                  </div>
                   <Card.Text>
                     <strong>Skills:</strong> {student.skills.join(', ')}
                   </Card.Text>
@@ -94,30 +132,52 @@ const StudentHomePage = () => {
                   <Card.Text>
                     <strong>Portfolio:</strong> {student.portfolio || 'N/A'}
                   </Card.Text>
-                  {student.image && (
-                    <Card.Img variant="top" src={student.image} alt="Profile Image" />
-                  )}
                 </Card.Body>
-                <Card.Footer>
-                  <Button variant="primary" onClick={toggleEdit}>Edit Profile</Button>
+                <Card.Footer className="d-flex justify-content-center">
+                  <Button 
+                    variant="primary" 
+                    onClick={toggleEdit} 
+                    className="w-100"
+                    style={{ backgroundColor: '#007bff', borderColor: '#007bff' }}
+                  >
+                    Edit Profile
+                  </Button>
                 </Card.Footer>
               </Card>
             ) : (
-              <EditableProfile student={student} onSave={handleSaveChanges} />
+              <EditableProfile student={student} onSave={fetchStudentData} />
             )}
           </Col>
         </Row>
 
-        {/* You can display additional sections, e.g., recent matches */}
-        <Row className="mt-5">
-          <Col md={8} className="mx-auto">
-            <h5 className="fw-bold">Recent Matches</h5>
-            <ul className="list-unstyled">
-              <li>Company A</li>
-              <li>Company B</li>
-            </ul>
-          </Col>
-        </Row>
+        {/* Display Matches Section */}
+        {!isEditing && matches.length > 0 && (
+          <Row className="mt-5">
+            <Col md={8} className="mx-auto">
+              <h5 className="fw-bold">Recent Matches</h5>
+              <ul className="list-unstyled">
+                {matches.map((match) => (
+                  <li key={match.id} className="mb-3">
+                    <Card className="shadow-sm rounded">
+                      <Card.Body>
+                        <Card.Title>{match.name}</Card.Title>
+                        <Card.Text>
+                          <strong>Location:</strong> {match.location}
+                        </Card.Text>
+                        <Card.Text>
+                          <strong>Ideal Skills:</strong> {match.idealSkill.join(', ')}
+                        </Card.Text>
+                        <Card.Text>
+                          <strong>Contact:</strong> {match.contact}
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </li>
+                ))}
+              </ul>
+            </Col>
+          </Row>
+        )}
       </Container>
     </main>
   );

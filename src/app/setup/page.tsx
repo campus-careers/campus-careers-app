@@ -173,7 +173,8 @@ export default function SetupPage() {
               classNamePrefix="select"
               styles={{ control: (base) => ({ ...base, fontSize: '1rem' }) }}
             />
-            <p style={styles.description}>Click to add or remove skills. No keyboard shortcut needed.</p>
+            <p style={styles.description}>Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+            </p>
           </div>
 
           <div style={styles.inputGroup}>
