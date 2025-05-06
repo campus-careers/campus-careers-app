@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap'; // Removed the unused 'Form' import
+import { Col, Container, Row } from 'react-bootstrap'; // Removed Button import
 import EditableProfile from '@/components/EditStudent';
-import { useForm } from 'react-hook-form'; // Keep useForm for form handling
 
 type Student = {
   id: number;
@@ -21,29 +20,20 @@ type Student = {
 
 const StudentHomePage = () => {
   const [student, setStudent] = useState<Student | null>(null);
-  const { handleSubmit } = useForm(); // Only need handleSubmit if not using register directly
 
-  // Fetch student data from API
   const fetchStudentData = async () => {
     const response = await fetch('/api/user/get-user');
     const data = await response.json();
     if (data.success) {
-      setStudent(data.user); // Set the fetched student data
+      setStudent(data.user);
     } else {
       console.log('Error fetching student data:', data.error);
     }
   };
 
-  // Handle form submission
-  const onSubmit = async (data: any) => {
-    console.log('Profile data submitted:', data);
-    // You would send this data to your backend to save the changes
-    // For example: await fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) });
-  };
-
   useEffect(() => {
-    fetchStudentData(); // Fetch student data when the page loads
-  }, []); // Empty dependency array ensures this runs only once when the page loads
+    fetchStudentData();
+  }, []);
 
   if (!student) {
     return (
@@ -62,16 +52,10 @@ const StudentHomePage = () => {
         <h2 className="text-center mb-4">Student Home Page</h2>
         <Row className="justify-content-center">
           <Col md={5}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <EditableProfile student={student} onSave={fetchStudentData} />
-              <Button variant="primary" type="submit">
-                Save Changes
-              </Button>
-            </form>
+            <EditableProfile student={student} onSave={fetchStudentData} />
           </Col>
         </Row>
 
-        {/* Removed unnecessary buttons for browsing companies, skills, etc. */}
         <Row className="mt-5">
           <Col md={8} className="mx-auto">
             <h5 className="fw-bold">Recent Matches</h5>

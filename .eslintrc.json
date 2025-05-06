@@ -6,7 +6,8 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "@typescript-eslint/quotes": ["error", "single"],
+    "@typescript-eslint/quotes": "off",  // Disable the quotes rule for TypeScript files
+    "jsx-quotes": "off",  // Disable the jsx-quotes rule
     "arrow-parens": "off",
     "func-names": "off",
     "linebreak-style": "off",
