@@ -73,42 +73,47 @@ const EditCompanyForm = ({ company, onFinish = () => {} }: EditCompanyFormProps)
   };
 
   return (
-    <Container className="py-3">
+    <Container className="py-4">
       <Row className="justify-content-center">
-        <Col lg={10}>
-          <Card className="shadow-sm">
+        <Col md={10}>
+          <Card className="shadow-sm p-4">
             <Card.Body>
-              <h3 className="mb-4 text-center fw-bold">Edit Company Profile</h3>
-              <Form onSubmit={handleSubmit(onSubmit)} className="d-grid gap-3">
+              <h3 className="text-center fw-bold mb-4">Edit Company Profile</h3>
+              <Form onSubmit={handleSubmit(onSubmit)} className="d-grid gap-4">
                 <input type="hidden" {...register('id')} />
                 <input type="hidden" {...register('userId')} />
 
                 <Form.Group>
-                  <Form.Label>Name</Form.Label>
+                  <Form.Label>Company Name</Form.Label>
                   <Form.Control {...register('name')} className={errors.name ? 'is-invalid' : ''} />
                   <div className="invalid-feedback">{errors.name?.message}</div>
                 </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Salary</Form.Label>
-                  <Form.Control
-                    type="number"
-                    {...register('salary')}
-                    className={errors.salary ? 'is-invalid' : ''}
-                  />
-                  <div className="invalid-feedback">{errors.salary?.message}</div>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Location</Form.Label>
-                  <Form.Select {...register('location')} className={errors.location ? 'is-invalid' : ''}>
-                    <option value="">Select a state</option>
-                    {US_STATES.map((state) => (
-                      <option key={state} value={state}>{state}</option>
-                    ))}
-                  </Form.Select>
-                  <div className="invalid-feedback">{errors.location?.message}</div>
-                </Form.Group>
+                <Row>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label>Salary</Form.Label>
+                      <Form.Control
+                        type="number"
+                        {...register('salary')}
+                        className={errors.salary ? 'is-invalid' : ''}
+                      />
+                      <div className="invalid-feedback">{errors.salary?.message}</div>
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label>Location</Form.Label>
+                      <Form.Select {...register('location')} className={errors.location ? 'is-invalid' : ''}>
+                        <option value="">Select a state</option>
+                        {US_STATES.map((state) => (
+                          <option key={state} value={state}>{state}</option>
+                        ))}
+                      </Form.Select>
+                      <div className="invalid-feedback">{errors.location?.message}</div>
+                    </Form.Group>
+                  </Col>
+                </Row>
 
                 <Form.Group>
                   <Form.Label>Overview</Form.Label>
@@ -151,7 +156,7 @@ const EditCompanyForm = ({ company, onFinish = () => {} }: EditCompanyFormProps)
                   <div className="invalid-feedback">{errors.idealSkill?.message}</div>
                 </Form.Group>
 
-                <Row className="pt-3">
+                <Row className="pt-2">
                   <Col>
                     <Button type="submit" variant="success" className="w-100">
                       Save Changes
