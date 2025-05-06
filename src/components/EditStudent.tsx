@@ -6,18 +6,19 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 
 const locations = [
-  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 
-  'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 
-  'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 
-  'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 
-  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 
-  'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 
-  'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+  'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+  'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
+  'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
+  'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
+  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming', 'Remote',
 ];
 
 const skills = [
-  'JavaScript', 'Python', 'Java', 'CSharp', 'Ruby', 'HTML', 'CSS', 'SQL', 'PHP', 'Perl', 
-  'Scala', 'MATLAB', 'R', 'Objective-C', 'Dart', 'Elixir', 'Assembly', 'Shell', 'Go', 'Swift'
+  'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
+  'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
+  'Shell', 'Assembly', 'Objective-C',
 ];
 
 const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: any) => void }) => {
@@ -101,6 +102,10 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
                   </option>
                 ))}
               </Form.Control>
+              {/* Add the caption here */}
+              <small className="form-text text-muted">
+                Hold Ctrl (Windows) or Cmd (Mac) to select multiple.
+              </small>
             </Form.Group>
           </Col>
 
