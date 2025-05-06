@@ -29,11 +29,11 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       name: student?.name,
       email: student?.email,
       skills: student?.skills || [],
-      image: student?.image || 'public/default-image.jpg', // Default image
+      image: student?.image || 'public/default-image.jpg',
       location: student?.location,
-      interests: student?.interests.join(', '), // Convert interests to string for editing
-      portfolio: student?.portfolio || '', // Portfolio URL
-      major: student?.major || '', // Add major as part of the form
+      interests: student?.interests.join(', '),
+      portfolio: student?.portfolio || '',
+      major: student?.major || '',
     },
   });
 
@@ -41,7 +41,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImage(file);
-      setValue('image', file.name); // Update the form with the new image name
+      setValue('image', file.name);
     }
   };
 
@@ -50,12 +50,12 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
       ...data,
       skills: data.skills || [],
       location: data.location || '',
-      interests: data.interests.split(',').map((interest: string) => interest.trim()), // Convert string back to array
-      image: selectedImage ? `/images/${selectedImage.name}` : data.image, // Update image URL if uploaded
+      interests: data.interests.split(',').map((interest: string) => interest.trim()),
+      image: selectedImage ? `/images/${selectedImage.name}` : data.image,
     };
 
     await onSave(updatedData);
-    setSelectedImage(null); // Reset the image selection after submitting
+    setSelectedImage(null);
   };
 
   return (
@@ -67,7 +67,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4">
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
           <Col md={6}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Full Name</Form.Label>
@@ -94,7 +94,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4">
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
           <Col md={6}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Major</Form.Label>
@@ -125,7 +125,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4">
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
           <Col md={12}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Interests</Form.Label>
@@ -142,7 +142,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4">
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
           <Col md={6}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Skills</Form.Label>
@@ -177,7 +177,7 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
           </Col>
         </Row>
 
-        <Row className="mb-4">
+        <Row className="mb-4" style={{ border: '1px solid #ddd', padding: '1.5rem', borderRadius: '8px' }}>
           <Col md={12}>
             <Form.Group>
               <Form.Label style={{ fontWeight: 'bold' }}>Profile Image</Form.Label>
