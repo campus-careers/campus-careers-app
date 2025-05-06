@@ -6,10 +6,12 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "@typescript-eslint/quotes": ["error", "single"],
     "arrow-parens": "off",
     "func-names": "off",
     "linebreak-style": "off",
     "max-len": ["error", 120],
+    "no-multi-spaces": "off",
     "no-console": "off",
     "no-plusplus": "off",
     "no-restricted-syntax": "off",

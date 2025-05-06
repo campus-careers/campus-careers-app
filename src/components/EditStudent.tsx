@@ -1,73 +1,127 @@
-import { FC } from 'react';
-import { Button, Form } from 'react-bootstrap';
+'use client';
 
-// Define the Student type here
-type Student = {
-  id: number;
-  name: string;
-  email: string;
-  skills: string[];
-  image: string;  // Ensure 'image' is part of the 'Student' type
-  location: string;
-  companies: string[];
-  interviews: string[];
-  interests: string[];
-  major?: string;
-  portfolio?: string;
-};
+import { useState } from 'react';
+import { Button, Form, Col, Row } from 'react-bootstrap';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
-type EditableProfileProps = {
-  student: Student;  // Use the Student type here
+interface EditStudentProps {
+  student: any; // Use the correct type for 'student'
   onSave: () => void;
-};
+}
 
-const EditableProfile: FC<EditableProfileProps> = ({ student, onSave }) => {
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+const EditStudent = ({ student, onSave }: EditStudentProps) => {
+  const [name, setName] = useState(student.name);
+  const [location, setLocation] = useState(student.location);
+  const [skills, setSkills] = useState(student.skills.join(', '));
+  const [imageUrl, setImageUrl] = useState(student.image || ''); // Removed `setImage` state
+  const [file, setFile] = useState<File | null>(null); // Keep the file state for the image
+  const router = useRouter();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]; // Changed 'file' to 'selectedFile'
+    if (selectedFile) {
+      setFile(selectedFile); // Only set the file state
+      setImageUrl(URL.createObjectURL(selectedFile)); // Set image URL for preview
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('location', location);
+    formData.append('skills', skills);
     if (file) {
-      // Handle image upload logic here
-      console.log("Image file selected:", file);
-      // You can add logic to upload the image to the server here
+      formData.append('image', file); // Append image file if selected
+    }
+
+    // Call your save API
+    const response = await fetch('/api/user/save-profile', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      onSave(); // Update parent component with the new data
+      router.push('/student'); // Redirect to the student page
+    } else {
+      console.log('Error saving profile:', data.error);
     }
   };
 
   return (
-    <div>
-      <h4>Profile Information</h4>
-      <Form>
-        <Form.Group className="mb-3">
+    <Form onSubmit={handleSubmit}>
+      <Row className="mb-3">
+        <Form.Group as={Col} controlId="formName">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="text" value={student.name} readOnly />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control type="email" value={student.email} readOnly />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Location</Form.Label>
-          <Form.Control type="text" value={student.location} readOnly />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Image</Form.Label>
-          <div>
-            <img
-              src={student.image || 'default-image.jpg'} // Fallback to default image if no profile image exists
-              alt="Profile"
-              style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-            />
-          </div>
           <Form.Control
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
+            type="text"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </Form.Group>
-        <Button variant="primary" onClick={onSave}>
-          Save
-        </Button>
-      </Form>
-    </div>
+      </Row>
+
+      <Row className="mb-3">
+        <Form.Group as={Col} controlId="formLocation">
+          <Form.Label>Location</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter your location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+        </Form.Group>
+      </Row>
+
+      <Row className="mb-3">
+        <Form.Group as={Col} controlId="formSkills">
+          <Form.Label>Skills</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter your skills (comma separated)"
+            value={skills}
+            onChange={(e) => setSkills(e.target.value)}
+          />
+        </Form.Group>
+      </Row>
+
+      <Row className="mb-3">
+        <Form.Group as={Col} controlId="formImage">
+          <Form.Label>Profile Image</Form.Label>
+          <Form.Control
+            type="file"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+        </Form.Group>
+      </Row>
+
+      {imageUrl && (
+        <Row className="mb-3">
+          <Form.Group as={Col}>
+            <Form.Label>Image Preview</Form.Label>
+            <div style={{ width: '200px', height: '200px', position: 'relative' }}>
+              <Image
+                src={imageUrl}
+                alt="Image preview"
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+          </Form.Group>
+        </Row>
+      )}
+
+      <Button variant="primary" type="submit">
+        Save Changes
+      </Button>
+    </Form>
   );
 };
 
-export default EditableProfile;
+export default EditStudent;
