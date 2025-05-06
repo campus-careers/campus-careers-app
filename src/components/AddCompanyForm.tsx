@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row, Alert } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import swal from 'sweetalert';
@@ -17,7 +17,7 @@ type FormValues = {
   overview: string;
   jobs: string;
   contacts: string;
-  idealSkill: string; // comma-separated
+  idealSkill: string;
 };
 
 const AddCompanyForm: React.FC = () => {
@@ -39,7 +39,7 @@ const AddCompanyForm: React.FC = () => {
   if (status === 'unauthenticated') {
     redirect('/auth/signin');
   }
-  
+
   if (session?.user?.randomKey !== 'ADMIN') {
     redirect('/unauthorized');
   }
@@ -66,7 +66,7 @@ const AddCompanyForm: React.FC = () => {
       await addCompany(companyData);
 
       swal('Success', 'Company added successfully!', 'success');
-      reset(); // ✅ Clear the form after successful submission
+      reset();
     } catch (error) {
       console.error('❌ Failed to add company:', error);
       swal('Error', 'Failed to add company. Please try again.', 'error');
@@ -74,110 +74,84 @@ const AddCompanyForm: React.FC = () => {
   };
 
   return (
-    <Container className="py-3">
-      <Row className="justify-content-center">
-        <Col xs={5}>
-          <Col className="text-center">
-            <h2>Add Company</h2>
-          </Col>
-          <Card>
-            <Card.Body>
-              <Form onSubmit={handleSubmit(onSubmit)}>
-                {/* Fields */}
-                <Form.Group>
-                  <Form.Label>Name</Form.Label>
-                  <input
-                    type="text"
-                    {...register('name')}
-                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                  />
-                  <div className="invalid-feedback">{errors.name?.message}</div>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Location</Form.Label>
-                  <input
-                    type="text"
-                    {...register('location')}
-                    className={`form-control ${errors.location ? 'is-invalid' : ''}`}
-                  />
-                  <div className="invalid-feedback">{errors.location?.message}</div>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Salary</Form.Label>
-                  <input
-                    type="number"
-                    {...register('salary')}
-                    className={`form-control ${errors.salary ? 'is-invalid' : ''}`}
-                  />
-                  <div className="invalid-feedback">{errors.salary?.message}</div>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Overview</Form.Label>
-                  <textarea
-                    {...register('overview')}
-                    className={`form-control ${errors.overview ? 'is-invalid' : ''}`}
-                    rows={3}
-                  />
-                  <div className="invalid-feedback">{errors.overview?.message}</div>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Jobs (comma-separated)</Form.Label>
-                  <input
-                    type="text"
-                    {...register('jobs')}
-                    className={`form-control ${errors.jobs ? 'is-invalid' : ''}`}
-                  />
-                  <div className="invalid-feedback">{errors.jobs?.message}</div>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Contacts (email, phone)</Form.Label>
-                  <input
-                    type="text"
-                    {...register('contacts')}
-                    className={`form-control ${errors.contacts ? 'is-invalid' : ''}`}
-                  />
-                  <div className="invalid-feedback">{errors.contacts?.message}</div>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Ideal Skills (comma-separated)</Form.Label>
-                  <input
-                    type="text"
-                    {...register('idealSkill')}
-                    className={`form-control ${errors.idealSkill ? 'is-invalid' : ''}`}
-                  />
-                  <div className="invalid-feedback">{errors.idealSkill?.message}</div>
-                </Form.Group>
-
-                <Form.Group className="form-group pt-3">
-                  <Row>
-                    <Col>
-                      <Button type="submit" variant="primary" className="w-100">
-                        Submit
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button
-                        type="button"
-                        variant="warning"
-                        className="w-100"
-                        onClick={() => reset()}
-                      >
-                        Reset
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form.Group>
-              </Form>
-            </Card.Body>
-          </Card>
+    <Container className="mt-4">
+      <Row className="mb-3">
+        <Col>
+          <h3 className="text-center fw-bold">Add New Company</h3>
         </Col>
       </Row>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Row className="mb-4">
+          <Col md={6}>
+            <Form.Group className="border p-3 rounded">
+              <Form.Label className="fw-bold">Company Name</Form.Label>
+              <Form.Control {...register('name')} type="text" placeholder="e.g. Tech Corp" />
+              {errors.name && <small className="text-danger">{errors.name.message}</small>}
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className="border p-3 rounded">
+              <Form.Label className="fw-bold">Location</Form.Label>
+              <Form.Control {...register('location')} type="text" placeholder="e.g. California" />
+              {errors.location && <small className="text-danger">{errors.location.message}</small>}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mb-4">
+          <Col md={6}>
+            <Form.Group className="border p-3 rounded">
+              <Form.Label className="fw-bold">Salary</Form.Label>
+              <Form.Control {...register('salary')} type="number" placeholder="e.g. 80000" />
+              {errors.salary && <small className="text-danger">{errors.salary.message}</small>}
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group className="border p-3 rounded">
+              <Form.Label className="fw-bold">Ideal Skills</Form.Label>
+              <Form.Control {...register('idealSkill')} type="text" placeholder="e.g. Python, React" />
+              <small className="text-muted">Separate with commas</small>
+              {errors.idealSkill && <small className="text-danger">{errors.idealSkill.message}</small>}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mb-4">
+          <Col>
+            <Form.Group className="border p-3 rounded">
+              <Form.Label className="fw-bold">Overview</Form.Label>
+              <Form.Control {...register('overview')} as="textarea" rows={3} />
+              {errors.overview && <small className="text-danger">{errors.overview.message}</small>}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mb-4">
+          <Col>
+            <Form.Group className="border p-3 rounded">
+              <Form.Label className="fw-bold">Jobs</Form.Label>
+              <Form.Control {...register('jobs')} type="text" placeholder="e.g. Frontend Developer, Data Analyst" />
+              {errors.jobs && <small className="text-danger">{errors.jobs.message}</small>}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mb-4">
+          <Col>
+            <Form.Group className="border p-3 rounded">
+              <Form.Label className="fw-bold">Contacts</Form.Label>
+              <Form.Control {...register('contacts')} type="text" placeholder="e.g. hr@company.com, (123) 456-7890" />
+              {errors.contacts && <small className="text-danger">{errors.contacts.message}</small>}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mb-4">
+          <Col>
+            <Button type="submit" variant="primary" className="fw-semibold w-100">Submit</Button>
+          </Col>
+        </Row>
+      </Form>
     </Container>
   );
 };
