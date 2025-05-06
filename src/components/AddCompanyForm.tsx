@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { Button, Col, Container, Form, Row, Alert } from 'react-bootstrap';
+import { Button, Col, Container, Row, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import swal from 'sweetalert';
@@ -9,6 +9,22 @@ import { redirect } from 'next/navigation';
 import { addCompany } from '@/lib/dbActions';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { AddCompanySchema } from '@/lib/validationSchemas';
+
+const US_STATES = [
+  'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
+  'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana',
+  'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
+  'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma',
+  'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
+  'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+];
+
+const PROGRAMMING_SKILLS = [
+  'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
+  'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
+  'Shell', 'Assembly', 'Objective-C',
+];
 
 type FormValues = {
   name: string;
@@ -32,39 +48,19 @@ const AddCompanyForm: React.FC = () => {
     resolver: yupResolver(AddCompanySchema),
   });
 
-  if (status === 'loading') {
-    return <LoadingSpinner />;
-  }
-
-  if (status === 'unauthenticated') {
-    redirect('/auth/signin');
-  }
-
-  if (session?.user?.randomKey !== 'ADMIN') {
-    redirect('/unauthorized');
-  }
+  if (status === 'loading') return <LoadingSpinner />;
+  if (status === 'unauthenticated') redirect('/auth/signin');
+  if (session?.user?.randomKey !== 'ADMIN') redirect('/unauthorized');
 
   const onSubmit = async (data: FormValues) => {
-    if (!session?.user?.id) {
-      console.error('❌ User ID not found');
-      swal('Error', 'User not authenticated. Please sign in again.', 'error');
-      return;
-    }
-
     try {
       const companyData = {
-        name: data.name,
-        salary: Number(data.salary),
-        overview: data.overview,
-        location: data.location,
-        jobs: data.jobs,
-        contacts: data.contacts,
-        idealSkill: data.idealSkill.split(',').map((s) => s.trim()),
-        userId: Number(session.user.id),
+        ...data,
+        idealSkill: data.idealSkill.split(',').map((s) => s.trim()), // Convert string → array
+        userId: Number(session?.user?.id),
       };
 
       await addCompany(companyData);
-
       swal('Success', 'Company added successfully!', 'success');
       reset();
     } catch (error) {
@@ -76,10 +72,9 @@ const AddCompanyForm: React.FC = () => {
   return (
     <Container className="mt-4">
       <Row className="mb-3">
-        <Col>
-          <h3 className="text-center fw-bold">Add New Company</h3>
-        </Col>
+        <Col><h3 className="text-center fw-bold">Add New Company</h3></Col>
       </Row>
+
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Row className="mb-4">
           <Col md={6}>
@@ -89,10 +84,16 @@ const AddCompanyForm: React.FC = () => {
               {errors.name && <small className="text-danger">{errors.name.message}</small>}
             </Form.Group>
           </Col>
+
           <Col md={6}>
             <Form.Group className="border p-3 rounded">
               <Form.Label className="fw-bold">Location</Form.Label>
-              <Form.Control {...register('location')} type="text" placeholder="e.g. California" />
+              <Form.Select {...register('location')} required>
+                <option value="">Select a state</option>
+                {US_STATES.map((state) => (
+                  <option key={state} value={state}>{state}</option>
+                ))}
+              </Form.Select>
               {errors.location && <small className="text-danger">{errors.location.message}</small>}
             </Form.Group>
           </Col>
@@ -106,11 +107,16 @@ const AddCompanyForm: React.FC = () => {
               {errors.salary && <small className="text-danger">{errors.salary.message}</small>}
             </Form.Group>
           </Col>
+
           <Col md={6}>
             <Form.Group className="border p-3 rounded">
               <Form.Label className="fw-bold">Ideal Skills</Form.Label>
-              <Form.Control {...register('idealSkill')} type="text" placeholder="e.g. Python, React" />
-              <small className="text-muted">Separate with commas</small>
+              <Form.Control {...register('idealSkill')} as="select" multiple>
+                {PROGRAMMING_SKILLS.map((skill) => (
+                  <option key={skill} value={skill}>{skill}</option>
+                ))}
+              </Form.Control>
+              <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
               {errors.idealSkill && <small className="text-danger">{errors.idealSkill.message}</small>}
             </Form.Group>
           </Col>
