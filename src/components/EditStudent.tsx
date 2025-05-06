@@ -8,7 +8,7 @@ import Image from 'next/image';
 const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: any) => void }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       name: student?.name,
       email: student?.email,
@@ -21,15 +21,17 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
   // Handle image upload
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
+      const file = e.target.files[0];
+      setSelectedImage(file);
+      setValue('image', file.name);  // Set the file name in the form state
     }
   };
 
   // Handle form submission
   const onSubmit = async (data: any) => {
-    // Handle the image upload logic here if needed, e.g., uploading to server
+    // If an image is selected, append it to the data
     const imageUrl = selectedImage ? `/images/${selectedImage.name}` : data.image;
-    // Update the student data (send it to the backend or context)
+
     const updatedData = {
       ...data,
       image: imageUrl,
@@ -38,7 +40,8 @@ const EditStudent = ({ student, onSave }: { student: any, onSave: (updatedData: 
     // Use the updated data when calling onSave
     await onSave(updatedData);
 
-    // Reset form state or provide feedback
+    // Optionally reset form state here or provide feedback
+    setSelectedImage(null);  // Clear the selected image
   };
 
   return (
