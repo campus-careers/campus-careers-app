@@ -8,6 +8,8 @@
   "rules": {
     "@typescript-eslint/quotes": "off",  // Disable the quotes rule for TypeScript files
     "jsx-quotes": "off",  // Disable the jsx-quotes rule
+    "no-trailing-spaces": "off",  // Disable the trailing spaces rule
+    "react/jsx-one-expression-per-line": "off",  // Allow multiple expressions per line
     "arrow-parens": "off",
     "func-names": "off",
     "linebreak-style": "off",
@@ -24,7 +26,6 @@
     "import/prefer-default-export": "off",
     "react/function-component-definition": "off",
     "react/jsx-props-no-spreading": "off",
-    "react/one-expression-per-line": "off",
     "react/react-in-jsx-scope": "off"
   }
 }
