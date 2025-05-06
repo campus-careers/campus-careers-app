@@ -74,114 +74,85 @@ const EditCompanyForm = ({
   };
 
   return (
-    <Container className="py-3">
+    <Container className="mt-4">
       <Row className="justify-content-center">
-        <Col xs={5}>
-          <Col className="text-center">
-            <h2>Edit Company</h2>
-          </Col>
-          <Card>
-            <Card.Body>
-              <Form onSubmit={handleSubmit(onSubmit)}>
-                <input type="hidden" {...register('id')} />
-                <input type="hidden" {...register('userId')} />
+        <Col md={6}>
+          <Card className="shadow p-4 rounded-4">
+            <h3 className="text-center fw-bold mb-3">Edit Company Profile</h3>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+              <input type="hidden" {...register('id')} />
+              <input type="hidden" {...register('userId')} />
 
-                <Form.Group>
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control
-                    {...register('name')}
-                    className={errors.name ? 'is-invalid' : ''}
-                  />
-                  <div className="invalid-feedback">{errors.name?.message}</div>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Company Name</Form.Label>
+                <Form.Control {...register('name')} />
+                {errors.name && <small className="text-danger">{errors.name.message}</small>}
+              </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Salary</Form.Label>
-                  <Form.Control
-                    type="number"
-                    {...register('salary')}
-                    className={errors.salary ? 'is-invalid' : ''}
-                  />
-                  <div className="invalid-feedback">{errors.salary?.message}</div>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Salary</Form.Label>
+                <Form.Control type="number" {...register('salary')} />
+                {errors.salary && <small className="text-danger">{errors.salary.message}</small>}
+              </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Location</Form.Label>
-                  <Form.Select {...register('location')} className={errors.location ? 'is-invalid' : ''}>
-                    <option value="">Select a state</option>
-                    {US_STATES.map((state) => (
-                      <option key={state} value={state}>
-                        {state}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <div className="invalid-feedback">{errors.location?.message}</div>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Location</Form.Label>
+                <Form.Select {...register('location')}>
+                  <option value="">Select a state</option>
+                  {US_STATES.map((state) => (
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
+                  ))}
+                </Form.Select>
+                {errors.location && <small className="text-danger">{errors.location.message}</small>}
+              </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Overview</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={2}
-                    {...register('overview')}
-                    className={errors.overview ? 'is-invalid' : ''}
-                  />
-                  <div className="invalid-feedback">{errors.overview?.message}</div>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Overview</Form.Label>
+                <Form.Control as="textarea" rows={2} {...register('overview')} />
+                {errors.overview && <small className="text-danger">{errors.overview.message}</small>}
+              </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Jobs</Form.Label>
-                  <Form.Control
-                    {...register('jobs')}
-                    className={errors.jobs ? 'is-invalid' : ''}
-                  />
-                  <div className="invalid-feedback">{errors.jobs?.message}</div>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Jobs</Form.Label>
+                <Form.Control {...register('jobs')} />
+                {errors.jobs && <small className="text-danger">{errors.jobs.message}</small>}
+              </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Contacts</Form.Label>
-                  <Form.Control
-                    {...register('contacts')}
-                    className={errors.contacts ? 'is-invalid' : ''}
-                  />
-                  <div className="invalid-feedback">{errors.contacts?.message}</div>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Contacts</Form.Label>
+                <Form.Control {...register('contacts')} />
+                {errors.contacts && <small className="text-danger">{errors.contacts.message}</small>}
+              </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Recommended Skills</Form.Label>
-                  <Form.Control
-                    {...register('idealSkill')}
-                    as="select"
-                    multiple
-                    className={errors.idealSkill ? 'is-invalid' : ''}
-                  >
-                    {PROGRAMMING_SKILLS.map((skill) => (
-                      <option key={skill} value={skill}>
-                        {skill}
-                      </option>
-                    ))}
-                  </Form.Control>
-                  <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
-                  <div className="invalid-feedback">{errors.idealSkill?.message}</div>
-                </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Recommended Skills</Form.Label>
+                <Form.Control as="select" multiple {...register('idealSkill')}>
+                  {PROGRAMMING_SKILLS.map((skill) => (
+                    <option key={skill} value={skill}>
+                      {skill}
+                    </option>
+                  ))}
+                </Form.Control>
+                <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+                {errors.idealSkill && <div className="text-danger">{errors.idealSkill.message}</div>}
+              </Form.Group>
 
-                <Row className="pt-3">
-                  <Col>
-                    <Button type="submit" variant="primary">Submit</Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      type="button"
-                      onClick={() => reset(defaultValues)}
-                      variant="warning"
-                      className="float-right"
-                    >
-                      Reset
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </Card.Body>
+              <div className="d-flex justify-content-between">
+                <Button type="submit" variant="primary">Save</Button>
+                <Button
+                  type="button"
+                  variant="outline-secondary"
+                  onClick={() => {
+                    reset(defaultValues);
+                    if (onFinish) onFinish();
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </Form>
           </Card>
         </Col>
       </Row>
@@ -189,8 +160,8 @@ const EditCompanyForm = ({
   );
 };
 
-export default EditCompanyForm;
-
 EditCompanyForm.defaultProps = {
   onFinish: () => {},
 };
+
+export default EditCompanyForm;
