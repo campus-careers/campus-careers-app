@@ -9,7 +9,7 @@ const StudentHomePage = () => {
   const [student, setStudent] = useState<any>(null);
 
   const fetchStudentData = async () => {
-    const response = await fetch('/api/get-user');
+    const response = await fetch('/api/user/get-user');  // Updated the API path to match the route
     const data = await response.json();
     if (data.success) {
       setStudent(data.user); // Update the student state
