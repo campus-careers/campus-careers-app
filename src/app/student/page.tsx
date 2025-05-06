@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Col, Container, Row, Button, Card, Spinner } from 'react-bootstrap'; 
+import { Col, Container, Row, Button, Card } from 'react-bootstrap'; 
 import EditableProfile from '@/components/EditStudent';
 
 type Student = {
@@ -19,7 +19,7 @@ type Student = {
 };
 
 type Match = {
-  id: string;
+  id: string; // Assuming a unique identifier exists for each match
   name: string;
   location: string;
   idealSkill: string[];
@@ -30,11 +30,9 @@ const StudentHomePage = () => {
   const [student, setStudent] = useState<Student | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [matches, setMatches] = useState<Match[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
 
   // Function to fetch student data
   const fetchStudentData = async () => {
-    setLoading(true);
     const response = await fetch('/api/user/get-user');
     const data = await response.json();
     if (data.success) {
@@ -42,7 +40,6 @@ const StudentHomePage = () => {
     } else {
       console.log('Error fetching student data:', data.error);
     }
-    setLoading(false);
   };
 
   // Memoize fetchMatches to avoid unnecessary re-creations
@@ -56,32 +53,29 @@ const StudentHomePage = () => {
         console.log('Error fetching matches:', data.error);
       }
     }
-  }, [student]); 
+  }, [student]);
 
   // Toggle edit mode
   const toggleEdit = () => {
     setIsEditing((prev) => !prev);
   };
 
+  // Handle save changes
+  const saveChanges = async () => {
+    // Save the updated data here, make API call if necessary
+    await fetchStudentData();  // Re-fetch data to ensure it's updated
+    setIsEditing(false);  // Set isEditing to false to exit edit mode
+  };
+
   useEffect(() => {
     fetchStudentData();
-  }, []);  // Only fetch the student data on mount
+  }, []);
 
   useEffect(() => {
     if (student) {
       fetchMatches();
     }
-  }, [student, fetchMatches]); 
-
-  if (loading) {
-    return (
-      <main>
-        <div className="text-center mt-5">
-          <Spinner animation="border" role="status" />
-        </div>
-      </main>
-    );
-  }
+  }, [student, fetchMatches]);
 
   if (!student) {
     return (
@@ -134,18 +128,11 @@ const StudentHomePage = () => {
                   </Card.Text>
                 </Card.Body>
                 <Card.Footer className="d-flex justify-content-center">
-                  <Button 
-                    variant="primary" 
-                    onClick={toggleEdit} 
-                    className="w-100"
-                    style={{ backgroundColor: '#007bff', borderColor: '#007bff' }}
-                  >
-                    Edit Profile
-                  </Button>
+                  <Button variant="primary" onClick={toggleEdit}>Edit Profile</Button>
                 </Card.Footer>
               </Card>
             ) : (
-              <EditableProfile student={student} onSave={fetchStudentData} />
+              <EditableProfile student={student} onSave={saveChanges} />
             )}
           </Col>
         </Row>
@@ -157,8 +144,8 @@ const StudentHomePage = () => {
               <h5 className="fw-bold">Recent Matches</h5>
               <ul className="list-unstyled">
                 {matches.map((match) => (
-                  <li key={match.id} className="mb-3">
-                    <Card className="shadow-sm rounded">
+                  <li key={match.id}>
+                    <Card>
                       <Card.Body>
                         <Card.Title>{match.name}</Card.Title>
                         <Card.Text>
