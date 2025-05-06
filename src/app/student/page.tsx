@@ -1,4 +1,4 @@
-'use client';  // Add this line to mark it as a Client Component
+'use client'; // Mark this as a Client Component
 
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
