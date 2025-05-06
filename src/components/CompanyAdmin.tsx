@@ -65,21 +65,25 @@ const CompanyAdmin: React.FC = () => {
                   : company.idealSkill.split(',').map((s: string) => s.trim());
 
                 return editId === company.id && isAdmin ? (
-                  <div key={company.id} className="mb-4">
-                    <EditCompanyForm
-                      company={{
-                        ...company,
-                        location: company.location as Locations,
-                        idealSkill: parsedIdealSkill,
-                      }}
-                      onFinish={() => setEditId(null)}
-                    />
-                    <div className="text-end mt-2">
-                      <Button variant="secondary" size="sm" onClick={() => setEditId(null)}>
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
+                  <Container fluid className="px-4" key={company.id}>
+                    <Row className="justify-content-center">
+                      <Col lg={10}>
+                        <EditCompanyForm
+                          company={{
+                            ...company,
+                            location: company.location as Locations,
+                            idealSkill: parsedIdealSkill,
+                          }}
+                          onFinish={() => setEditId(null)}
+                        />
+                        <div className="text-end mt-2">
+                          <Button variant="secondary" size="sm" onClick={() => setEditId(null)}>
+                            Cancel
+                          </Button>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Container>
                 ) : (
                   <Card className="mb-3" key={company.id}>
                     <Card.Body>

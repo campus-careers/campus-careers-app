@@ -36,13 +36,12 @@ type FormValues = {
   userId: number;
 };
 
-const EditCompanyForm = ({
-  company,
-  onFinish,
-}: {
+interface EditCompanyFormProps {
   company: Company;
   onFinish?: () => void;
-}) => {
+}
+
+const EditCompanyForm = ({ company, onFinish = () => {} }: EditCompanyFormProps) => {
   const defaultValues: FormValues = {
     id: company.id,
     name: company.name,
@@ -53,7 +52,7 @@ const EditCompanyForm = ({
     location: company.location as Locations,
     idealSkill: Array.isArray(company.idealSkill)
       ? company.idealSkill
-      : (company.idealSkill as never as string).split(',').map((skill) => skill.trim()),
+      : (company.idealSkill as unknown as string).split(',').map((s) => s.trim()),
     userId: company.userId,
   };
 
@@ -70,143 +69,116 @@ const EditCompanyForm = ({
   const onSubmit = async (data: FormValues) => {
     await editCompany(data);
     swal('Success', 'Company updated successfully', 'success', { timer: 2000 });
-    if (onFinish) onFinish();
+    onFinish();
   };
 
   return (
-    <Container className="py-4">
-      <Card className="p-4" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <h3 className="fw-bold text-center mb-4">Edit Company Profile</h3>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <input type="hidden" {...register('id')} />
-          <input type="hidden" {...register('userId')} />
+    <Container className="py-3">
+      <Row className="justify-content-center">
+        <Col lg={10}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h3 className="mb-4 text-center fw-bold">Edit Company Profile</h3>
+              <Form onSubmit={handleSubmit(onSubmit)} className="d-grid gap-3">
+                <input type="hidden" {...register('id')} />
+                <input type="hidden" {...register('userId')} />
 
-          <Row className="mb-4">
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label className="fw-bold">Company Name</Form.Label>
-                <Form.Control {...register('name')} className={errors.name ? 'is-invalid' : ''} />
-                <div className="invalid-feedback">{errors.name?.message}</div>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label className="fw-bold">Salary</Form.Label>
-                <Form.Control
-                  type="number"
-                  {...register('salary')}
-                  className={errors.salary ? 'is-invalid' : ''}
-                />
-                <div className="invalid-feedback">{errors.salary?.message}</div>
-              </Form.Group>
-            </Col>
-          </Row>
+                <Form.Group>
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control {...register('name')} className={errors.name ? 'is-invalid' : ''} />
+                  <div className="invalid-feedback">{errors.name?.message}</div>
+                </Form.Group>
 
-          <Row className="mb-4">
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label className="fw-bold">Location</Form.Label>
-                <Form.Select
-                  {...register('location')}
-                  className={errors.location ? 'is-invalid' : ''}
-                >
-                  <option value="">Select a state</option>
-                  {US_STATES.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </Form.Select>
-                <div className="invalid-feedback">{errors.location?.message}</div>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label className="fw-bold">Ideal Skills</Form.Label>
-                <Form.Control
-                  {...register('idealSkill')}
-                  as="select"
-                  multiple
-                  className={errors.idealSkill ? 'is-invalid' : ''}
-                >
-                  {PROGRAMMING_SKILLS.map((skill) => (
-                    <option key={skill} value={skill}>
-                      {skill}
-                    </option>
-                  ))}
-                </Form.Control>
-                <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
-                <div className="invalid-feedback">{errors.idealSkill?.message}</div>
-              </Form.Group>
-            </Col>
-          </Row>
+                <Form.Group>
+                  <Form.Label>Salary</Form.Label>
+                  <Form.Control
+                    type="number"
+                    {...register('salary')}
+                    className={errors.salary ? 'is-invalid' : ''}
+                  />
+                  <div className="invalid-feedback">{errors.salary?.message}</div>
+                </Form.Group>
 
-          <Row className="mb-4">
-            <Col>
-              <Form.Group>
-                <Form.Label className="fw-bold">Overview</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  {...register('overview')}
-                  className={errors.overview ? 'is-invalid' : ''}
-                />
-                <div className="invalid-feedback">{errors.overview?.message}</div>
-              </Form.Group>
-            </Col>
-          </Row>
+                <Form.Group>
+                  <Form.Label>Location</Form.Label>
+                  <Form.Select {...register('location')} className={errors.location ? 'is-invalid' : ''}>
+                    <option value="">Select a state</option>
+                    {US_STATES.map((state) => (
+                      <option key={state} value={state}>{state}</option>
+                    ))}
+                  </Form.Select>
+                  <div className="invalid-feedback">{errors.location?.message}</div>
+                </Form.Group>
 
-          <Row className="mb-4">
-            <Col>
-              <Form.Group>
-                <Form.Label className="fw-bold">Jobs</Form.Label>
-                <Form.Control
-                  {...register('jobs')}
-                  className={errors.jobs ? 'is-invalid' : ''}
-                />
-                <div className="invalid-feedback">{errors.jobs?.message}</div>
-              </Form.Group>
-            </Col>
-          </Row>
+                <Form.Group>
+                  <Form.Label>Overview</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    {...register('overview')}
+                    className={errors.overview ? 'is-invalid' : ''}
+                  />
+                  <div className="invalid-feedback">{errors.overview?.message}</div>
+                </Form.Group>
 
-          <Row className="mb-4">
-            <Col>
-              <Form.Group>
-                <Form.Label className="fw-bold">Contacts</Form.Label>
-                <Form.Control
-                  {...register('contacts')}
-                  className={errors.contacts ? 'is-invalid' : ''}
-                />
-                <div className="invalid-feedback">{errors.contacts?.message}</div>
-              </Form.Group>
-            </Col>
-          </Row>
+                <Form.Group>
+                  <Form.Label>Jobs</Form.Label>
+                  <Form.Control {...register('jobs')} className={errors.jobs ? 'is-invalid' : ''} />
+                  <div className="invalid-feedback">{errors.jobs?.message}</div>
+                </Form.Group>
 
-          <Row className="pt-3">
-            <Col md={6}>
-              <Button type="submit" variant="primary" className="w-100 fw-semibold">
-                Save Changes
-              </Button>
-            </Col>
-            <Col md={6}>
-              <Button
-                type="button"
-                variant="secondary"
-                className="w-100 fw-semibold"
-                onClick={() => reset(defaultValues)}
-              >
-                Reset
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
+                <Form.Group>
+                  <Form.Label>Contacts</Form.Label>
+                  <Form.Control {...register('contacts')} className={errors.contacts ? 'is-invalid' : ''} />
+                  <div className="invalid-feedback">{errors.contacts?.message}</div>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Recommended Skills</Form.Label>
+                  <Form.Control
+                    as="select"
+                    multiple
+                    {...register('idealSkill')}
+                    className={errors.idealSkill ? 'is-invalid' : ''}
+                  >
+                    {PROGRAMMING_SKILLS.map((skill) => (
+                      <option key={skill} value={skill}>
+                        {skill}
+                      </option>
+                    ))}
+                  </Form.Control>
+                  <small className="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+                  <div className="invalid-feedback">{errors.idealSkill?.message}</div>
+                </Form.Group>
+
+                <Row className="pt-3">
+                  <Col>
+                    <Button type="submit" variant="success" className="w-100">
+                      Save Changes
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      type="button"
+                      onClick={() => reset(defaultValues)}
+                      variant="warning"
+                      className="w-100"
+                    >
+                      Reset
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };
 
+export default EditCompanyForm;
+
 EditCompanyForm.defaultProps = {
   onFinish: undefined,
 };
-
-export default EditCompanyForm;
