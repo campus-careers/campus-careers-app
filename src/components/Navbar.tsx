@@ -9,9 +9,9 @@ import { BoxArrowRight, Lock, PersonFill, PersonPlusFill } from 'react-bootstrap
 const NavBar: React.FC = () => {
   const { data: session } = useSession();
   const currentUser = session?.user?.email;
-  const userWithRole = session?.user as { email: string; randomKey: string };
-  const role = userWithRole?.randomKey;
   const pathName = usePathname();
+
+  const isAdmin = currentUser === 'admin@foo.com';
 
   return (
     <Navbar bg="dark" expand="lg" className="navbar-dark">
@@ -20,6 +20,13 @@ const NavBar: React.FC = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto flex-nowrap">
+
+            {isAdmin && (
+              <Nav.Link as={Link} href="/admin" active={pathName === '/admin'}>
+                Admin Portal
+              </Nav.Link>
+            )}
+
             {currentUser && (
               <>
                 <Nav.Link as={Link} href="/student" active={pathName === '/student'}>
@@ -36,7 +43,7 @@ const NavBar: React.FC = () => {
                 </Nav.Link>
               </>
             )}
-            {currentUser && role === 'ADMIN' && (
+            {isAdmin && (
               <Nav.Link as={Link} href="/admin/add-company" active={pathName === '/admin/add-company'}>
                 Add Company
               </Nav.Link>

@@ -1,6 +1,6 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { signIn, getSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Button, Card, Col, Container, Form, Row, Alert } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
@@ -15,27 +15,32 @@ const SignIn = () => {
       email: { value: string };
       password: { value: string };
     };
+
     const email = target.email.value;
     const password = target.password.value;
 
-    // Attempt to sign in with credentials
     const result = await signIn('credentials', {
       email,
       password,
-      redirect: false, // Disable default redirect handling
-    }) as { url?: string; error?: string; user?: { randomKey: string } };
+      redirect: false,
+    });
 
-    // Handle errors or successful login
     if (result?.error) {
-      console.error('Sign in failed:', result.error);
       setErrorMessage('Invalid email or password. Please try again.');
-    } else if (result?.url) {
-      // Redirect based on user role (admin or student)
-      if (result.user?.randomKey === 'ADMIN') {
-        router.push('/admin'); // Admin portal
-      } else {
-        router.push('/student'); // Student home page
-      }
+    } else {
+      // Wait for session to update
+      const interval = setInterval(async () => {
+        const session = await getSession();
+        if (session) {
+          clearInterval(interval);
+          const userEmail = session.user?.email;
+          if (userEmail === 'admin@foo.com') {
+            router.push('/admin');
+          } else {
+            router.push('/student');
+          }
+        }
+      }, 100);
     }
   };
 
@@ -67,8 +72,7 @@ const SignIn = () => {
                 </Form>
               </Card.Body>
               <Card.Footer className="text-center">
-                Don&apos;t have an account? 
-                <a href="/auth/signup">Sign up</a>              
+                Don&apos;t have an account? <a href="/auth/signup">Sign up</a>
               </Card.Footer>
             </Card>
           </Col>

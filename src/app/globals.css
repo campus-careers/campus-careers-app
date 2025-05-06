@@ -72,3 +72,24 @@ body .navbar {
   color: var(--nat-navbar-highlight-text);
   background-color: transparent;
 }
+
+/* === Custom Layout Enhancements === */
+.superwide-scroll-wrapper {
+  overflow-x: auto;
+  padding: 2rem;
+}
+
+.outer-border-box {
+  width: 240%;
+  border: 2px solid #dee2e6;
+  padding: 1rem;
+  margin: 0 auto;
+  border-radius: 12px;
+  background-color: #fff;
+}
+
+
+
+.card-body form {
+  gap: 1.25rem; /* For consistent spacing between form fields */
+}

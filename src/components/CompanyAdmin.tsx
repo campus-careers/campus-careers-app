@@ -66,29 +66,25 @@ const CompanyAdmin: React.FC = () => {
 
                 return editId === company.id && isAdmin ? (
                   <div key={company.id} className="mb-5">
-                    <Container>
-                      <Row className="justify-content-center">
-                        <Col xs={12} md={10} lg={8}>
-                          <Card className="p-4 shadow-sm">
-                            <Card.Body>
-                              <EditCompanyForm
-                                company={{
-                                  ...company,
-                                  location: company.location as Locations,
-                                  idealSkill: parsedIdealSkill,
-                                }}
-                                onFinish={() => setEditId(null)}
-                              />
-                              <div className="text-center mt-4">
-                                <Button variant="secondary" onClick={() => setEditId(null)}>
-                                  Cancel
-                                </Button>
-                              </div>
-                            </Card.Body>
-                          </Card>
-                        </Col>
-                      </Row>
-                    </Container>
+                    <div className="d-flex justify-content-center">
+                      <Card style={{ maxWidth: '1200px', width: '100%' }} className="p-4 shadow-sm">
+                        <Card.Body>
+                          <EditCompanyForm
+                            company={{
+                              ...company,
+                              location: company.location as Locations,
+                              idealSkill: parsedIdealSkill,
+                            }}
+                            onFinish={() => setEditId(null)}
+                          />
+                          <div className="text-end mt-3">
+                            <Button variant="secondary" onClick={() => setEditId(null)}>
+                              Cancel
+                            </Button>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </div>
                   </div>
                 ) : (
                   <Card className="mb-3" key={company.id}>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Row, Col } from 'react-bootstrap';
 import { Company, Locations } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import EditCompanyForm from './EditCompanyForm';
@@ -17,10 +17,10 @@ const CompanyCard: React.FC<{ company: Company }> = ({ company }) => {
   };
 
   return (
-    <Card className="mb-4" style={{ maxWidth: '350px' }}>
-      <Card.Body>
+    <Row className="justify-content-center">
+      <Col md={10}>
         {editing ? (
-          <>
+          <div className="mb-4 w-100">
             <EditCompanyForm
               company={{
                 ...company,
@@ -31,48 +31,42 @@ const CompanyCard: React.FC<{ company: Company }> = ({ company }) => {
               }}
               onFinish={handleEditFinish}
             />
-            <Button
-              className="mt-2"
-              variant="secondary"
-              size="sm"
-              onClick={() => setEditing(false)}
-            >
-              Cancel
-            </Button>
-          </>
+          </div>
         ) : (
-          <>
-            <Card.Title>{company.name}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">
-              {company.location}
-            </Card.Subtitle>
+          <Card className="mb-4 w-100 shadow-sm">
+            <Card.Body>
+              <Card.Title>{company.name}</Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">
+                {company.location}
+              </Card.Subtitle>
 
-            <Card.Text className="mb-3">{company.overview}</Card.Text>
+              <Card.Text className="mb-3">{company.overview}</Card.Text>
 
-            <Card.Text>
-              <strong>Searching for:</strong><br />
-              {company.jobs}
-            </Card.Text>
+              <Card.Text>
+                <strong>Searching for:</strong><br />
+                {company.jobs}
+              </Card.Text>
 
-            <Card.Text>
-              <strong>If interested, contact:</strong><br />
-              {company.contacts}
-            </Card.Text>
+              <Card.Text>
+                <strong>If interested, contact:</strong><br />
+                {company.contacts}
+              </Card.Text>
 
-            {isAdmin && (
-              <Button
-                variant="primary"
-                size="sm"
-                className="mt-2"
-                onClick={() => setEditing(true)}
-              >
-                Edit
-              </Button>
-            )}
-          </>
+              {isAdmin && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => setEditing(true)}
+                >
+                  Edit Profile
+                </Button>
+              )}
+            </Card.Body>
+          </Card>
         )}
-      </Card.Body>
-    </Card>
+      </Col>
+    </Row>
   );
 };
 

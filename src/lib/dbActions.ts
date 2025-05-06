@@ -2,7 +2,6 @@
 
 import { Company, Locations } from '@prisma/client';
 import { hash } from 'bcrypt';
-import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
 
 /**
@@ -45,8 +44,6 @@ export async function addCompany(company: {
       user: { connect: { id: company.userId } },
     },
   });
-
-  redirect('/list');
 }
 
 /**
@@ -80,8 +77,6 @@ export async function editCompany(company: Company) {
       idealSkill: company.idealSkill,
     },
   });
-
-  redirect('/list');
 }
 
 /**
@@ -91,8 +86,6 @@ export async function deleteCompany(id: number) {
   await prisma.company.delete({
     where: { id },
   });
-
-  redirect('/list');
 }
 
 /**

@@ -94,11 +94,20 @@ const SignUp = () => {
 
                   <Form.Group className="form-group">
                     <Form.Label>Location</Form.Label>
-                    <input
-                      type="text"
-                      {...register('location')}
-                      className={`form-control ${errors.location ? 'is-invalid' : ''}`}
-                    />
+                    <Form.Select {...register('location')} className={`${errors.location ? 'is-invalid' : ''}`}>
+                      <option value="">Select a state</option>
+                      {[
+                        'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
+                        'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana',
+                        'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
+                        'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+                        'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma',
+                        'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
+                        'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+                      ].map((state) => (
+                        <option key={state} value={state}>{state}</option>
+                      ))}
+                    </Form.Select>
                     <div className="invalid-feedback">{errors.location?.message}</div>
                   </Form.Group>
 
