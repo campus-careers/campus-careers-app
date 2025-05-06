@@ -1,3 +1,6 @@
+// Add the "use client" directive to this file to mark it as a Client Component
+'use client';
+
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import EditableProfile from '@/components/EditStudent';
@@ -5,20 +8,19 @@ import EditableProfile from '@/components/EditStudent';
 const StudentHomePage = () => {
   const [student, setStudent] = useState<any>(null);
 
-  useEffect(() => {
-    async function fetchStudentData() {
-      const response = await fetch('/api/get-user');  // Ensure correct API call
-      const data = await response.json();
-      
-      if (data.success) {
-        setStudent(data.user); // Sets the student data
-      } else {
-        console.log('Error fetching student data:', data.error);
-      }
+  const fetchStudentData = async () => {
+    const response = await fetch('/api/get-user');
+    const data = await response.json();
+    if (data.success) {
+      setStudent(data.user); // Update the student state
+    } else {
+      console.log('Error fetching student data:', data.error);
     }
+  };
 
-    fetchStudentData();
-  }, []); // This ensures the data is fetched when the page loads
+  useEffect(() => {
+    fetchStudentData(); // Fetch student data when the page loads
+  }, []); // Empty dependency array ensures this runs only once when the page loads
 
   if (!student) {
     return (
@@ -37,7 +39,7 @@ const StudentHomePage = () => {
         <h2 className="text-center mb-4">Student Home Page</h2>
         <Row className="justify-content-center">
           <Col md={5}>
-            <EditableProfile student={student} />  {/* Pass the student data as prop */}
+            <EditableProfile student={student} onSave={fetchStudentData} /> {/* Pass the fetchStudentData function as a prop */}
           </Col>
 
           <Col md={4} className="d-flex flex-column gap-3">

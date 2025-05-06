@@ -10,7 +10,7 @@ type Student = {
   image: string;
 };
 
-const EditableProfile = ({ student }: { student: Student }) => {
+const EditableProfile = ({ student, onSave }: { student: Student; onSave: () => void }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [fullName, setFullName] = useState(student.name || 'Full Name');
   const [location, setLocation] = useState(student.location || 'Preferred Location');
@@ -32,6 +32,12 @@ const EditableProfile = ({ student }: { student: Student }) => {
 
   const toggleEdit = () => {
     setIsEditing((prev) => !prev);
+  };
+
+  const saveProfile = () => {
+    // Call the `onSave` function passed down from the parent component to refresh the student data.
+    onSave();
+    setIsEditing(false);
   };
 
   return (
@@ -116,7 +122,7 @@ const EditableProfile = ({ student }: { student: Student }) => {
             )}
           </Form.Group>
 
-          <Button className="mt-3" onClick={toggleEdit}>
+          <Button className="mt-3" onClick={isEditing ? saveProfile : toggleEdit}>
             {isEditing ? 'Save' : 'Edit'}
           </Button>
         </Col>
