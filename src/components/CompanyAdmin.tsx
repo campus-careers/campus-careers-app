@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
 import { deleteCompany } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
-import EditCompanyForm from './EditCompanyForm';
 import { Locations } from '@prisma/client';
+import EditCompanyForm from './EditCompanyForm';
 
 interface Company {
   id: number;

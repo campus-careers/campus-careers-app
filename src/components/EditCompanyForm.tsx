@@ -190,3 +190,7 @@ const EditCompanyForm = ({
 };
 
 export default EditCompanyForm;
+
+EditCompanyForm.defaultProps = {
+  onFinish: () => {},
+};
