@@ -16,6 +16,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retry-with-video',
+    headless: true,  // Enforce headless mode globally
     storageState: process.env.CI ? 'tests/auth/john-auth.json' : 'tests/auth/john-auth.json',
   },
 
