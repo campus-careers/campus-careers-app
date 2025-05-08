@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-  "dev": "next dev",
-  "dev-https": "next dev --experimental-https",
-  "build": "prisma generate && next build",
-  "start": "next start",
-  "lint": "next lint",
-  "playwright-development": "npx playwright test",
-  "playwright-ci": "next build && next start & npx playwright test"
-},
+    "dev": "next dev",
+    "dev-https": "next dev --experimental-https",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "playwright-development": "npx playwright test",
+    "playwright-ci": "next build && next start & npx playwright test"
+  },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
@@ -38,10 +38,17 @@
   "devDependencies": {
     "@playwright/test": "^1.52.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/json5": "^0.0.30",
     "@types/next-auth": "^3.13.0",
     "@types/node": "^22.5.4",
+    "@types/parse-json": "^4.0.2",
+    "@types/phoenix": "^1.6.6",
+    "@types/prop-types": "^15.7.14",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-transition-group": "^4.4.12",
+    "@types/warning": "^3.0.3",
+    "@types/ws": "^8.18.1",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
