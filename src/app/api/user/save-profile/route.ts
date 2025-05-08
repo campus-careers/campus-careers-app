@@ -7,7 +7,10 @@ export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 },
+    );
   }
 
   const data = await req.json();
@@ -42,6 +45,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('❌ Error saving student profile:', error);
-    return NextResponse.json({ success: false, error: 'Failed to save profile' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to save profile' },
+      { status: 500 },
+    );
   }
 }

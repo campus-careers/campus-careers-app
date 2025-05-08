@@ -26,12 +26,12 @@ export async function GET() {
   });
 
   const hasProfile = Boolean(
-    student?.name
-    && student?.major
-    && student?.skills?.length
-    && student?.interests?.length
-    && student?.location
-    && student?.portfolio,
+    student?.name &&
+      student?.major &&
+      student?.skills?.length &&
+      student?.interests?.length &&
+      student?.location &&
+      student?.portfolio,
   );
 
   return NextResponse.json({ hasProfile });

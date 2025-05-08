@@ -22,7 +22,9 @@ const NotAuthorized = () => {
         <Row className="justify-content-center">
           <Col xs={6} className="text-center">
             <h2>Not Authorized</h2>
-            <p className="mt-3 text-muted">Redirecting you to complete your student profile...</p>
+            <p className="mt-3 text-muted">
+              Redirecting you to complete your student profile...
+            </p>
           </Col>
         </Row>
       </Container>

@@ -1,25 +1,99 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Col, Container, Row, Form, InputGroup, Alert } from 'react-bootstrap';
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  Form,
+  InputGroup,
+  Alert,
+} from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabaseClient';
 
 const locations: string[] = [
-  'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
-  'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
-  'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
-  'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
-  'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
-  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+  'Remote',
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',
+  'Colorado',
+  'Connecticut',
+  'Delaware',
+  'Florida',
+  'Georgia',
+  'Hawaii',
+  'Idaho',
+  'Illinois',
+  'Indiana',
+  'Iowa',
+  'Kansas',
+  'Kentucky',
+  'Louisiana',
+  'Maine',
+  'Maryland',
+  'Massachusetts',
+  'Michigan',
+  'Minnesota',
+  'Mississippi',
+  'Missouri',
+  'Montana',
+  'Nebraska',
+  'Nevada',
+  'New Hampshire',
+  'New Jersey',
+  'New Mexico',
+  'New York',
+  'North Carolina',
+  'North Dakota',
+  'Ohio',
+  'Oklahoma',
+  'Oregon',
+  'Pennsylvania',
+  'Rhode Island',
+  'South Carolina',
+  'South Dakota',
+  'Tennessee',
+  'Texas',
+  'Utah',
+  'Vermont',
+  'Virginia',
+  'Washington',
+  'West Virginia',
+  'Wisconsin',
+  'Wyoming',
 ];
 
 const skills: string[] = [
-  'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
-  'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
-  'Shell', 'Assembly', 'Objective-C',
+  'JavaScript',
+  'TypeScript',
+  'Python',
+  'Java',
+  'C',
+  'C++',
+  'C#',
+  'Ruby',
+  'Go',
+  'Rust',
+  'Kotlin',
+  'Swift',
+  'HTML',
+  'CSS',
+  'SQL',
+  'R',
+  'PHP',
+  'Perl',
+  'Scala',
+  'MATLAB',
+  'Dart',
+  'Elixir',
+  'Shell',
+  'Assembly',
+  'Objective-C',
 ];
 
 // Define the student prop type
@@ -116,17 +190,31 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onSave }) => {
   return (
     <>
       {uploadError && (
-        <Alert variant="danger" dismissible onClose={() => setUploadError(null)}>{uploadError}</Alert>
+        <Alert
+          variant="danger"
+          dismissible
+          onClose={() => setUploadError(null)}
+        >
+          {uploadError}
+        </Alert>
       )}
 
       {successMessage && (
-        <Alert variant="success" dismissible onClose={() => setSuccessMessage(null)}>{successMessage}</Alert>
+        <Alert
+          variant="success"
+          dismissible
+          onClose={() => setSuccessMessage(null)}
+        >
+          {successMessage}
+        </Alert>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Container className="mt-4">
           <Row className="mb-3">
-            <Col><h3 className="text-center fw-bold">Edit Student Profile</h3></Col>
+            <Col>
+              <h3 className="text-center fw-bold">Edit Student Profile</h3>
+            </Col>
           </Row>
 
           <Row className="mb-4">
@@ -155,7 +243,11 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onSave }) => {
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Location</Form.Label>
                 <Form.Control {...register('location')} as="select">
-                  {locations.map((loc) => <option key={loc} value={loc}>{loc}</option>)}
+                  {locations.map((loc) => (
+                    <option key={loc} value={loc}>
+                      {loc}
+                    </option>
+                  ))}
                 </Form.Control>
               </Form.Group>
             </Col>
@@ -165,7 +257,11 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onSave }) => {
             <Col>
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Interests</Form.Label>
-                <Form.Control {...register('interests')} type="text" placeholder="e.g. Programming, AI, Music" />
+                <Form.Control
+                  {...register('interests')}
+                  type="text"
+                  placeholder="e.g. Programming, AI, Music"
+                />
                 <small className="text-muted">Separate with commas</small>
               </Form.Group>
             </Col>
@@ -176,7 +272,11 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onSave }) => {
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Skills</Form.Label>
                 <Form.Control {...register('skills')} as="select" multiple>
-                  {skills.map((s) => <option key={s} value={s}>{s}</option>)}
+                  {skills.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
                 </Form.Control>
               </Form.Group>
             </Col>
@@ -193,7 +293,12 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onSave }) => {
               <Form.Group className="border p-3 rounded">
                 <Form.Label className="fw-bold">Profile Image</Form.Label>
                 <InputGroup>
-                  <Button onClick={() => document.getElementById('fileInput')?.click()} variant="outline-secondary">
+                  <Button
+                    onClick={() =>
+                      document.getElementById('fileInput')?.click()
+                    }
+                    variant="outline-secondary"
+                  >
                     Upload
                   </Button>
                   <input
@@ -213,7 +318,11 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onSave }) => {
               <Col>
                 <h5 className="fw-semibold">Image Preview</h5>
                 <Image
-                  src={selectedImage ? URL.createObjectURL(selectedImage) : student?.image ?? ''}
+                  src={
+                    selectedImage
+                      ? URL.createObjectURL(selectedImage)
+                      : (student?.image ?? '')
+                  }
                   alt="Preview"
                   width={150}
                   height={150}
@@ -225,7 +334,9 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onSave }) => {
 
           <Row className="mb-4">
             <Col>
-              <Button type="submit" variant="primary" className="fw-semibold">Save Changes</Button>
+              <Button type="submit" variant="primary" className="fw-semibold">
+                Save Changes
+              </Button>
             </Col>
           </Row>
         </Container>

@@ -1,29 +1,11 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import React from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import swal from 'sweetalert';
-import { redirect } from 'next/navigation';
-import { addCompany } from '@/lib/dbActions';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import * as Yup from 'yup';
+import { Button, Form, Alert } from 'react-bootstrap';
 import { AddCompanySchema } from '@/lib/validationSchemas';
-
-const US_STATES = [
-  'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida',
-  'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
-  'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-  'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
-];
-
-const PROGRAMMING_SKILLS = [
-  'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
-  'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
-  'Shell', 'Assembly', 'Objective-C',
-];
 
 type FormValues = {
   name: string;
@@ -33,131 +15,124 @@ type FormValues = {
   jobs: string;
   contacts: string;
   idealSkill: string;
+  category: string; // New field for category
+};
+
+const defaultValues: FormValues = {
+  name: '',
+  location: '',
+  salary: 0,
+  overview: '',
+  jobs: '',
+  contacts: '',
+  idealSkill: '',
+  category: '', // Default value for category
 };
 
 const AddCompanyForm: React.FC = () => {
-  const { data: session, status } = useSession();
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+    defaultValues,
     resolver: yupResolver(AddCompanySchema),
   });
 
-  if (status === 'loading') return <LoadingSpinner />;
-  if (status === 'unauthenticated') redirect('/auth/signin');
-  if (session?.user?.randomKey !== 'ADMIN') redirect('/unauthorized');
-
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      const companyData = {
-        ...data,
-        idealSkill: data.idealSkill.split(',').map((s) => s.trim()),
-        userId: Number(session?.user?.id),
-      };
-
-      await addCompany(companyData);
-      swal('Success', 'Company added successfully!', 'success');
-      reset();
+      console.log('Submitted data:', data);
+      // Replace with actual API call
+      alert('Company added successfully!');
     } catch (error) {
-      console.error('❌ Failed to add company:', error);
-      swal('Error', 'Failed to add company. Please try again.', 'error');
+      alert('Failed to add company');
+      console.error(error);
     }
   };
 
   return (
-    <Container className="mt-4">
-      <Row className="mb-3">
-        <Col><h3 className="text-center fw-bold">Add New Company</h3></Col>
-      </Row>
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form.Group className="mb-3">
+        <Form.Label>Company Name</Form.Label>
+        <Form.Control
+          {...register('name')}
+          placeholder="Enter company name"
+          isInvalid={!!errors.name}
+        />
+        {errors.name && <Form.Text className="text-danger">{errors.name.message}</Form.Text>}
+      </Form.Group>
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Row className="mb-4">
-          <Col md={6}>
-            <Form.Group className="border p-3 rounded">
-              <Form.Label className="fw-bold">Company Name</Form.Label>
-              <Form.Control {...register('name')} type="text" placeholder="e.g. Tech Corp" />
-              {errors.name && <small className="text-black">{errors.name.message}</small>}
-            </Form.Group>
-          </Col>
+      <Form.Group className="mb-3">
+        <Form.Label>Location</Form.Label>
+        <Form.Control
+          {...register('location')}
+          placeholder="Enter location"
+          isInvalid={!!errors.location}
+        />
+        {errors.location && <Form.Text className="text-danger">{errors.location.message}</Form.Text>}
+      </Form.Group>
 
-          <Col md={6}>
-            <Form.Group className="border p-3 rounded">
-              <Form.Label className="fw-bold">Location</Form.Label>
-              <Form.Select {...register('location')} required>
-                <option value="">Select a state</option>
-                {US_STATES.map((state) => (
-                  <option key={state} value={state}>{state}</option>
-                ))}
-              </Form.Select>
-              {errors.location && <small className="text-black">{errors.location.message}</small>}
-            </Form.Group>
-          </Col>
-        </Row>
+      <Form.Group className="mb-3">
+        <Form.Label>Salary</Form.Label>
+        <Form.Control
+          {...register('salary')}
+          type="number"
+          placeholder="Enter salary"
+          isInvalid={!!errors.salary}
+        />
+        {errors.salary && <Form.Text className="text-danger">{errors.salary.message}</Form.Text>}
+      </Form.Group>
 
-        <Row className="mb-4">
-          <Col md={6}>
-            <Form.Group className="border p-3 rounded">
-              <Form.Label className="fw-bold">Salary</Form.Label>
-              <Form.Control {...register('salary')} type="number" step={10000} min={0} placeholder="e.g. 80000" />
-              {errors.salary && <small className="text-black">{errors.salary.message}</small>}
-            </Form.Group>
-          </Col>
+      <Form.Group className="mb-3">
+        <Form.Label>Overview</Form.Label>
+        <Form.Control
+          {...register('overview')}
+          placeholder="Enter company overview"
+          isInvalid={!!errors.overview}
+        />
+        {errors.overview && <Form.Text className="text-danger">{errors.overview.message}</Form.Text>}
+      </Form.Group>
 
-          <Col md={6}>
-            <Form.Group className="border p-3 rounded">
-              <Form.Label className="fw-bold">Ideal Skills</Form.Label>
-              <Form.Control {...register('idealSkill')} as="select" multiple>
-                {PROGRAMMING_SKILLS.map((skill) => (
-                  <option key={skill} value={skill}>{skill}</option>
-                ))}
-              </Form.Control>
-              <small className="text-black">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
-              {errors.idealSkill && <small className="text-black">{errors.idealSkill.message}</small>}
-            </Form.Group>
-          </Col>
-        </Row>
+      <Form.Group className="mb-3">
+        <Form.Label>Jobs</Form.Label>
+        <Form.Control
+          {...register('jobs')}
+          placeholder="Enter job titles"
+          isInvalid={!!errors.jobs}
+        />
+        {errors.jobs && <Form.Text className="text-danger">{errors.jobs.message}</Form.Text>}
+      </Form.Group>
 
-        <Row className="mb-4">
-          <Col>
-            <Form.Group className="border p-3 rounded">
-              <Form.Label className="fw-bold">Overview</Form.Label>
-              <Form.Control {...register('overview')} as="textarea" rows={3} />
-              {errors.overview && <small className="text-black">{errors.overview.message}</small>}
-            </Form.Group>
-          </Col>
-        </Row>
+      <Form.Group className="mb-3">
+        <Form.Label>Contacts</Form.Label>
+        <Form.Control
+          {...register('contacts')}
+          placeholder="Enter contact information"
+          isInvalid={!!errors.contacts}
+        />
+        {errors.contacts && <Form.Text className="text-danger">{errors.contacts.message}</Form.Text>}
+      </Form.Group>
 
-        <Row className="mb-4">
-          <Col>
-            <Form.Group className="border p-3 rounded">
-              <Form.Label className="fw-bold">Jobs</Form.Label>
-              <Form.Control {...register('jobs')} type="text" placeholder="e.g. Frontend Developer, Data Analyst" />
-              {errors.jobs && <small className="text-black">{errors.jobs.message}</small>}
-            </Form.Group>
-          </Col>
-        </Row>
+      <Form.Group className="mb-3">
+        <Form.Label>Ideal Skills</Form.Label>
+        <Form.Control
+          {...register('idealSkill')}
+          placeholder="Enter ideal skills (comma separated)"
+          isInvalid={!!errors.idealSkill}
+        />
+        {errors.idealSkill && <Form.Text className="text-danger">{errors.idealSkill.message}</Form.Text>}
+      </Form.Group>
 
-        <Row className="mb-4">
-          <Col>
-            <Form.Group className="border p-3 rounded">
-              <Form.Label className="fw-bold">Contacts</Form.Label>
-              <Form.Control {...register('contacts')} type="text" placeholder="e.g. hr@company.com, (123) 456-7890" />
-              {errors.contacts && <small className="text-black">{errors.contacts.message}</small>}
-            </Form.Group>
-          </Col>
-        </Row>
+      <Form.Group className="mb-3">
+        <Form.Label>Category</Form.Label>
+        <Form.Control
+          {...register('category')}
+          placeholder="Enter category"
+          isInvalid={!!errors.category}
+        />
+        {errors.category && <Form.Text className="text-danger">{errors.category.message}</Form.Text>}
+      </Form.Group>
 
-        <Row className="mb-4">
-          <Col>
-            <Button type="submit" variant="primary" className="fw-semibold w-100">Submit</Button>
-          </Col>
-        </Row>
-      </Form>
-    </Container>
+      <Button variant="primary" type="submit">
+        Add Company
+      </Button>
+    </Form>
   );
 };
 

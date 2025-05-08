@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding the database');
 
+  // Seed users
   const users = [
     {
       email: 'admin@foo.com',
@@ -16,6 +17,7 @@ async function main() {
       image: 'default-image.jpg',
       role: Role.ADMIN,
       password: 'adminpass',
+      category: 'Tech',  // New field
     },
     {
       email: 'john@foo.com',
@@ -25,19 +27,27 @@ async function main() {
       interests: ['Data Science', 'AI'],
       image: 'default-image.jpg',
       role: Role.USER,
-      password: 'changeme', // this is the login password you should test
+      password: 'changeme', // This is the login password you should test
+      category: 'Tech',  // New field
     },
   ];
 
   await Promise.all(
     users.map(async (user) => {
       const { email, name, location, skills, interests, image, role, password: plainPassword } = user;
-
       const hashedPassword = await hash(plainPassword, 10);
 
       await prisma.user.upsert({
         where: { email },
-        update: {},
+        update: {
+          name,
+          location,
+          skills,
+          interests,
+          image,
+          role,
+          password: hashedPassword,
+        },
         create: {
           email,
           name,
@@ -47,6 +57,67 @@ async function main() {
           image,
           password: hashedPassword,
           role,
+        },
+      });
+    }),
+  );
+
+  // Seed companies
+  const companies = [
+    {
+      name: 'Google',
+      location: Locations.California,
+      salary: 150000,
+      overview: 'Tech Giant focusing on software development and cloud services.',
+      jobs: 'Software Engineer',
+      contacts: 'hr@google.com',
+      idealSkill: ['JavaScript', 'Python'],
+      userId: 1, // Assuming userId 1 is admin
+    },
+    {
+      name: 'Tesla',
+      location: Locations.California,
+      salary: 140000,
+      overview: 'Electric Vehicle Manufacturer and Clean Energy Company.',
+      jobs: 'Mechanical Engineer',
+      contacts: 'hr@tesla.com',
+      idealSkill: ['CPlusPlus', 'Python'],
+      userId: 1,
+    },
+    {
+      name: 'Meta',
+      location: Locations.California,
+      salary: 130000,
+      overview: 'Social Media and Virtual Reality Innovator.',
+      jobs: 'Data Scientist',
+      contacts: 'hr@meta.com',
+      idealSkill: ['SQL', 'Python'],
+      userId: 1,
+    },
+  ];
+
+  await Promise.all(
+    companies.map(async (company) => {
+      await prisma.company.upsert({
+        where: { name: company.name },
+        update: {
+          location: company.location,
+          salary: company.salary,
+          overview: company.overview,
+          jobs: company.jobs,
+          contacts: company.contacts,
+          idealSkill: company.idealSkill,
+          userId: company.userId,
+        },
+        create: {
+          name: company.name,
+          location: company.location,
+          salary: company.salary,
+          overview: company.overview,
+          jobs: company.jobs,
+          contacts: company.contacts,
+          idealSkill: company.idealSkill,
+          userId: company.userId,
         },
       });
     }),

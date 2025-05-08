@@ -19,7 +19,7 @@ type Student = {
 };
 
 type Match = {
-  id: string; 
+  id: string;
   name: string;
   location: string;
   idealSkill: string[];
@@ -42,8 +42,11 @@ const StudentHomePage = () => {
   };
 
   const fetchMatches = useCallback(async () => {
-    if (student && student.id) {  // Ensure student ID exists
-      const response = await fetch(`/api/user/get-matches?studentId=${student.id}`);
+    if (student && student.id) {
+      // Ensure student ID exists
+      const response = await fetch(
+        `/api/user/get-matches?studentId=${student.id}`,
+      );
       const data = await response.json();
       if (data.success) {
         setMatches(data.matches);
@@ -77,11 +80,11 @@ const StudentHomePage = () => {
       },
       body: JSON.stringify(updatedData),
     });
-    
+
     const result = await response.json();
     if (result.success) {
       fetchStudentData();
-      setIsEditing(false);  // Toggle back to non-edit mode
+      setIsEditing(false); // Toggle back to non-edit mode
     } else {
       console.log('Error saving profile:', result.error);
     }
@@ -108,8 +111,12 @@ const StudentHomePage = () => {
             {!isEditing ? (
               <Card className="shadow-lg rounded-lg">
                 <Card.Body>
-                  <Card.Title className="text-center text-primary">{student.name}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted text-center">{student.email}</Card.Subtitle>
+                  <Card.Title className="text-center text-primary">
+                    {student.name}
+                  </Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted text-center">
+                    {student.email}
+                  </Card.Subtitle>
                   <div className="text-center">
                     {student.image && (
                       <Card.Img
@@ -117,7 +124,11 @@ const StudentHomePage = () => {
                         src={student.image}
                         alt="Profile Image"
                         className="rounded-circle mb-3"
-                        style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                        style={{
+                          width: '150px',
+                          height: '150px',
+                          objectFit: 'cover',
+                        }}
                       />
                     )}
                   </div>
@@ -138,7 +149,9 @@ const StudentHomePage = () => {
                   </Card.Text>
                 </Card.Body>
                 <Card.Footer className="d-flex justify-content-center">
-                  <Button variant="primary" onClick={toggleEdit}>Edit Profile</Button>
+                  <Button variant="primary" onClick={toggleEdit}>
+                    Edit Profile
+                  </Button>
                 </Card.Footer>
               </Card>
             ) : (
@@ -162,7 +175,8 @@ const StudentHomePage = () => {
                           <strong>Location:</strong> {match.location}
                         </Card.Text>
                         <Card.Text>
-                          <strong>Ideal Skills:</strong> {match.idealSkill.join(', ')}
+                          <strong>Ideal Skills:</strong>{' '}
+                          {match.idealSkill.join(', ')}
                         </Card.Text>
                         <Card.Text>
                           <strong>Contact:</strong> {match.contact}

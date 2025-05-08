@@ -2,7 +2,15 @@
 
 import { signIn, getSession } from 'next-auth/react';
 import { useState } from 'react';
-import { Button, Card, Col, Container, Form, Row, Alert } from 'react-bootstrap';
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+  Alert,
+} from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
 
 const SignIn = () => {
@@ -60,11 +68,21 @@ const SignIn = () => {
                 <Form method="post" onSubmit={handleSubmit}>
                   <Form.Group controlId="formBasicEmail">
                     <Form.Label>Email</Form.Label>
-                    <input name="email" type="email" className="form-control" required />
+                    <input
+                      name="email"
+                      type="email"
+                      className="form-control"
+                      required
+                    />
                   </Form.Group>
                   <Form.Group controlId="formBasicPassword" className="mt-3">
                     <Form.Label>Password</Form.Label>
-                    <input name="password" type="password" className="form-control" required />
+                    <input
+                      name="password"
+                      type="password"
+                      className="form-control"
+                      required
+                    />
                   </Form.Group>
                   <Button type="submit" className="mt-4 w-100">
                     Sign In
