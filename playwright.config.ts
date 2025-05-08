@@ -37,6 +37,6 @@ export default defineConfig({
   webServer: {
     command: 'npm run start',
     url: 'https://campus-careers-app.vercel.app',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
   },
 });
