@@ -16,25 +16,25 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retry-with-video',
-    headless: true, // Add this line to force headless mode
+    headless: true,  // Force headless mode in CI
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], headless: true },  // Ensure headless mode
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'], headless: true },  // Ensure headless mode
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'], headless: true },  // Ensure headless mode
     },
   ],
   webServer: {
     command: 'npm run start',
     url: 'https://campus-careers-app.vercel.app',
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
   },
 });
