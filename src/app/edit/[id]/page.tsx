@@ -28,6 +28,7 @@ export default function EditCompanyPage({
     location: 'Hawaii',
     idealSkill: [],
     userId: 1,
+    category: 'General', // Add a default or appropriate category value
   };
 
   return (
