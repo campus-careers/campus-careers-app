@@ -41,6 +41,9 @@ const NavBar: React.FC = () => {
                 <Nav.Link as={Link} href="/company" active={pathName === '/company'}>
                   List Companies
                 </Nav.Link>
+                <Nav.Link as={Link} href="/contact" active={pathName === '/contact'}>
+                  Contact
+                </Nav.Link>
               </>
             )}
             {isAdmin && (
