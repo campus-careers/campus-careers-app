@@ -8,19 +8,84 @@ import Select from 'react-select';
 import swal from 'sweetalert';
 
 const US_STATES = [
-  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
-  'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
-  'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
-  'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
-  'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
-  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',
+  'Colorado',
+  'Connecticut',
+  'Delaware',
+  'Florida',
+  'Georgia',
+  'Hawaii',
+  'Idaho',
+  'Illinois',
+  'Indiana',
+  'Iowa',
+  'Kansas',
+  'Kentucky',
+  'Louisiana',
+  'Maine',
+  'Maryland',
+  'Massachusetts',
+  'Michigan',
+  'Minnesota',
+  'Mississippi',
+  'Missouri',
+  'Montana',
+  'Nebraska',
+  'Nevada',
+  'New Hampshire',
+  'New Jersey',
+  'New Mexico',
+  'New York',
+  'North Carolina',
+  'North Dakota',
+  'Ohio',
+  'Oklahoma',
+  'Oregon',
+  'Pennsylvania',
+  'Rhode Island',
+  'South Carolina',
+  'South Dakota',
+  'Tennessee',
+  'Texas',
+  'Utah',
+  'Vermont',
+  'Virginia',
+  'Washington',
+  'West Virginia',
+  'Wisconsin',
+  'Wyoming',
 ];
 
 const PROGRAMMING_SKILLS = [
-  'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
-  'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
-  'Shell', 'Assembly', 'Objective-C',
+  'JavaScript',
+  'TypeScript',
+  'Python',
+  'Java',
+  'C',
+  'C++',
+  'C#',
+  'Ruby',
+  'Go',
+  'Rust',
+  'Kotlin',
+  'Swift',
+  'HTML',
+  'CSS',
+  'SQL',
+  'R',
+  'PHP',
+  'Perl',
+  'Scala',
+  'MATLAB',
+  'Dart',
+  'Elixir',
+  'Shell',
+  'Assembly',
+  'Objective-C',
 ];
 
 const skillOptions = PROGRAMMING_SKILLS.map((skill) => ({
@@ -107,7 +172,9 @@ export default function SetupPage() {
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
@@ -134,11 +201,17 @@ export default function SetupPage() {
     });
 
     if (response.ok) {
-      swal('✅ Success!', 'Your profile has been saved.', 'success').then(() => {
-        router.push('/student');
-      });
+      swal('✅ Success!', 'Your profile has been saved.', 'success').then(
+        () => {
+          router.push('/student');
+        },
+      );
     } else {
-      swal('❌ Error', 'Failed to save your profile. Please try again.', 'error');
+      swal(
+        '❌ Error',
+        'Failed to save your profile. Please try again.',
+        'error',
+      );
       setSubmitting(false);
     }
   };
@@ -152,7 +225,9 @@ export default function SetupPage() {
         </p>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.inputGroup}>
-            <label htmlFor="name" style={styles.label}>Full Name</label>
+            <label htmlFor="name" style={styles.label}>
+              Full Name
+            </label>
             <input
               type="text"
               id="name"
@@ -165,7 +240,9 @@ export default function SetupPage() {
           </div>
 
           <div style={styles.inputGroup}>
-            <label htmlFor="major" style={styles.label}>Major</label>
+            <label htmlFor="major" style={styles.label}>
+              Major
+            </label>
             <input
               type="text"
               id="major"
@@ -178,12 +255,16 @@ export default function SetupPage() {
           </div>
 
           <div style={styles.inputGroup}>
-            <label htmlFor="skills" style={styles.label}>Skills</label>
+            <label htmlFor="skills" style={styles.label}>
+              Skills
+            </label>
             <Select
               isMulti
               name="skills"
               options={skillOptions}
-              value={skillOptions.filter(opt => form.skills.includes(opt.value))}
+              value={skillOptions.filter((opt) =>
+                form.skills.includes(opt.value),
+              )}
               onChange={handleSkillSelectChange}
               classNamePrefix="select"
               styles={{ control: (base) => ({ ...base, fontSize: '1rem' }) }}
@@ -194,7 +275,9 @@ export default function SetupPage() {
           </div>
 
           <div style={styles.inputGroup}>
-            <label htmlFor="interests" style={styles.label}>Interests</label>
+            <label htmlFor="interests" style={styles.label}>
+              Interests
+            </label>
             <input
               type="text"
               id="interests"
@@ -204,11 +287,15 @@ export default function SetupPage() {
               style={styles.input}
               required
             />
-            <p style={styles.description}>Separate interests with commas (e.g. Web, AI)</p>
+            <p style={styles.description}>
+              Separate interests with commas (e.g. Web, AI)
+            </p>
           </div>
 
           <div style={styles.inputGroup}>
-            <label htmlFor="location" style={styles.label}>Location</label>
+            <label htmlFor="location" style={styles.label}>
+              Location
+            </label>
             <select
               id="location"
               name="location"
@@ -219,13 +306,17 @@ export default function SetupPage() {
             >
               <option value="">Select a state</option>
               {US_STATES.map((state) => (
-                <option key={state} value={state}>{state}</option>
+                <option key={state} value={state}>
+                  {state}
+                </option>
               ))}
             </select>
           </div>
 
           <div style={styles.inputGroup}>
-            <label htmlFor="portfolio" style={styles.label}>Portfolio URL</label>
+            <label htmlFor="portfolio" style={styles.label}>
+              Portfolio URL
+            </label>
             <input
               type="text"
               id="portfolio"

@@ -4,7 +4,12 @@ import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { BoxArrowRight, Lock, PersonFill, PersonPlusFill } from 'react-bootstrap-icons';
+import {
+  BoxArrowRight,
+  Lock,
+  PersonFill,
+  PersonPlusFill,
+} from 'react-bootstrap-icons';
 
 const NavBar: React.FC = () => {
   const { data: session } = useSession();
@@ -16,11 +21,12 @@ const NavBar: React.FC = () => {
   return (
     <Navbar bg="dark" expand="lg" className="navbar-dark">
       <Container fluid>
-        <Navbar.Brand as={Link} href="/">Campus Careers</Navbar.Brand>
+        <Navbar.Brand as={Link} href="/">
+          Campus Careers
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto flex-nowrap">
-
             {isAdmin && (
               <Nav.Link as={Link} href="/admin" active={pathName === '/admin'}>
                 Admin Portal
@@ -29,26 +35,50 @@ const NavBar: React.FC = () => {
 
             {currentUser && (
               <>
-                <Nav.Link as={Link} href="/student" active={pathName === '/student'}>
+                <Nav.Link
+                  as={Link}
+                  href="/student"
+                  active={pathName === '/student'}
+                >
                   Student Home
                 </Nav.Link>
-                <Nav.Link as={Link} href="/setup" active={pathName === '/setup'}>
+                <Nav.Link
+                  as={Link}
+                  href="/setup"
+                  active={pathName === '/setup'}
+                >
                   Add Student Info
                 </Nav.Link>
-                <Nav.Link as={Link} href="/filter" active={pathName === '/filter'}>
+                <Nav.Link
+                  as={Link}
+                  href="/filter"
+                  active={pathName === '/filter'}
+                >
                   Browse By Skill/Location
                 </Nav.Link>
-                <Nav.Link as={Link} href="/company" active={pathName === '/company'}>
+                <Nav.Link
+                  as={Link}
+                  href="/company"
+                  active={pathName === '/company'}
+                >
                   List Companies
                 </Nav.Link>
-                <Nav.Link as={Link} href="/contact" active={pathName === '/contact'}>
+                <Nav.Link
+                  as={Link}
+                  href="/contact"
+                  active={pathName === '/contact'}
+                >
                   Contact Us
                 </Nav.Link>
               </>
             )}
 
             {isAdmin && (
-              <Nav.Link as={Link} href="/admin/add-company" active={pathName === '/admin/add-company'}>
+              <Nav.Link
+                as={Link}
+                href="/admin/add-company"
+                active={pathName === '/admin/add-company'}
+              >
                 Add Company
               </Nav.Link>
             )}

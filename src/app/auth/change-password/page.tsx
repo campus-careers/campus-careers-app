@@ -43,7 +43,12 @@ const ChangePassword = () => {
   const onSubmit = async (data: ChangePasswordForm) => {
     // console.log(JSON.stringify(data, null, 2));
     await changePassword({ email, ...data });
-    await swal('Password Changed', 'Your password has been changed', 'success', { timer: 2000 });
+    await swal(
+      'Password Changed',
+      'Your password has been changed',
+      'success',
+      { timer: 2000 },
+    );
     reset();
   };
 
@@ -67,7 +72,9 @@ const ChangePassword = () => {
                       {...register('oldpassword')}
                       className={`form-control ${errors.oldpassword ? 'is-invalid' : ''}`}
                     />
-                    <div className="invalid-feedback">{errors.oldpassword?.message}</div>
+                    <div className="invalid-feedback">
+                      {errors.oldpassword?.message}
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="form-group">
@@ -77,7 +84,9 @@ const ChangePassword = () => {
                       {...register('password')}
                       className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                     />
-                    <div className="invalid-feedback">{errors.password?.message}</div>
+                    <div className="invalid-feedback">
+                      {errors.password?.message}
+                    </div>
                   </Form.Group>
                   <Form.Group className="form-group">
                     <Form.Label>Confirm Password</Form.Label>
@@ -86,7 +95,9 @@ const ChangePassword = () => {
                       {...register('confirmPassword')}
                       className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
                     />
-                    <div className="invalid-feedback">{errors.confirmPassword?.message}</div>
+                    <div className="invalid-feedback">
+                      {errors.confirmPassword?.message}
+                    </div>
                   </Form.Group>
                   <Form.Group className="form-group py-3">
                     <Row>
@@ -96,7 +107,11 @@ const ChangePassword = () => {
                         </Button>
                       </Col>
                       <Col>
-                        <Button type="button" onClick={() => reset()} className="btn btn-warning float-right">
+                        <Button
+                          type="button"
+                          onClick={() => reset()}
+                          className="btn btn-warning float-right"
+                        >
                           Reset
                         </Button>
                       </Col>

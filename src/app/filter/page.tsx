@@ -28,22 +28,26 @@ const FilterSkillPage = async () => {
   const allLocations = Array.from(allLocationsSet);
 
   // 2. Fetch Admin Students
-  const adminEmails = (await prisma.adminList.findMany({
-    select: { email: true },
-  })).map((admin) => admin.email);
+  const adminEmails = (
+    await prisma.adminList.findMany({
+      select: { email: true },
+    })
+  ).map((admin) => admin.email);
 
-  const adminList = (await prisma.student.findMany({
-    where: { email: { in: adminEmails } },
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      skills: true,
-      location: true,
-      companies: true,
-      interviews: true,
-    },
-  })).map((student) => ({
+  const adminList = (
+    await prisma.student.findMany({
+      where: { email: { in: adminEmails } },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        skills: true,
+        location: true,
+        companies: true,
+        interviews: true,
+      },
+    })
+  ).map((student) => ({
     ...student,
     id: student.id.toString(),
   }));

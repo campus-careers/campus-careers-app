@@ -40,13 +40,19 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
 
     switch (filterType) {
       case 'companies':
-        filtered = jobListings.filter((job) => job.companies && job.companies.length > 0);
+        filtered = jobListings.filter(
+          (job) => job.companies && job.companies.length > 0,
+        );
         break;
       case 'skills':
-        filtered = jobListings.filter((job) => job.skills.some((skill) => student?.skills.includes(skill)));
+        filtered = jobListings.filter((job) =>
+          job.skills.some((skill) => student?.skills.includes(skill)),
+        );
         break;
       case 'location':
-        filtered = jobListings.filter((job) => job.location === student?.location);
+        filtered = jobListings.filter(
+          (job) => job.location === student?.location,
+        );
         break;
       default:
         filtered = jobListings;
@@ -85,7 +91,13 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
               <Row>
                 <Col xs={4}>
                   {student.image ? (
-                    <div style={{ position: 'relative', width: '100%', paddingBottom: '100%' }}>
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '100%',
+                        paddingBottom: '100%',
+                      }}
+                    >
                       <Image
                         src={student.image}
                         alt="Profile"
@@ -106,16 +118,17 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
                   )}
                 </Col>
                 <Col xs={8}>
-                  <h5 className="fw-bold">{student.name || 'Unknown Student'}</h5>
+                  <h5 className="fw-bold">
+                    {student.name || 'Unknown Student'}
+                  </h5>
                   <p className="mb-1">
-                    Preferred Location:
-                    {' '}
-                    {student.location || 'Unknown'}
+                    Preferred Location: {student.location || 'Unknown'}
                   </p>
                   <p className="mb-0">
-                    Skills:
-                    {' '}
-                    {student.skills?.length > 0 ? student.skills.join(', ') : 'None'}
+                    Skills:{' '}
+                    {student.skills?.length > 0
+                      ? student.skills.join(', ')
+                      : 'None'}
                   </p>
                 </Col>
               </Row>
@@ -123,16 +136,32 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
           </Col>
 
           <Col md={4} className="d-flex flex-column gap-3">
-            <Button variant="light" className="border" onClick={() => filterJobs('companies')}>
+            <Button
+              variant="light"
+              className="border"
+              onClick={() => filterJobs('companies')}
+            >
               Browse Companies
             </Button>
-            <Button variant="light" className="border" onClick={() => filterJobs('skills')}>
+            <Button
+              variant="light"
+              className="border"
+              onClick={() => filterJobs('skills')}
+            >
               Browse by Skill
             </Button>
-            <Button variant="light" className="border" onClick={() => filterJobs('location')}>
+            <Button
+              variant="light"
+              className="border"
+              onClick={() => filterJobs('location')}
+            >
               Browse by Location
             </Button>
-            <Button variant="light" className="border" onClick={() => setFilteredJobs(jobListings)}>
+            <Button
+              variant="light"
+              className="border"
+              onClick={() => setFilteredJobs(jobListings)}
+            >
               Reset Filters
             </Button>
           </Col>
@@ -145,12 +174,8 @@ const BrowseDataSet = ({ student, jobListings }: BrowseDataSetProps) => {
               <ul className="list-unstyled">
                 {filteredJobs.map((job) => (
                   <li key={job.id}>
-                    {job.name}
-                    {' '}
-                    - Location:
-                    {job.location}
-                    {' '}
-                    - Skills:
+                    {job.name} - Location:
+                    {job.location} - Skills:
                     {job.skills.join(', ')}
                   </li>
                 ))}

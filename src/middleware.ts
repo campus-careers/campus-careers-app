@@ -2,17 +2,26 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('next-auth.session-token')?.value
-    || request.cookies.get('__Secure-next-auth.session-token')?.value;
+  const token =
+    request.cookies.get('next-auth.session-token')?.value ||
+    request.cookies.get('__Secure-next-auth.session-token')?.value;
 
   const { pathname } = request.nextUrl;
 
   // Pages that should NOT require authentication
-  const publicPaths = ['/', '/filter', '/company', '/setup', '/auth', '/favicon.ico'];
+  const publicPaths = [
+    '/',
+    '/filter',
+    '/company',
+    '/setup',
+    '/auth',
+    '/favicon.ico',
+  ];
 
-  const isPublic = publicPaths.some((path) => pathname.startsWith(path))
-    || pathname.startsWith('/_next')
-    || pathname.startsWith('/static');
+  const isPublic =
+    publicPaths.some((path) => pathname.startsWith(path)) ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/static');
 
   if (isPublic) {
     return NextResponse.next();
@@ -26,14 +35,11 @@ export async function middleware(request: NextRequest) {
   const baseUrl = request.nextUrl.origin;
 
   try {
-    const profileCheck = await fetch(
-      `${baseUrl}/api/user/check-profile`,
-      {
-        headers: {
-          cookie: request.headers.get('cookie') || '',
-        },
+    const profileCheck = await fetch(`${baseUrl}/api/user/check-profile`, {
+      headers: {
+        cookie: request.headers.get('cookie') || '',
       },
-    );
+    });
 
     if (!profileCheck.ok) {
       throw new Error('Failed to fetch profile check');

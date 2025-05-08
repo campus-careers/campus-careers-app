@@ -38,7 +38,9 @@ const CompaniesPage = async () => {
                   className="me-2"
                   style={{ maxWidth: '300px' }}
                 />
-                <Button variant="primary" id="search-button">Search</Button>
+                <Button variant="primary" id="search-button">
+                  Search
+                </Button>
               </Form>
 
               <Row xs={1} md={2} lg={3} className="g-4">

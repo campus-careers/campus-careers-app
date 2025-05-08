@@ -9,13 +9,16 @@ export async function GET() {
   } catch (error: any) {
     console.error('🔥 Prisma error:', error);
 
-    return NextResponse.json({
-      error: {
-        message: error.message,
-        stack: error.stack,
-        code: error.code,
-        clientVersion: error.clientVersion,
+    return NextResponse.json(
+      {
+        error: {
+          message: error.message,
+          stack: error.stack,
+          code: error.code,
+          clientVersion: error.clientVersion,
+        },
       },
-    }, { status: 500 });
+      { status: 500 },
+    );
   }
 }

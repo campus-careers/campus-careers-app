@@ -9,7 +9,10 @@ export async function GET() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email || session.user.email !== 'admin@foo.com') {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 },
+    );
   }
 
   try {
@@ -29,6 +32,9 @@ export async function GET() {
     return NextResponse.json({ success: true, students });
   } catch (error) {
     console.error('❌ Failed to fetch students:', error);
-    return NextResponse.json({ success: false, error: 'Failed to fetch students' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch students' },
+      { status: 500 },
+    );
   }
 }

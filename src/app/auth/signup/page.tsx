@@ -59,7 +59,9 @@ const SignUp = () => {
                       {...register('name')}
                       className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                     />
-                    <div className="invalid-feedback">{errors.name?.message}</div>
+                    <div className="invalid-feedback">
+                      {errors.name?.message}
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="form-group">
@@ -69,7 +71,9 @@ const SignUp = () => {
                       {...register('email')}
                       className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                     />
-                    <div className="invalid-feedback">{errors.email?.message}</div>
+                    <div className="invalid-feedback">
+                      {errors.email?.message}
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="form-group">
@@ -79,7 +83,9 @@ const SignUp = () => {
                       {...register('password')}
                       className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                     />
-                    <div className="invalid-feedback">{errors.password?.message}</div>
+                    <div className="invalid-feedback">
+                      {errors.password?.message}
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="form-group">
@@ -89,26 +95,79 @@ const SignUp = () => {
                       {...register('confirmPassword')}
                       className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
                     />
-                    <div className="invalid-feedback">{errors.confirmPassword?.message}</div>
+                    <div className="invalid-feedback">
+                      {errors.confirmPassword?.message}
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="form-group">
                     <Form.Label>Location</Form.Label>
-                    <Form.Select {...register('location')} className={`${errors.location ? 'is-invalid' : ''}`}>
+                    <Form.Select
+                      {...register('location')}
+                      className={`${errors.location ? 'is-invalid' : ''}`}
+                    >
                       <option value="">Select a state</option>
                       {[
-                        'Remote', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-                        'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana',
-                        'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
-                        'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-                        'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma',
-                        'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
-                        'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+                        'Remote',
+                        'Alabama',
+                        'Alaska',
+                        'Arizona',
+                        'Arkansas',
+                        'California',
+                        'Colorado',
+                        'Connecticut',
+                        'Delaware',
+                        'Florida',
+                        'Georgia',
+                        'Hawaii',
+                        'Idaho',
+                        'Illinois',
+                        'Indiana',
+                        'Iowa',
+                        'Kansas',
+                        'Kentucky',
+                        'Louisiana',
+                        'Maine',
+                        'Maryland',
+                        'Massachusetts',
+                        'Michigan',
+                        'Minnesota',
+                        'Mississippi',
+                        'Missouri',
+                        'Montana',
+                        'Nebraska',
+                        'Nevada',
+                        'New Hampshire',
+                        'New Jersey',
+                        'New Mexico',
+                        'New York',
+                        'North Carolina',
+                        'North Dakota',
+                        'Ohio',
+                        'Oklahoma',
+                        'Oregon',
+                        'Pennsylvania',
+                        'Rhode Island',
+                        'South Carolina',
+                        'South Dakota',
+                        'Tennessee',
+                        'Texas',
+                        'Utah',
+                        'Vermont',
+                        'Virginia',
+                        'Washington',
+                        'West Virginia',
+                        'Wisconsin',
+                        'Wyoming',
                       ].map((state) => (
-                        <option key={state} value={state}>{state}</option>
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
                       ))}
                     </Form.Select>
-                    <div className="invalid-feedback">{errors.location?.message}</div>
+                    <div className="invalid-feedback">
+                      {errors.location?.message}
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="form-group py-3">
@@ -119,7 +178,11 @@ const SignUp = () => {
                         </Button>
                       </Col>
                       <Col>
-                        <Button type="button" onClick={() => reset()} className="btn btn-warning float-right">
+                        <Button
+                          type="button"
+                          onClick={() => reset()}
+                          className="btn btn-warning float-right"
+                        >
                           Reset
                         </Button>
                       </Col>
@@ -128,9 +191,7 @@ const SignUp = () => {
                 </Form>
               </Card.Body>
               <Card.Footer>
-                Already have an account?
-                {' '}
-                <a href="/auth/signin">Sign in</a>
+                Already have an account? <a href="/auth/signin">Sign in</a>
               </Card.Footer>
             </Card>
           </Col>

@@ -2,7 +2,15 @@
 
 // import { Filter } from '@prisma/client';
 import { useState } from 'react';
-import { Button, Container, Row, Col, Form, Table, Image } from 'react-bootstrap';
+import {
+  Button,
+  Container,
+  Row,
+  Col,
+  Form,
+  Table,
+  Image,
+} from 'react-bootstrap';
 
 /* Renders a filter in the List Skills/Location table. See filter/page.tsx. */
 const FilterSkillOrLocation = ({
@@ -31,14 +39,14 @@ const FilterSkillOrLocation = ({
   // handle search button click
   const handleSearch = async () => {
     const results = users.filter(
-      (user) => (!selectedSkill || user.skills.includes(selectedSkill))
-&& (!selectedLocation || user.location === selectedLocation),
+      (user) =>
+        (!selectedSkill || user.skills.includes(selectedSkill)) &&
+        (!selectedLocation || user.location === selectedLocation),
     );
 
     setFilteredUsers(results);
   };
   return (
-
     <Container className="mt-5">
       {/* Search Section */}
       <Row className="mb-4 align-items-center">
@@ -102,7 +110,13 @@ const FilterSkillOrLocation = ({
                   <tr key={user.id}>
                     <td>{user.name}</td>
                     <td>
-                      <Image src={user.image} alt={user.name} rounded width={50} height={50} />
+                      <Image
+                        src={user.image}
+                        alt={user.name}
+                        rounded
+                        width={50}
+                        height={50}
+                      />
                     </td>
                     <td>{user.skills.join(', ')}</td>
                     <td>{user.location}</td>

@@ -37,7 +37,9 @@ export const EditCompanySchema = Yup.object({
 // Schema for editing student profile
 export const EditStudentSchema = Yup.object({
   id: Yup.string().required('ID is required'),
-  email: Yup.string().email('Valid email is required').required('Email is required'),
+  email: Yup.string()
+    .email('Valid email is required')
+    .required('Email is required'),
   fullName: Yup.string().required('Full name is required'),
   location: Yup.string().required('Location is required'),
   skills: Yup.array()

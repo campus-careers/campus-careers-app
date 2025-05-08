@@ -26,7 +26,9 @@ const CompanyCard: React.FC<{ company: Company }> = ({ company }) => {
                 location: company.location as Locations,
                 idealSkill: Array.isArray(company.idealSkill)
                   ? company.idealSkill
-                  : (company.idealSkill as never as string).split(',').map((s) => s.trim()),
+                  : (company.idealSkill as never as string)
+                      .split(',')
+                      .map((s) => s.trim()),
               }}
               onFinish={handleEditFinish}
             />

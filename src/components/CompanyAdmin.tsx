@@ -15,7 +15,7 @@ interface Company {
   contacts: string;
   idealSkill: string[];
   userId: number;
-  category: string;  // New field
+  category: string; // New field
 }
 
 const CompanyAdmin = () => {
@@ -40,7 +40,10 @@ const CompanyAdmin = () => {
           {companies.map((company) => (
             <Card key={company.id} className="mb-3">
               <Card.Body>
-                <h5>{company.name} - {company.category}</h5>  {/* New field */}
+                <h5>
+                  {company.name} - {company.category}
+                </h5>{' '}
+                {/* New field */}
                 <p>{company.overview}</p>
                 <Button onClick={() => setEditId(company.id)}>Edit</Button>
               </Card.Body>

@@ -25,7 +25,8 @@ const AdminPortalPage = () => {
       try {
         const res = await fetch('/api/admin/students');
         const data = await res.json();
-        if (!res.ok || !data.success) throw new Error(data.error || 'Unknown error');
+        if (!res.ok || !data.success)
+          throw new Error(data.error || 'Unknown error');
         setStudents(data.students);
       } catch (err: any) {
         setError(err.message || 'Failed to load students');
@@ -45,7 +46,11 @@ const AdminPortalPage = () => {
           <Spinner animation="border" variant="primary" />
         </div>
       )}
-      {error && <Alert variant="danger" className="text-center">{error}</Alert>}
+      {error && (
+        <Alert variant="danger" className="text-center">
+          {error}
+        </Alert>
+      )}
       <Row xs={1} sm={2} md={3} lg={3} xl={4} className="g-4">
         {students.map((student) => (
           <Col key={student.id}>

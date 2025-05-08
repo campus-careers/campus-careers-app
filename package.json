@@ -3,16 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "install": "npm install --legacy-peer-deps",
     "dev": "next dev",
     "dev-https": "next dev --experimental-https",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "playwright-development": "npx playwright test",
-    "playwright-ci": "next build && next start & npx playwright test",
-    "postinstall": "npm install --legacy-peer-deps"
-
+    "playwright-ci": "next build && next start & npx playwright test"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -39,6 +36,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.26.0",
     "@playwright/test": "^1.52.0",
     "@types/bcrypt": "^5.0.2",
     "@types/next-auth": "^3.13.0",
@@ -48,13 +46,13 @@
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
     "eslint": "^8.57.1",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^18.0.0",
-    "eslint-config-next": "14.2.10",
+    "eslint-config-next": "^14.2.10",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-react": "^7.37.5",
-    "prettier": "^3.3.1",
+    "prettier": "^3.5.3",
     "prettier-eslint": "^16.3.0",
     "prisma": "^5.19.1",
     "typescript": "^5.8.3"

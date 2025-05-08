@@ -9,7 +9,10 @@ export async function GET() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 },
+    );
   }
 
   const student = await prisma.student.findUnique({
@@ -27,7 +30,10 @@ export async function GET() {
   });
 
   if (!student) {
-    return NextResponse.json({ success: false, error: 'Student not found' }, { status: 404 });
+    return NextResponse.json(
+      { success: false, error: 'Student not found' },
+      { status: 404 },
+    );
   }
 
   return NextResponse.json({ success: true, user: student });

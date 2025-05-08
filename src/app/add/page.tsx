@@ -8,7 +8,9 @@ const AddCompany = async () => {
   // Protect the page—only authenticated users may access it
   const session = await getServerSession(authOptions);
   loggedInProtectedPage(
-    session as { user: { email: string; id: string; randomKey: string } } | null,
+    session as {
+      user: { email: string; id: string; randomKey: string };
+    } | null,
   );
 
   return (
