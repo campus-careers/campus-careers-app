@@ -4,7 +4,7 @@ test.describe('Browsing and Filtering Tests', () => {
 
   test.beforeEach(async ({ page }) => {
     // Step 1: Navigate to the login page
-    await page.goto('http://localhost:3000/auth/signin');
+    await page.goto('https://campus-careers-app.vercel.app/auth/signin');
 
     // Step 2: Log in as Admin
     await page.fill('input[name="email"]', 'admin@foo.com');
@@ -20,7 +20,7 @@ test.describe('Browsing and Filtering Tests', () => {
 
   test('Filter by Skill', async ({ page }) => {
     // Step 5: Go to the filter page
-    await page.goto('http://localhost:3000/filter');
+    await page.goto('https://campus-careers-app.vercel.app/filter');
 
     // Step 6: Wait for the page to load completely
     await page.waitForLoadState('networkidle');
