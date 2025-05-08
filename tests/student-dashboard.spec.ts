@@ -4,7 +4,7 @@ test.describe('Student Dashboard Tests', () => {
 
   test.beforeEach(async ({ page }) => {
     // Step 1: Navigate to Sign-In Page
-    await page.goto('http://localhost:3000/auth/signin');
+    await page.goto('https://campus-careers-app.vercel.app/auth/signin');
 
     // Step 2: Log in as the student
     await page.fill('input[name="email"]', 'john@foo.com');
@@ -12,18 +12,18 @@ test.describe('Student Dashboard Tests', () => {
     await page.click('button[type="submit"]');
 
     // Step 3: Wait for the student dashboard to load
-    await page.waitForURL('http://localhost:3000/student', { timeout: 60000 });
+    await page.waitForURL('https://campus-careers-app.vercel.app/student', { timeout: 60000 });
   });
 
   test('Update Profile Information (without photo)', async ({ page }) => {
     // Step 4: Navigate to Student Profile
-    await page.goto('http://localhost:3000/student');
+    await page.goto('https://campus-careers-app.vercel.app/student');
     await page.click('text=Edit Profile');
   });
     
   test('View Student Profile', async ({ page }) => {
     // Step 10: Navigate to the Student Dashboard
-    await page.goto('http://localhost:3000/student', { waitUntil: 'networkidle' });
+    await page.goto('https://campus-careers-app.vercel.app/student', { waitUntil: 'networkidle' });
 
     // Step 11: Verify the Student Home Page heading
     const heading = page.locator('h2');

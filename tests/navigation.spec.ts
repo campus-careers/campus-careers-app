@@ -4,18 +4,18 @@ test.describe('Navigation Tests', () => {
 
   test.beforeEach(async ({ page }) => {
     // Sign in as admin before each navigation test
-    await page.goto('http://localhost:3000/auth/signin');
+    await page.goto('https://campus-careers-app.vercel.app/auth/signin');
     await page.fill('input[name="email"]', 'admin@foo.com');
     await page.fill('input[name="password"]', 'adminpass');
     await page.click('button[type="submit"]');
-    await page.waitForURL('http://localhost:3000/admin');
+    await page.waitForURL('https://campus-careers-app.vercel.app/admin');
   });
 
   test('Home Page Navigation', async ({ page }) => {
-    await page.goto('http://localhost:3000/');
+    await page.goto('https://campus-careers-app.vercel.app/');
     await page.waitForSelector('text=Explore Company Profiles', { timeout: 900000 });
     await page.click('text=Explore Company Profiles');
-    await expect(page).toHaveURL('http://localhost:3000/company', { timeout: 900000 });
+    await expect(page).toHaveURL('https://campus-careers-app.vercel.app/company', { timeout: 900000 });
   });
 
 });
