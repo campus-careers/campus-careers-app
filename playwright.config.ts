@@ -12,7 +12,7 @@ export default defineConfig({
     timeout: 10000, // Increase expect timeout for slow responses
   },
   use: {
-    baseURL: process.env.CI ? 'http://localhost:3000' : 'http://localhost:3000', // Unify baseURL for local and CI
+    baseURL: process.env.CI ? 'http://https://campus-careers-app.vercel.app' : 'http://https://campus-careers-app.vercel.app', // Unify baseURL for local and CI
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retry-with-video',
@@ -36,7 +36,7 @@ export default defineConfig({
 
   webServer: {
     command: 'npm run start',
-    url: 'http://localhost:3000',
+    url: 'https://campus-careers-app.vercel.app',
     reuseExistingServer: !process.env.CI,
   },
 });
