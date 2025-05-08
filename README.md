@@ -12,4 +12,7 @@ For details, please see http://ics-software-engineering.github.io/nextjs-applica
  
 5. [Final Project: Milestone 2](https://courses.ics.hawaii.edu/ics314s25/morea/final-project/experience-final-project-m2.html)
 
-6. . [EC Project Management: Effort Estimation 2](https://laulima.hawaii.edu/portal/site/MAN.87147.202530/tool/fa88c289-b233-47f7-8790-62d4f5747b76?panel=Main)
+6. [EC Project Management: Effort Estimation 2](https://laulima.hawaii.edu/portal/site/MAN.87147.202530/tool/fa88c289-b233-47f7-8790-62d4f5747b76?panel=Main)
+
+7. [Final Project: Milestone 3](https://courses.ics.hawaii.edu/ics314s25/morea/final-project/experience-final-project-m3.html)
+
