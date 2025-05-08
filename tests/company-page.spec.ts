@@ -1,11 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { test, expect } from '@playwright/test';
 
 test.use({
-  storageState: 'john-auth.json',
+  storageState: 'tests/auth/john-auth.json',
 });
 
-test('test', async ({ page }) => {
+test('Company Pages - Form and Navigation', async ({ page }) => {
   await page.goto('http://localhost:3000/company');
   await page.getByRole('checkbox', { name: 'Engineering License' }).check();
   await page.locator('input[name="contacts"]').click();
@@ -13,7 +12,6 @@ test('test', async ({ page }) => {
   await page.locator('input[name="name"]').click();
   await page.locator('input[name="overview"]').click();
   await page.getByRole('button', { name: 'Reset' }).click();
-  await page.getByRole('main').click();
   await page.getByRole('navigation').click();
   await page.getByRole('link', { name: 'Companies' }).click();
 });

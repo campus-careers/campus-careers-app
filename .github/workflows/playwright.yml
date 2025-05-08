@@ -1,4 +1,4 @@
-name: CI for Next.js Application Template
+name: CI for Next.js with Playwright
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
 
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -24,7 +24,7 @@ jobs:
 
       # Step 3: Load environment variables from GitHub Secrets
       - name: Set up environment variables
-        run: echo "${{ secrets.ENV_FILE }}" > .env
+        run: echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
 
       # Step 4: Install dependencies
       - name: Install dependencies
@@ -46,13 +46,17 @@ jobs:
 
       # Step 8: Wait for the server to be ready
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000
+        run: npx wait-on http://localhost:3000 && sleep 5
 
-      # Step 9: Run Playwright tests
+      # Step 9: Verify server is running using Playwright
+      - name: Verify server status
+        run: npx playwright codegen http://localhost:3000
+
+      # Step 10: Run Playwright tests
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npm run playwright-ci
 
-      # Step 10: Upload Playwright HTML report as an artifact
+      # Step 11: Upload Playwright report
       - name: Upload Playwright Report
         if: always()
         uses: actions/upload-artifact@v4
