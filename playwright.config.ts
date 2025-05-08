@@ -12,32 +12,35 @@ export default defineConfig({
     timeout: 10000,
   },
   use: {
-    baseURL: process.env.CI ? 'https://campus-careers-app.vercel.app' : 'http://localhost:3000',
+    baseURL: process.env.CI
+      ? 'https://campus-careers-app.vercel.app'
+      : 'https://campus-careers-app.vercel.app',
     trace: 'on-first-retry',
-    headless: true,  // Always run in headless mode in CI
     screenshot: 'only-on-failure',
     video: 'retry-with-video',
+    storageState: process.env.CI
+      ? 'tests/auth/john-auth.json'
+      : 'tests/auth/john-auth.json',
   },
 
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], headless: true },
+      use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'], headless: true },
+      use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'], headless: true },
+      use: { ...devices['Desktop Safari'] },
     },
   ],
 
   webServer: {
     command: 'npm run start',
     url: 'https://campus-careers-app.vercel.app',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true, // ✅ This prevents starting if server is already running
   },
 });
-
