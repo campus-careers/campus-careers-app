@@ -113,7 +113,7 @@ export async function createUser(credentials: { email: string; password: string;
       email: credentials.email,
       password,
       name: credentials.name,
-      image: 'default-image.jpg',
+      image: 'default.png',
       location: validLocation,
     },
   });
