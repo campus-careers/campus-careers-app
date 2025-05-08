@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import swal from 'sweetalert';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,12 +17,6 @@ const US_STATES = [
   'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
 ];
 
-const PROGRAMMING_SKILLS = [
-  'JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#', 'Ruby', 'Go', 'Rust', 'Kotlin',
-  'Swift', 'HTML', 'CSS', 'SQL', 'R', 'PHP', 'Perl', 'Scala', 'MATLAB', 'Dart', 'Elixir',
-  'Shell', 'Assembly', 'Objective-C',
-];
-
 type FormValues = {
   id: number;
   name: string;
@@ -33,6 +27,7 @@ type FormValues = {
   location: Locations;
   idealSkill: string[];
   userId: number;
+  category: string;  // Including category in form values
 };
 
 const EditCompanyForm = ({ company, onFinish }: { company: Company; onFinish?: () => void }) => {
@@ -44,10 +39,11 @@ const EditCompanyForm = ({ company, onFinish }: { company: Company; onFinish?: (
     jobs: company.jobs,
     contacts: company.contacts,
     location: company.location as Locations,
-    idealSkill: Array.isArray(company.idealSkill)
-      ? company.idealSkill
+    idealSkill: Array.isArray(company.idealSkill) 
+      ? company.idealSkill 
       : (company.idealSkill as never as string).split(',').map((s) => s.trim()),
     userId: company.userId,
+    category: company.category || '',  // Properly adding category
   };
 
   const {
@@ -61,90 +57,88 @@ const EditCompanyForm = ({ company, onFinish }: { company: Company; onFinish?: (
   });
 
   const onSubmit = async (data: FormValues) => {
-    await editCompany(data);
-    swal('Success', 'Company updated successfully', 'success', { timer: 2000 });
-    if (onFinish) onFinish();
+    try {
+      await editCompany(data);
+      swal('Success', 'Company updated successfully', 'success', { timer: 2000 });
+      if (onFinish) onFinish();
+    } catch (error) {
+      console.error('Error updating company:', error);
+      swal('Error', 'Could not update the company', 'error');
+    }
   };
 
   return (
-    <div className="outer-border-box" style={{ width: '200%', margin: '0 auto' }}>
-      <Card style={{ width: '100%' }} className="shadow-sm p-4 rounded-4">
-        <h3 className="text-center fw-bold mb-4">Edit Company</h3>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <input type="hidden" {...register('id')} />
-          <input type="hidden" {...register('userId')} />
+    <Card style={{ width: '100%' }} className="shadow-sm p-4 rounded-4">
+      <h3 className="text-center fw-bold mb-4">Edit Company</h3>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <input type="hidden" {...register('id')} />
+        <input type="hidden" {...register('userId')} />
 
-          <Row className="mb-3">
-            <Col md={6}>
-              <Form.Label className="fw-bold">Name</Form.Label>
-              <Form.Control {...register('name')} />
-              {errors.name && <small className="text-black">{errors.name.message}</small>}
-            </Col>
-            <Col md={6}>
-              <Form.Label className="fw-bold">Salary</Form.Label>
-              <Form.Control type="number" step={10000} min={0} {...register('salary')} />
-              {errors.salary && <small className="text-black">{errors.salary.message}</small>}
-            </Col>
-          </Row>
+        <Row className="mb-3">
+          <Col md={6}>
+            <Form.Label>Name</Form.Label>
+            <Form.Control {...register('name')} />
+            {errors.name && <small className="text-danger">{errors.name.message}</small>}
+          </Col>
+          <Col md={6}>
+            <Form.Label>Category</Form.Label>
+            <Form.Control {...register('category')} placeholder="Enter category" />
+            {errors.category && <small className="text-danger">{errors.category.message}</small>}
+          </Col>
+        </Row>
 
-          <Row className="mb-3">
-            <Col>
-              <Form.Label className="fw-bold">Location</Form.Label>
-              <Form.Select {...register('location')}>
-                <option value="">Select a state</option>
-                {US_STATES.map((state) => (
-                  <option key={state} value={state}>{state}</option>
-                ))}
-              </Form.Select>
-              {errors.location && <small className="text-black">{errors.location.message}</small>}
-            </Col>
-          </Row>
+        <Row className="mb-3">
+          <Col>
+            <Form.Label>Overview</Form.Label>
+            <Form.Control as="textarea" rows={3} {...register('overview')} />
+            {errors.overview && <small className="text-danger">{errors.overview.message}</small>}
+          </Col>
+        </Row>
 
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-bold">Overview</Form.Label>
-            <Form.Control as="textarea" rows={2} {...register('overview')} />
-            {errors.overview && <small className="text-black">{errors.overview.message}</small>}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-bold">Jobs</Form.Label>
-            <Form.Control {...register('jobs')} />
-            {errors.jobs && <small className="text-black">{errors.jobs.message}</small>}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-bold">Contacts</Form.Label>
-            <Form.Control {...register('contacts')} />
-            {errors.contacts && <small className="text-black">{errors.contacts.message}</small>}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-bold">Recommended Skills</Form.Label>
-            <Form.Control as="select" multiple {...register('idealSkill')}>
-              {PROGRAMMING_SKILLS.map((skill) => (
-                <option key={skill} value={skill}>{skill}</option>
+        <Row className="mb-3">
+          <Col>
+            <Form.Label>Location</Form.Label>
+            <Form.Select {...register('location')}>
+              {US_STATES.map((state) => (
+                <option key={state} value={state}>{state}</option>
               ))}
-            </Form.Control>
-            <small className="text-black">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
-            {errors.idealSkill && <div className="text-black">{errors.idealSkill.message}</div>}
-          </Form.Group>
+            </Form.Select>
+            {errors.location && <small className="text-danger">{errors.location.message}</small>}
+          </Col>
+        </Row>
 
-          <div className="d-flex justify-content-between mt-4">
-            <Button type="submit" variant="primary">Save</Button>
-            <Button
-              type="button"
-              variant="outline-secondary"
-              onClick={() => {
-                reset(defaultValues);
-                if (onFinish) onFinish();
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </Form>
-      </Card>
-    </div>
+        <Row className="mb-3">
+          <Col>
+            <Form.Label>Jobs</Form.Label>
+            <Form.Control {...register('jobs')} />
+            {errors.jobs && <small className="text-danger">{errors.jobs.message}</small>}
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col>
+            <Form.Label>Contacts</Form.Label>
+            <Form.Control {...register('contacts')} />
+            {errors.contacts && <small className="text-danger">{errors.contacts.message}</small>}
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col>
+            <Form.Label>Ideal Skills</Form.Label>
+            <Form.Control as="select" multiple {...register('idealSkill')}>
+              <option value="JavaScript">JavaScript</option>
+              <option value="Python">Python</option>
+              <option value="Java">Java</option>
+              <option value="C++">C++</option>
+            </Form.Control>
+            {errors.idealSkill && <small className="text-danger">{errors.idealSkill.message}</small>}
+          </Col>
+        </Row>
+
+        <Button type="submit" variant="primary">Save Changes</Button>
+      </Form>
+    </Card>
   );
 };
 

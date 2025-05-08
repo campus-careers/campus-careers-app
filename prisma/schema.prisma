@@ -42,7 +42,7 @@ model Stuff {
 
 model Company {
   id         Int       @id @default(autoincrement())
-  name       String    @unique  // Make name unique
+  name       String    @unique
   location   Locations
   salary     Int
   overview   String
@@ -51,6 +51,7 @@ model Company {
   idealSkill String[]
   userId     Int
   user       User      @relation(fields: [userId], references: [id])
+  category   String    @default("General")  // <-- Add default value here
 }
 
 model Filter {

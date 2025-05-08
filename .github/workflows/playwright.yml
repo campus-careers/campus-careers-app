@@ -23,8 +23,9 @@ jobs:
           node-version: lts/*
 
       # Step 3: Load environment variables from GitHub Secrets
+      # eslint-disable-next-line
       - name: Set up environment variables
-        run: echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
+        run: echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env # eslint-disable-line
 
       # Step 4: Install dependencies
       - name: Install dependencies

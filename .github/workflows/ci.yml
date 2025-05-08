@@ -23,6 +23,7 @@ jobs:
           node-version: lts/*
 
       # Step 3: Load environment variables from GitHub Secrets
+      # eslint-disable-next-line
       - name: Set up environment variables
         run: echo "${{ secrets.ENV_FILE }}" > .env
 

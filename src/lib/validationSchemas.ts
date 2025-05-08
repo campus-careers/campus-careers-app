@@ -12,6 +12,7 @@ export const AddCompanySchema = Yup.object({
   jobs: Yup.string().required('Jobs list is required'),
   contacts: Yup.string().required('Contact info is required'),
   idealSkill: Yup.string().required('Ideal skills are required'), // stored as comma-separated string
+  category: Yup.string().required('Category is required'), // New field
 });
 
 // Schema for editing a company (idealSkill is array of strings)
@@ -30,6 +31,7 @@ export const EditCompanySchema = Yup.object({
     .required('Ideal skills are required')
     .min(1, 'You must provide at least one skill'),
   userId: Yup.number().required('User ID is required'),
+  category: Yup.string().required('Category is required'), // New field
 });
 
 // Schema for editing student profile

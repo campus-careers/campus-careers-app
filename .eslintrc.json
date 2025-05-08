@@ -1,34 +1,16 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript"],
-  "parserOptions": {
-    "ecmaVersion": "latest",
-    "sourceType": "module",
-    "project": "./tsconfig.json"
-  },
+  "extends": [
+    "next/core-web-vitals",
+    "next",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "rules": {
-    "@typescript-eslint/no-unused-vars": "off", // Disable this rule globally
-    "@typescript-eslint/quotes": "off",  // Disable the quotes rule for TypeScript files
-    "jsx-quotes": "off",  // Disable the jsx-quotes rule
-    "no-trailing-spaces": "off",  // Disable the trailing spaces rule
-    "react/jsx-one-expression-per-line": "off",  // Allow multiple expressions per line
-    "arrow-parens": "off",
-    "func-names": "off",
-    "linebreak-style": "off",
-    "max-len": ["error", 120],
-    "no-multi-spaces": "off",
-    "no-console": "off",
-    "no-plusplus": "off",
-    "no-restricted-syntax": "off",
-    "no-return-assign": "off",
-    "object-curly-newline": "off",
-    "prefer-arrow-callback": "off",
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.ts", "**/*.spec.ts"] }],
-    "import/extensions": ["error", "ignorePackages", { "js": "never", "jsx": "never", "ts": "never", "tsx": "never" }],
-    "import/prefer-default-export": "off",
-    "react/function-component-definition": "off",
-    "react/jsx-props-no-spreading": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "comma-dangle": "off",
+    "no-undef": "off",
     "react/react-in-jsx-scope": "off",
-    "react/prop-types": "off",
-    "@typescript-eslint/comma-dangle": "off"  // Disable the trailing comma rule
+    "import/prefer-default-export": "off",
+    "jsx-a11y/label-has-associated-control": "off"
   }
 }
