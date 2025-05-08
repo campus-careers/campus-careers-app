@@ -7,19 +7,17 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [['html', { outputFolder: 'playwright-report' }]],
-  timeout: 60000, // Global timeout set to 60 seconds
+  timeout: 60000,
   expect: {
-    timeout: 10000, // Expect timeout for slower responses
+    timeout: 10000,
   },
   use: {
-    baseURL: process.env.CI ? 'https://campus-careers-app.vercel.app' : 'https://campus-careers-app.vercel.app', // Corrected baseURL
+    baseURL: process.env.CI ? 'https://campus-careers-app.vercel.app' : 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retry-with-video',
-    headless: true,  // Enforce headless mode globally
-    storageState: process.env.CI ? 'tests/auth/john-auth.json' : 'tests/auth/john-auth.json',
+    headless: true, // Add this line to force headless mode
   },
-
   projects: [
     {
       name: 'chromium',
@@ -34,7 +32,6 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
   ],
-
   webServer: {
     command: 'npm run start',
     url: 'https://campus-careers-app.vercel.app',
