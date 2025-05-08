@@ -7,16 +7,20 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [['html', { outputFolder: 'playwright-report' }]],
-  timeout: 60000, // Increase global timeout to 60 seconds
+  timeout: 60000,
   expect: {
-    timeout: 10000, // Increase expect timeout for slow responses
+    timeout: 10000,
   },
   use: {
-    baseURL: process.env.CI ? 'http://https://campus-careers-app.vercel.app' : 'http://https://campus-careers-app.vercel.app', // Unify baseURL for local and CI
+    baseURL: process.env.CI
+      ? 'https://campus-careers-app.vercel.app'
+      : 'https://campus-careers-app.vercel.app',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retry-with-video',
-    storageState: process.env.CI ? 'tests/auth/john-auth.json' : 'tests/auth/john-auth.json', // Use stored auth state
+    storageState: process.env.CI
+      ? 'tests/auth/john-auth.json'
+      : 'tests/auth/john-auth.json',
   },
 
   projects: [
@@ -37,6 +41,6 @@ export default defineConfig({
   webServer: {
     command: 'npm run start',
     url: 'https://campus-careers-app.vercel.app',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true, // ✅ This prevents starting if server is already running
   },
 });

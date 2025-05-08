@@ -23,9 +23,8 @@ jobs:
           node-version: lts/*
 
       # Step 3: Load environment variables from GitHub Secrets
-      # eslint-disable-next-line
       - name: Set up environment variables
-        run: echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env # eslint-disable-line
+        run: echo "${{ secrets.ENV_FILE }}" | tr ' ' '\n' > .env
 
       # Step 4: Install dependencies
       - name: Install dependencies
@@ -43,15 +42,11 @@ jobs:
       - name: Start the server
         run: npm run start &
         env:
-          PORT: 3000
+          PORT: 5432
 
       # Step 8: Wait for the server to be ready
       - name: Wait for server to be ready
         run: npx wait-on https://campus-careers-app.vercel.app && sleep 5
-
-      # Step 9: Verify server is running using Playwright
-      - name: Verify server status
-        run: npx playwright codegen https://campus-careers-app.vercel.app
 
       # Step 10: Run Playwright tests
       - name: Run Playwright tests
