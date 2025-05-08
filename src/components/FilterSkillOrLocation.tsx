@@ -30,12 +30,13 @@ const FilterSkillOrLocation = ({
   const [filteredUsers, setFilteredUsers] = useState(users);
   // handle search button click
   const handleSearch = async () => {
-    const results = users.filter(
-      (user) => (!selectedSkill || user.skills.includes(selectedSkill))
-&& (!selectedLocation || user.location === selectedLocation),
-    );
-
-    setFilteredUsers(results);
+    const query = new URLSearchParams();
+    if (selectedSkill) query.append('skill', selectedSkill);
+    if (selectedLocation) query.append('location', selectedLocation);
+  
+    const res = await fetch(`/api/filter-users?${query.toString()}`);
+    const data = await res.json();
+    setFilteredUsers(data);
   };
   return (
 
