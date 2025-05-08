@@ -11,7 +11,7 @@ const FilterSkillPage = async () => {
     },
   });
 
-  // Flatten skills and collect unique.
+  // Flatten skills and collect unique
   const allSkillsSet = new Set<string>();
   const allLocationsSet = new Set<string>();
 
