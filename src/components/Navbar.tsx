@@ -42,14 +42,16 @@ const NavBar: React.FC = () => {
                   List Companies
                 </Nav.Link>
                 <Nav.Link as={Link} href="/contact" active={pathName === '/contact'}>
-                  Contact
+                  Contact Us
                 </Nav.Link>
+
               </>
             )}
             {isAdmin && (
-              <Nav.Link as={Link} href="/admin/add-company" active={pathName === '/admin/add-company'}>
-                Add Company
-              </Nav.Link>
+            <Nav.Link as={Link} href="/contact" active={pathName === '/contact'}>
+              Contact Us
+            </Nav.Link>
+            
             )}
           </Nav>
 
