@@ -46,11 +46,11 @@ jobs:
       - name: Start the server
         run: npm run start &
         env:
-          PORT: 3000
+          PORT: 5432
 
       # Step 8: Wait for the server to be ready
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000
+        run: npx wait-on https://campus-careers-app.vercel.app
 
       # Step 9: Run Playwright tests
       - name: Run Playwright tests

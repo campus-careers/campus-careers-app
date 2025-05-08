@@ -47,11 +47,11 @@ jobs:
 
       # Step 8: Wait for the server to be ready
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000 && sleep 5
+        run: npx wait-on https://campus-careers-app.vercel.app && sleep 5
 
       # Step 9: Verify server is running using Playwright
       - name: Verify server status
-        run: npx playwright codegen http://localhost:3000
+        run: npx playwright codegen https://campus-careers-app.vercel.app
 
       # Step 10: Run Playwright tests
       - name: Run Playwright tests
