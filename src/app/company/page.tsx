@@ -26,7 +26,7 @@ const CompaniesPage = async () => {
       <Container id="list" fluid className="py-3">
         <Container>
           <Row>
-            <Col className='d-flex'>
+            <Col>
               <h1 className="text-center mb-4">Company Profiles</h1>
 
               {/* Search and Filter Form */}
