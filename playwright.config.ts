@@ -14,7 +14,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.CI
       ? 'https://campus-careers-app.vercel.app'
-      : 'https://campus-careers-app.vercel.app',
+      : 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retry-with-video',
@@ -41,6 +41,6 @@ export default defineConfig({
   webServer: {
     command: 'npm run start',
     url: 'https://campus-careers-app.vercel.app',
-    reuseExistingServer: true, // ✅ This prevents starting if server is already running
+    reuseExistingServer: true, 
   },
 });
