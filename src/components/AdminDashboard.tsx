@@ -24,7 +24,7 @@ const AdminDashboard = ({
   interviews,
 }: AdminDashboardProps) => (
   <Card
-    className="shadow-sm rounded-4 mb-4"
+    className="shadow-sm rounded-4 mb-4 h-100 d-flex flex-column w-100"
     style={{ maxWidth: '500px', margin: '0 auto' }}
   >
     <Card.Img
