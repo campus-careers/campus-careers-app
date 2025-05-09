@@ -59,14 +59,23 @@ const AddCompanyForm: React.FC = () => {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Location</Form.Label>
-        <Form.Control
-          {...register('location')}
-          placeholder="Enter location"
-          isInvalid={!!errors.location}
-        />
-        {errors.location && <Form.Text className="text-danger">{errors.location.message}</Form.Text>}
-      </Form.Group>
+  <Form.Label>Location</Form.Label>
+  <Form.Select
+    {...register('location')}
+    name="location" // Important for Playwright
+    isInvalid={!!errors.location}
+  >
+    <option value="">Select a location</option>
+    <option value="California">California</option>
+    <option value="New York">New York</option>
+    <option value="Hawaii">Hawaii</option>
+    <option value="Texas">Texas</option>
+    <option value="Remote">Remote</option>
+  </Form.Select>
+  {errors.location && (
+    <Form.Text className="text-danger">{errors.location.message}</Form.Text>
+  )}
+</Form.Group>
 
       <Form.Group className="mb-3">
         <Form.Label>Salary</Form.Label>
