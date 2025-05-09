@@ -40,7 +40,6 @@ Then install the project's dependencies:
 npm install
 ```
 
-
 # SET UP THE ENVIRONMENT FILE
 
 Create and configure your local environment file:
