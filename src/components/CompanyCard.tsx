@@ -17,7 +17,7 @@ const CompanyCard: React.FC<{ company: Company }> = ({ company }) => {
 
   return (
     <Row className="justify-content-center">
-      <Col md={10}>
+      <Col>
         {editing ? (
           <div className="mb-4 w-100">
             <EditCompanyForm
@@ -34,9 +34,9 @@ const CompanyCard: React.FC<{ company: Company }> = ({ company }) => {
             />
           </div>
         ) : (
-          <Card className="shadow-sm rounded-4 mb-4 h-100 d-flex flex-column w-100">
-            <Card.Body>
-              <Card.Title className="company-name">{company.name}</Card.Title>
+          <Card className="shadow-sm rounded-4 mb-4 h-100 d-flex flex-column w-100 company-card">
+            <Card.Body className='flex-grow-1'>
+              <Card.Title className="fw-bold company-name">{company.name}</Card.Title>
               <Card.Subtitle className="mb-2 text-muted company-category">
                 {company.category} - {company.location}
               </Card.Subtitle>
