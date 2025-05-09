@@ -43,7 +43,7 @@ const CompaniesPage = async () => {
                 </Button>
               </Form>
 
-              <Row xs={1} md={2} lg={3} className="g-4">
+              <Row xs={1} md={2} lg={3} className="g-4 align-items-stretch">
                 {companies.map((company) => (
                   <Col key={company.id} className='d-flex'>
                     <CompanyCard company={company} />
