@@ -18,46 +18,55 @@ For details, please see http://ics-software-engineering.github.io/nextjs-applica
 
 # CLONE THE REPOSITORY
 Clone the repository to your local machine using Git.
-git clone https://github.com/your-username/your-repo-name.git
+```
+git clone https://github.com/campus-careers/campus-careers-app.git
 cd your-repo-name
-
+```
 
 # INSTALL DEPENDENCIES
 
 Install Node.js and npm (if not already installed):
 - Download for Windows/macOS: https://nodejs.org/en/download
-- Ubuntu/Debian: sudo apt install nodejs npm
+- Ubuntu/Debian: ```sudo apt install nodejs npm```
 
 Install PostgreSQL:
 - Official download page (Windows/macOS/Linux): https://www.postgresql.org/download/
-- Homebrew (Mac): brew install postgresql
-- Ubuntu/Debian: sudo apt install postgresql postgresql-contrib
+- Homebrew (Mac): ```brew install postgresql```
+- Ubuntu/Debian: ```sudo apt install postgresql postgresql-contrib```
 
 Make sure you have Node.js (v18+) and npm installed.
 Then install the project's dependencies:
+```
 npm install
-
+```
 
 
 # SET UP THE ENVIRONMENT FILE
 
 Create and configure your local environment file:
+```
 cp sample.env .env  # Use `copy sample.env .env` on Windows
+```
 
 Update the DATABASE_URL in the `.env` file:
+```
 DATABASE_URL=postgresql://<username>:<password>@localhost:5432/your-database-name?schema=public
-
+```
 Tip: If you don't have a PostgreSQL user yet, you can create one using:
+```
 createuser your-username --pwprompt
+```
 Then grant it access to the database if needed.
 
 
 Copy the example environment file and edit it with your settings:
+```
 cp sample.env .env
-
+```
 Update the DATABASE_URL in the `.env` file:
+```
 DATABASE_URL=postgresql://<username>:<password>@localhost:5432/your-database-name?schema=public
-
+```
 
 
 DATABASE SETUP (PostgreSQL + Prisma)
@@ -77,24 +86,25 @@ npx prisma db seed
 
 Tip: Ensure that you have a valid seed file defined in `prisma/seed.ts` or `prisma/seed.js`.
 If not set up, seeding will fail. See Prisma docs: https://www.prisma.io/docs/guides/database/seed-database
+```
 npx prisma db seed
-
+```
 # CODE LINTING AND FORMATTING
 
 Run ESLint to check the codebase for errors and style issues.
 This helps maintain code quality and consistency.
+```
 npm run lint
-
-Format your code using Prettier (if configured).
-Automatically fixes spacing, semicolons, quotes, etc.
-npm run format
+```
 
 # STARTING THE DEVELOPMENT SERVER
 
 This command runs the Next.js development server.
-By default, it starts at http://localhost:3000
+By default, it starts at `http://localhost:3000`
 Open your browser and go to that URL to view the app.
+```
 npm run dev
+```
 
 
 # TESTING THE APPLICATION (Manual Verification)
