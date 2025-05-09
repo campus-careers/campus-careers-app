@@ -34,7 +34,7 @@ const CompanyCard: React.FC<{ company: Company }> = ({ company }) => {
             />
           </div>
         ) : (
-          <Card className="mb-4 w-100 shadow-sm company-card">
+          <Card className="shadow-sm rounded-4 mb-4 h-100 d-flex flex-column w-100 company-card">
             <Card.Body>
               <Card.Title className="company-name">{company.name}</Card.Title>
               <Card.Subtitle className="mb-2 text-muted company-category">
