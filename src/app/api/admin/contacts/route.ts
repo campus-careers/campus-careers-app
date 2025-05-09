@@ -1,14 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma'; 
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { name, email, message } = body;
+  const { name, email, message } = await req.json();
 
-  console.log('📩 New Contact Message:', { name, email, message });
+  if (!name || !email || !message) {
+    return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+  }
 
-  return NextResponse.json({ success: true });
+  try {
+    const saved = await prisma.contactMessage.create({
+      data: { name, email, message },
+    });
+
+    return NextResponse.json({ success: true, saved });
+  } catch (error) {
+    console.error('Error saving message:', error);
+    return NextResponse.json({ error: 'Failed to save message' }, { status: 500 });
+  }
 }
 
+// GET: Return all messages (for admin viewing)
 export async function GET() {
-  return NextResponse.json({ message: 'Contact route is working' });
+  const messages = await prisma.contactMessage.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return NextResponse.json(messages);
 }
