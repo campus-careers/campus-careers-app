@@ -45,7 +45,7 @@ const CompaniesPage = async () => {
 
               <Row xs={1} md={2} lg={3} className="g-4">
                 {companies.map((company) => (
-                  <Col key={company.id}>
+                  <Col key={company.id} className='d-flex'>
                     <CompanyCard company={company} />
                   </Col>
                 ))}
