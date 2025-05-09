@@ -26,7 +26,7 @@ const CompaniesPage = async () => {
       <Container id="list" fluid className="py-3">
         <Container>
           <Row>
-            <Col>
+            <Col className='d-flex'>
               <h1 className="text-center mb-4">Company Profiles</h1>
 
               {/* Search and Filter Form */}
@@ -55,7 +55,7 @@ const CompaniesPage = async () => {
 
           {/* Browse Companies for Students */}
           <Row className="mt-5">
-            <Col>
+            <Col className='d-flex'>
               <BrowseCompaniesStudent companies={companies} />
             </Col>
           </Row>
