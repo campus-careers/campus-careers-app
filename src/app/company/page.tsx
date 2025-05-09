@@ -55,7 +55,7 @@ const CompaniesPage = async () => {
 
           {/* Browse Companies for Students */}
           <Row className="mt-5">
-            <Col className='d-flex'>
+            <Col>
               <BrowseCompaniesStudent companies={companies} />
             </Col>
           </Row>
