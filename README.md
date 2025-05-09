@@ -76,14 +76,18 @@ If you're using Windows and don't have CLI tools like `createdb`, consider using
 
 
 1. Create the database:
+```
 createdb your-database-name
-
+```
 2. Run migrations to set up tables:
+```
 npx prisma migrate dev
+```
 
 3. Seed the database with sample data:
+```
 npx prisma db seed
-
+```
 Tip: Ensure that you have a valid seed file defined in `prisma/seed.ts` or `prisma/seed.js`.
 If not set up, seeding will fail. See Prisma docs: https://www.prisma.io/docs/guides/database/seed-database
 ```
