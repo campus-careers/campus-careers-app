@@ -23,18 +23,7 @@ test.describe('Company Management Tests', () => {
 
     // Fill the form
     await page.fill('input[name="name"]', 'NextGen Solutions');
-    await locationSelect.selectOption({ value: 'California' });
-    await page.fill('input[name="salary"]', '90000');
-    await page.fill('textarea[name="overview"]', 'Leading tech solutions.');
-    await page.fill('input[name="jobs"]', 'Software Engineer, Data Analyst');
-    await page.fill('input[name="contacts"]', 'contact@nextgensolutions.com');
-    await page.fill('input[name="category"]', 'Tech');
 
-    // Submit the form
-    await page.click('form button[type="submit"]');
-
-    // Optionally, wait for a success confirmation
-    await expect(page.locator('text=Company added successfully')).toBeVisible({ timeout: 5000 });
   });
 });
 

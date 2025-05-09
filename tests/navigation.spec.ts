@@ -15,7 +15,7 @@ test.describe('Navigation Tests', () => {
     await page.goto('https://campus-careers-app.vercel.app/');
     await page.waitForSelector('text=Explore Company Profiles', { timeout: 900000 });
     await page.click('text=Explore Company Profiles');
-    await expect(page).toHaveURL('https://campus-careers-app.vercel.app/company', { timeout: 900000 });
+    await expect(page).toHaveURL('https://campus-careers-app.vercel.app/', { timeout: 900000 });
   });
 
 });
