@@ -14,7 +14,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.CI
       ? 'https://campus-careers-app.vercel.app'
-      : 'http://localhost:3000',
+      : 'https://campus-careers-app.vercel.app',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retry-with-video',
