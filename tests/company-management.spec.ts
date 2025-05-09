@@ -37,4 +37,3 @@ test.describe('Company Management Tests', () => {
     await expect(page.locator('text=Company added successfully')).toBeVisible({ timeout: 5000 });
   });
 });
-

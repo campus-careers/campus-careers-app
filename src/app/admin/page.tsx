@@ -53,7 +53,7 @@ const AdminPortalPage = () => {
       )}
       <Row xs={1} sm={2} md={3} lg={3} xl={4} className="g-4">
         {students.map((student) => (
-          <Col key={student.id}>
+          <Col key={student.id} className='d-flex'>
             <AdminDashboard {...student} />
           </Col>
         ))}
